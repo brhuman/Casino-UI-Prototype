@@ -1,6 +1,6 @@
 export const loadAssets = async (onProgress: (progress: number) => void) => {
-  // Implemented fake loader for MVP without external assets to ensure it runs out of the box.
-  // In production, we use PIXI.Assets.load() with SpriteSheets.
+
+
   return new Promise<void>((resolve) => {
     let progress = 0;
     const interval = setInterval(() => {

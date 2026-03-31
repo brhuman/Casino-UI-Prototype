@@ -5,22 +5,22 @@ import { useMinesStore } from '../store';
 import gsap from 'gsap';
 
 export class MinesEngine implements IGameEngine {
-  public app: Application;
+  public app!: Application;
   private container: Container;
   private gridContainer: Container;
   private cells: Cell[] = [];
   private isDestroyed = false;
+  private pendingTimeouts: Set<any> = new Set();
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   private socket: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   constructor(socket: any) {
-    this.app = new Application();
     this.container = new Container();
     this.gridContainer = new Container();
     this.socket = socket;
     
-    // Bind WS listeners
+
     this.onServerResult = this.onServerResult.bind(this);
     this.onGameStarted = this.onGameStarted.bind(this);
     this.onCashoutResult = this.onCashoutResult.bind(this);
@@ -30,24 +30,10 @@ export class MinesEngine implements IGameEngine {
     this.socket.on('MINES_CASHOUT_RESULT', this.onCashoutResult);
   }
 
-  async init(canvas: HTMLCanvasElement) {
-    await this.app.init({
-      canvas,
-      width: 800,
-      height: 800,
-      preference: 'webgl',
-      backgroundAlpha: 0,
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true,
-    });
-    
-    if (this.isDestroyed) {
-      try { this.app.destroy(true, { children: true }); } catch (e) { /* ignore */ }
-      return;
-    }
-    
+  public init(app: Application) {
+    this.app = app;
     this.app.stage.addChild(this.container);
-    this.container.x = 400; // Center 800x800
+    this.container.x = 400;
     this.container.y = 400;
     this.container.addChild(this.gridContainer);
 
@@ -76,13 +62,13 @@ export class MinesEngine implements IGameEngine {
   }
 
   public startRound(bet: number, payload: { minesCount: number }) {
-    // Reset Grid
+
     this.drawGrid();
     this.socket.emit('MINES_START', { bet, minesCount: payload.minesCount });
   }
 
   private handlePick(index: number) {
-    if (!useMinesStore.getState().isActive) return;
+    if (this.isDestroyed || !useMinesStore.getState().isActive) return;
     this.socket.emit('MINES_PICK', { index });
   }
 
@@ -100,21 +86,22 @@ export class MinesEngine implements IGameEngine {
   public onServerResult(data: { status: 'SAFE' | 'BUST', grid?: number[], newMultiplier?: number }) {
     if (data.status === 'SAFE' && data.newMultiplier) {
       useMinesStore.getState().actions.updateProgress(data.newMultiplier);
-      // Wait, we need to know WHICH cell was clicked. Since FakeSocket doesn't return it,
-      // we can infer it or we should just reveal the currently active one.
-      // For this demo, we'll reveal the first unrevealed clicked one if we tracked it, 
-      // but let's just cheat and check which cell was hovered/clicked via Pixi interaction,
-      // or we can pass `index` back from server.
-      // To simplify, we will just loop cells and if they are hovered we reveal them.
-      // Actually, a better way: store pending pick in class.
+
+
+
+
+
+
+
     } else if (data.status === 'BUST' && data.grid) {
       this.revealAll(data.grid, true);
       useMinesStore.getState().actions.endGame();
     }
   }
   
-  // Method injected when React clicks wrapper to tell engine which cell we intended
+
   public revealCellClient(index: number, isSafe: boolean) {
+    if (this.isDestroyed || !this.cells[index]) return;
     this.cells[index].reveal(isSafe ? 'SAFE' : 'BOMB');
   }
 
@@ -127,15 +114,18 @@ export class MinesEngine implements IGameEngine {
   private revealAll(grid: number[], isBust: boolean) {
      grid.forEach((status, idx) => {
        if (!this.cells[idx].isRevealed) {
-         // Add staggered delay
-         setTimeout(() => {
+
+         const tid = setTimeout(() => {
+           if (this.isDestroyed) return;
            this.cells[idx].reveal(status === 1 ? 'BOMB' : 'SAFE');
+           this.pendingTimeouts.delete(tid);
          }, Math.random() * 500);
+         this.pendingTimeouts.add(tid);
        }
      });
      
      if (isBust) {
-       // Shake screen
+
        gsap.to(this.container, { x: 410, duration: 0.05, yoyo: true, repeat: 5, onComplete: () => { this.container.x = 400; }});
      }
   }
@@ -159,21 +149,36 @@ export class MinesEngine implements IGameEngine {
     this.container.addChild(text);
     
     gsap.to(text, { alpha: 1, y: -200, scale: 1, duration: 0.8, ease: 'back.out(2)' });
-    setTimeout(() => {
+    const tid = setTimeout(() => {
+      if (this.isDestroyed) return;
       gsap.to(text, { alpha: 0, y: -300, duration: 0.5, onComplete: () => text.destroy() });
+      this.pendingTimeouts.delete(tid);
     }, 2000);
+    this.pendingTimeouts.add(tid);
   }
 
   public destroy() {
     this.isDestroyed = true;
+    
+
+    this.pendingTimeouts.forEach(tid => clearTimeout(tid as any));
+    this.pendingTimeouts.clear();
+
+
+    gsap.killTweensOf(this.container);
+    this.cells.forEach(cell => gsap.killTweensOf(cell.scale));
+
     this.socket.off('MINES_STARTED', this.onGameStarted);
     this.socket.off('MINES_RESULT', this.onServerResult);
     this.socket.off('MINES_CASHOUT_RESULT', this.onCashoutResult);
+
     if (this.app) {
       try {
-        this.app.destroy(true, { children: true });
+        this.app.ticker?.stop();
+
+        this.app.destroy(true, { children: true, texture: true, baseTexture: true } as any);
       } catch (e) {
-        console.warn("PIXI destroy ignored:", e);
+        console.warn("[MinesEngine] PIXI destroy ignored:", e);
       }
     }
   }

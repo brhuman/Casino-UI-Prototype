@@ -23,7 +23,7 @@ export const useUserStore = create<UserState>()(
       actions: {
         login: (token, userId, username, balance) => set({ token, userId, username, balance }),
         logout: () => set({ token: null, userId: null, username: 'Guest' }),
-        // updateBalance is called only after WS confirms outcome
+
         updateBalance: (amount) => set({ balance: get().balance + amount }),
       },
     }),
@@ -33,7 +33,7 @@ export const useUserStore = create<UserState>()(
         token: state.token, 
         userId: state.userId,
         username: state.username
-      }), // Do not persist balance!
+      }),
     }
   )
 );

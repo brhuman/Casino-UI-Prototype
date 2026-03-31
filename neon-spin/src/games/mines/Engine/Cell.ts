@@ -14,7 +14,7 @@ export class Cell extends Container {
     this.gridIndex = index;
     this.onClick = onClick;
     
-    // Interactive
+
     this.eventMode = 'static';
     this.cursor = 'pointer';
 
@@ -29,7 +29,7 @@ export class Cell extends Container {
     this.content.y = size / 2;
     this.addChild(this.content);
 
-    // Hover effects
+
     this.on('pointerover', () => {
        if (!this.isRevealed) gsap.to(this.scale, { x: 1.05, y: 1.05, duration: 0.2 });
     });
@@ -48,13 +48,13 @@ export class Cell extends Container {
     
     gsap.to(this.scale, { x: 1, y: 1, duration: 0.2 });
 
-    // Flip animation
+
     gsap.to(this.scale, {
       x: 0, duration: 0.15, onComplete: () => {
         if (type === 'SAFE') {
           this.baseBg.fill({ color: 0x002211, alpha: 0.9 });
           this.baseBg.stroke({ width: 2, color: 0x00ff00, alpha: 0.8 });
-          // Draw Crystal
+
           this.content.moveTo(0, -20);
           this.content.lineTo(15, 0);
           this.content.lineTo(0, 20);
@@ -63,7 +63,7 @@ export class Cell extends Container {
         } else {
           this.baseBg.fill({ color: 0x330000, alpha: 0.9 });
           this.baseBg.stroke({ width: 2, color: 0xff0000, alpha: 0.8 });
-          // Draw Bomb
+
           this.content.circle(0, 0, 15);
           this.content.fill({ color: 0xff3333 });
         }

@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { User, Activity, Clock } from 'lucide-react';
-import { useGameStore } from '../store/useGameStore';
+import { useUserStore } from '../store/useUserStore';
 import { Card } from '../components/ui/Card';
 
 export const ProfileView = () => {
-  const balance = useGameStore(state => state.balance);
+  const balance = useUserStore(state => state.balance);
 
   return (
     <motion.div 
@@ -29,18 +29,18 @@ export const ProfileView = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card glass={false}>
-           <h3 className="text-lg font-bold text-gray-300 mb-4">Статистика</h3>
+           <h3 className="text-lg font-bold text-gray-300 mb-4">Statistics</h3>
            <div className="flex flex-col gap-4">
              <div className="flex justify-between border-b border-gray-800 pb-2">
-               <span className="text-gray-500">Текущий баланс</span>
+               <span className="text-gray-500">Current Balance</span>
                <span className="text-white font-mono font-bold">${balance.toLocaleString()}</span>
              </div>
              <div className="flex justify-between border-b border-gray-800 pb-2">
-               <span className="text-gray-500">Всего ставок сделано</span>
+               <span className="text-gray-500">Total Bets Made</span>
                <span className="text-white font-mono">0</span>
              </div>
              <div className="flex justify-between border-b border-gray-800 pb-2">
-               <span className="text-gray-500">Крупнейший выигрыш</span>
+               <span className="text-gray-500">Biggest Win</span>
                <span className="text-neon-pink font-mono font-bold">$0.00</span>
              </div>
            </div>

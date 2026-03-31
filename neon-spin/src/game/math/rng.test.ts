@@ -26,11 +26,11 @@ describe('RNG Math Engine', () => {
     const winMatrix = [
       [1, 2, 3],
       [1, 5, 1],
-      [1, 3, 4], // 3 of symbol 1 (SEVEN) on row 0
+      [1, 3, 4],
       [5, 1, 2],
       [3, 4, 5]
     ];
-    // Symbol 1 is SEVEN. Base is 10. Match 3 mult is 1. Bet is 100. Win = 100 * 1 * 10 = 1000
+
     const win = calculateWin(winMatrix, 100);
     expect(win).toBe(1000);
   });
@@ -38,12 +38,12 @@ describe('RNG Math Engine', () => {
   it('calculateWin should correctly use wilds', () => {
     const winMatrix = [
       [2, 2, 3],
-      [0, 5, 1], // 0 is WILD
+      [0, 5, 1],
       [0, 3, 4],
-      [2, 1, 2], // 4 of symbol 2 (BAR) on row 0
+      [2, 1, 2],
       [3, 4, 5]
     ];
-    // Symbol 2 is BAR. Base is 5. Match 4 mult is 4. Bet is 100. Win = 100 * 4 * 5 = 2000
+
     const win = calculateWin(winMatrix, 100);
     expect(win).toBe(2000);
   });

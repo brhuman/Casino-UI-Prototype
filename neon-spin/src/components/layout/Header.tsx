@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useGameStore } from '../../store/useGameStore';
+import { useUserStore } from '../../store/useUserStore';
+import { useUiStore } from '../../store/useUiStore';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { User, Volume2, VolumeX } from 'lucide-react';
 import { useAudio } from '../../hooks/useAudio';
 
 export const Header = () => {
-  const balance = useGameStore((state) => state.balance);
+  const balance = useUserStore((state) => state.balance);
+  const setView = useUiStore((state) => state.setView);
   const [muted, setMuted] = useState(false);
   
   useAudio(muted);
 
-  // Animate balance
   const springBalance = useSpring(balance, { bounce: 0, duration: 800 });
   const displayBalance = useTransform(springBalance, (current) => `$${Math.floor(current).toLocaleString()}`);
 
@@ -36,7 +37,10 @@ export const Header = () => {
         <button onClick={() => setMuted(!muted)} className="p-2 rounded-full hover:bg-gray-800 transition-colors text-gray-300">
           {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
         </button>
-        <button className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 p-1.5 pr-4 rounded-full transition-colors border border-gray-700">
+        <button 
+          onClick={() => setView('profile')}
+          className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 p-1.5 pr-4 rounded-full transition-colors border border-gray-700"
+        >
           <div className="w-7 h-7 bg-gray-700 rounded-full flex items-center justify-center text-neon-pink">
             <User size={16} />
           </div>

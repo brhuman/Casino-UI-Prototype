@@ -20,17 +20,16 @@ class FakeSocket {
   }
 
   emit(event: WsEvent, payload?: unknown) {
-    console.log(`[WS UP] ${event}`, payload);
-    // Fake latency wrapper
+
     setTimeout(() => this.simulateServerResponse(event, payload), 250);
   }
 
-  // --- Fake Server-side State ---
+
   private currentMinesGame: {
      mines: number;
      bet: number;
      multiplier: number;
-     grid: number[]; // 0 = safe, 1 = mine
+     grid: number[];
      picked: number;
   } | null = null;
 
@@ -46,9 +45,9 @@ class FakeSocket {
         
         userStore.actions.updateBalance(-bet);
 
-        // Generate 5x5 grid
+
         const grid = Array(25).fill(0);
-        const maxMines = Math.min(minesCount, 24); // Can't have 25 mines in a 25-slot board otherwise you auto-lose
+        const maxMines = Math.min(minesCount, 24);
         
         const indices = Array.from({ length: 25 }, (_, i) => i);
         for (let i = indices.length - 1; i > 0; i--) {
@@ -85,7 +84,7 @@ class FakeSocket {
           this.currentMinesGame = null;
         } else {
           this.currentMinesGame.picked++;
-          // Base multiplier logic
+
           const baseRisk = this.currentMinesGame.mines / 25;
           this.currentMinesGame.multiplier += baseRisk * (1 + (this.currentMinesGame.picked * 0.1));
           
@@ -115,7 +114,6 @@ class FakeSocket {
   }
 
   private trigger(event: string, data: unknown) {
-    console.log(`[WS DOWN] ${event}`, data);
     if (this.listeners[event]) {
       this.listeners[event].forEach(cb => cb(data));
     }

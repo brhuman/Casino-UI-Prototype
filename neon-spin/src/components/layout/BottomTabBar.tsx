@@ -3,11 +3,11 @@ import { useUiStore } from '../../store/useUiStore';
 import type { ViewType } from '../../store/useUiStore';
 
 const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
-  { id: 'lobby', label: 'Лобби', icon: Home },
-  { id: 'slots', label: 'Слоты', icon: Gamepad2 },
+  { id: 'lobby', label: 'Lobby', icon: Home },
+  { id: 'slots', label: 'Slots', icon: Gamepad2 },
   { id: 'mines', label: 'Mines', icon: Bomb },
-  { id: 'tables', label: 'Настольные', icon: Layers },
-  { id: 'profile', label: 'Профиль', icon: User },
+  { id: 'tables', label: 'Tables', icon: Layers },
+  { id: 'profile', label: 'Profile', icon: User },
 ];
 
 export const BottomTabBar = () => {

@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
-// Mock GSAP to prevent animation-related hangs in tests
+
 vi.mock('gsap', () => ({
   default: {
     to: vi.fn((_target: any, vars: any) => {
-      // Immediately call onComplete if provided
+
       if (vars.onComplete) vars.onComplete();
       return { kill: vi.fn() };
     }),
@@ -20,6 +20,7 @@ vi.mock('gsap', () => ({
       play: vi.fn().mockReturnThis(),
       kill: vi.fn().mockReturnThis(),
     })),
+    killTweensOf: vi.fn(),
   },
 }));
 

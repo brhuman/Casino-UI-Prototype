@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
-// Mock PIXI.js as it won't work in JSDOM
+
 vi.mock('pixi.js', () => {
   const MockApp = vi.fn().mockImplementation(function(this: any) {
     this.init = vi.fn().mockResolvedValue(undefined);
@@ -48,25 +48,20 @@ describe('Integration: Mines View interaction', () => {
   it('should navigate to Mines and click minus button', async () => {
     render(<App />);
 
-    // 1. Navigate to Mines from Lobby
-    const minesCard = screen.getByText(/Neon Mines/i);
-    console.log('--- CLICKING NEON MINES CARD ---');
-    fireEvent.click(minesCard);
-    console.log('--- CLICKED NEON MINES CARD ---');
 
-    // 2. Find the Bet Amount input and minus button
-    // The minus button in MinesView.tsx has text "-"
+    const minesCard = screen.getByText(/Neon Mines/i);
+    fireEvent.click(minesCard);
+
+
+
     const minusButton = await screen.findByRole('button', { name: '-' });
-    console.log('--- FOUND MINUS BUTTON ---');
     expect(minusButton).toBeInTheDocument();
 
-    // 3. Click the minus button
-    console.log('--- CLICKING MINUS ---');
-    fireEvent.click(minusButton);
-    console.log('--- CLICKED MINUS ---');
 
-    // 4. Check if it updated (default 100, should not go below 100 in Mines store)
-    // Actually, if we increase it first, we can see if it decreases.
+    fireEvent.click(minusButton);
+
+
+
     const plusButton = screen.getByRole('button', { name: '+' });
     fireEvent.click(plusButton);
     
@@ -75,5 +70,5 @@ describe('Integration: Mines View interaction', () => {
 
     fireEvent.click(minusButton);
     expect(screen.getByDisplayValue('100')).toBeInTheDocument();
-  }, 10000); // 10s timeout for this test
+  }, 10000);
 });

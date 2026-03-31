@@ -6,9 +6,9 @@ export const SlotView = () => {
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="w-full h-full flex flex-col items-center justify-center"
+      className="w-full h-full flex items-center justify-center"
     >
-      <div className="w-full h-full max-w-7xl relative mx-auto pb-safe">
+      <div className="w-full h-full max-w-7xl relative mx-auto">
         <PixiBridge />
       </div>
     </motion.div>

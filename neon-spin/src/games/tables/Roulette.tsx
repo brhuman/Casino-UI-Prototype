@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
+import { useUserStore } from '../../store/useUserStore';
 import { Layers } from 'lucide-react';
 
 type BetType = 'red' | 'black' | 'green' | 'even' | 'odd';
@@ -29,7 +30,7 @@ const ROULETTE_NUMBERS = [
 export const Roulette = () => {
   const [bets, setBets] = useState<BetState[]>([]);
   const [chipSize, setChipSize] = useState<number>(10);
-  const balance = useGameStore((state: { balance: number }) => state.balance);
+  const balance = useUserStore((state: { balance: number }) => state.balance);
   const setResult = useGameStore((state: { actions: { setResult: (matrix: number[][], winAmount: number) => void } }) => state.actions.setResult);
   
   const [isSpinning, setIsSpinning] = useState(false);
@@ -39,8 +40,8 @@ export const Roulette = () => {
   const placeBet = (type: BetType) => {
     if (isSpinning || balance < chipSize) return;
     
-    // Deduct balance manually or we can sync with GameStore. 
-    // For MVP, just track logically and apply as a win/loss at end.
+
+
     setBets(prev => {
       const existing = prev.find(b => b.type === type);
       if (existing) {
@@ -70,10 +71,10 @@ export const Roulette = () => {
     setIsSpinning(true);
     setResultNum(null);
     
-    // Deduct total bet
+
     setResult([[]], -totalBet);
 
-    // Fake spin wait
+
     setTimeout(() => {
       const randomIdx = Math.floor(Math.random() * ROULETTE_NUMBERS.length);
       const res = ROULETTE_NUMBERS[randomIdx];
@@ -85,9 +86,9 @@ export const Roulette = () => {
       setIsSpinning(false);
       
       if (win > 0) {
-        setResult([[]], win); // add win
+        setResult([[]], win);
       }
-      setBets([]); // clear bets
+      setBets([]);
     }, 3000);
   };
 
@@ -109,7 +110,7 @@ export const Roulette = () => {
       </div>
 
       <div className="flex-1 flex flex-col lg:flex-row gap-6">
-        {/* Betting Area */}
+        {}
         <div className="flex-1 bg-gray-900/40 p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
            <div className="flex justify-center mb-10 mt-10">
               <div className="relative w-64 h-64 border-4 border-gray-800 rounded-full flex items-center justify-center overflow-hidden">
@@ -164,7 +165,7 @@ export const Roulette = () => {
            </div>
         </div>
 
-        {/* Controls */}
+        {}
         <div className="w-full lg:w-80 bg-gray-900/60 p-6 rounded-2xl border border-gray-800 flex flex-col gap-6">
            <div>
               <label className="text-gray-400 text-sm font-bold uppercase tracking-widest mb-2 block">Chip Size</label>
