@@ -4,6 +4,7 @@ import { MinesEngine } from '../Engine/MinesEngine';
 import { useMinesStore } from '../store';
 import { useUserStore } from '../../../store/useUserStore';
 import { useWebSocket } from '../../../hooks/useWebSocket';
+import { useMinesAudio } from '../hooks/useMinesAudio';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
 const canvasInitPromiseMap = new WeakMap<HTMLCanvasElement, Promise<Application>>();
@@ -21,6 +22,8 @@ export const MinesView = () => {
   const minesCount = useMinesStore(state => state.minesCount);
   const multiplier = useMinesStore(state => state.multiplier);
   const actions = useMinesStore(state => state.actions);
+
+  useMinesAudio();
 
   const [pendingPick, setPendingPick] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -161,7 +164,7 @@ export const MinesView = () => {
           engineRef.current = new MinesEngine(wrappedSocket);
         }
 
-        engineRef.current.init(localApp);
+        await engineRef.current.init(localApp);
         addLog("Engine ready.");
         setIsLoaded(true);
       } catch (err: any) {
@@ -283,11 +286,6 @@ export const MinesView = () => {
             </div>
          )}
 
-         <div className="absolute top-6 right-6 z-10 bg-gray-900/80 border border-gray-700 px-4 py-2 rounded-lg flex flex-col items-center">
-            <span className="text-xs text-gray-500 font-bold tracking-widest uppercase">Multiplier</span>
-            <span className="text-neon-pink font-mono font-bold text-xl">{multiplier.toFixed(2)}x</span>
-         </div>
-         
          <div ref={containerRef} className={`w-full h-full flex items-center justify-center transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
             <canvas ref={canvasRef} className="mx-auto block max-w-full max-h-full drop-shadow-[0_0_30px_rgba(0,255,255,0.1)]" style={{ objectFit: 'contain' }} />
          </div>
@@ -303,6 +301,12 @@ export const MinesView = () => {
               <span className="font-mono text-sm font-semibold text-emerald-400">{minesCount}</span>
             </div>
             <input disabled={isActive} type="range" min="1" max="24" value={minesCount} onChange={(e) => actions.setMinesCount(Number(e.target.value))} className="w-full accent-emerald-400" />
+          </div>
+
+          {/* Middle: Multiplier Stat */}
+          <div className="flex flex-col items-center justify-center min-w-[120px] px-4 border-x border-white/5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-300/40">Multiplier</span>
+            <span className="text-2xl font-black font-mono text-neon-pink">{multiplier.toFixed(2)}x</span>
           </div>
 
           {/* Right: Bet & Spin */}

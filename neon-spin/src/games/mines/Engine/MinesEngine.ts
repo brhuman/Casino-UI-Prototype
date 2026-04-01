@@ -1,4 +1,4 @@
-import { Application, Container, Text, TextStyle } from 'pixi.js';
+import { Application, Container, Text, TextStyle, Assets } from 'pixi.js';
 import type { IGameEngine } from '../../../types/game';
 import { Cell } from './Cell';
 import { useMinesStore } from '../store';
@@ -30,8 +30,15 @@ export class MinesEngine implements IGameEngine {
     this.socket.on('MINES_CASHOUT_RESULT', this.onCashoutResult);
   }
 
-  public init(app: Application) {
+  public async init(app: Application) {
     this.app = app;
+    
+    // Preload sprites for the game
+    await Assets.load([
+      '/assets/gem_sprite.png',
+      '/assets/mine_sprite.png'
+    ]);
+
     this.app.stage.addChild(this.container);
     this.container.x = app.screen.width / 2;
     this.container.y = app.screen.height / 2;
@@ -46,13 +53,20 @@ export class MinesEngine implements IGameEngine {
     });
   }
 
-  private drawGrid() {
+   private drawGrid() {
     this.gridContainer.removeChildren();
     this.cells = [];
     
-    const cellSize = 100;
+    // Calculate cell size based on available space to minimize empty areas
+    const padding = 60;
+    const availableSize = Math.min(this.app.screen.width, this.app.screen.height) - padding;
     const gap = 15;
-    const offset = ((cellSize * 5) + (gap * 4)) / 2 - (cellSize / 2);
+    const cellSize = Math.floor((availableSize - (gap * 4)) / 5);
+    
+    // Total width/height of the 5x5 grid including gaps
+    const totalGridSize = (cellSize * 5) + (gap * 4);
+    // Offset from the center to the top-left of the first cell
+    const offset = totalGridSize / 2;
 
     for (let i = 0; i < 25; i++) {
        const row = Math.floor(i / 5);
@@ -70,16 +84,19 @@ export class MinesEngine implements IGameEngine {
   public startRound(bet: number, payload: { minesCount: number }) {
 
     this.drawGrid();
+    useMinesStore.getState().actions.playSound('start');
     this.socket.emit('MINES_START', { bet, minesCount: payload.minesCount });
   }
 
   private handlePick(index: number) {
     if (this.isDestroyed || !useMinesStore.getState().isActive) return;
+    useMinesStore.getState().actions.playSound('click');
     this.socket.emit('MINES_PICK', { index });
   }
 
   public cashout() {
     if (!useMinesStore.getState().isActive) return;
+    useMinesStore.getState().actions.playSound('cashout');
     this.socket.emit('MINES_CASHOUT');
   }
 
@@ -92,15 +109,10 @@ export class MinesEngine implements IGameEngine {
   public onServerResult(data: { status: 'SAFE' | 'BUST', grid?: number[], newMultiplier?: number }) {
     if (data.status === 'SAFE' && data.newMultiplier) {
       useMinesStore.getState().actions.updateProgress(data.newMultiplier);
-
-
-
-
-
-
-
+      useMinesStore.getState().actions.playSound('reveal');
     } else if (data.status === 'BUST' && data.grid) {
       this.revealAll(data.grid, true);
+      useMinesStore.getState().actions.playSound('bust');
       useMinesStore.getState().actions.endGame();
     }
   }

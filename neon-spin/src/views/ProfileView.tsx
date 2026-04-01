@@ -4,12 +4,10 @@ import { useUserStore } from '../store/useUserStore';
 import { Card } from '../components/ui/Card';
 
 export const ProfileView = () => {
-  const { balance, totalBets, totalWinAmount, biggestWin } = useUserStore(state => ({
-    balance: state.balance,
-    totalBets: state.totalBets,
-    totalWinAmount: state.totalWinAmount,
-    biggestWin: state.biggestWin
-  }));
+  const balance = useUserStore(state => state.balance);
+  const totalBets = useUserStore(state => state.totalBets);
+  const totalWinAmount = useUserStore(state => state.totalWinAmount);
+  const biggestWin = useUserStore(state => state.biggestWin);
 
   const updateBalance = useUserStore(state => state.actions.updateBalance);
 

@@ -1,9 +1,9 @@
-import { Container, Graphics } from 'pixi.js';
+import { Container, Graphics, Sprite } from 'pixi.js';
 import gsap from 'gsap';
 
 export class Cell extends Container {
   private baseBg: Graphics;
-  private content: Graphics;
+  private content: Container;
   public gridIndex: number;
   public isRevealed = false;
 
@@ -24,7 +24,7 @@ export class Cell extends Container {
     this.baseBg.stroke({ width: 2, color: 0xff00ff, alpha: 0.3 });
     this.addChild(this.baseBg);
     
-    this.content = new Graphics();
+    this.content = new Container();
     this.content.x = size / 2;
     this.content.y = size / 2;
     this.addChild(this.content);
@@ -52,20 +52,25 @@ export class Cell extends Container {
     gsap.to(this.scale, {
       x: 0, duration: 0.15, onComplete: () => {
         if (type === 'SAFE') {
-          this.baseBg.fill({ color: 0x002211, alpha: 0.9 });
-          this.baseBg.stroke({ width: 2, color: 0x00ff00, alpha: 0.8 });
+          this.baseBg.fill({ color: 0x002233, alpha: 0.9 });
+          this.baseBg.stroke({ width: 2, color: 0x00ffff, alpha: 0.8 });
 
-          this.content.moveTo(0, -20);
-          this.content.lineTo(15, 0);
-          this.content.lineTo(0, 20);
-          this.content.lineTo(-15, 0);
-          this.content.fill({ color: 0x00ffff });
+          const sprite = Sprite.from('/assets/gem_sprite.png');
+          sprite.anchor.set(0.5);
+          sprite.width = this.baseBg.width * 0.8;
+          sprite.height = this.baseBg.height * 0.8;
+          sprite.blendMode = 'screen';
+          this.content.addChild(sprite);
         } else {
           this.baseBg.fill({ color: 0x330000, alpha: 0.9 });
           this.baseBg.stroke({ width: 2, color: 0xff0000, alpha: 0.8 });
 
-          this.content.circle(0, 0, 15);
-          this.content.fill({ color: 0xff3333 });
+          const sprite = Sprite.from('/assets/mine_sprite.png');
+          sprite.anchor.set(0.5);
+          sprite.width = this.baseBg.width * 0.8;
+          sprite.height = this.baseBg.height * 0.8;
+          sprite.blendMode = 'screen';
+          this.content.addChild(sprite);
         }
         gsap.to(this.scale, { x: 1, duration: 0.15, ease: 'back.out(2)' });
       }

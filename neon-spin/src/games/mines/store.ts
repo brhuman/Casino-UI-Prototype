@@ -14,7 +14,9 @@ interface MinesState {
     endGame: (winAmount?: number) => void;
     increaseBet: () => void;
     decreaseBet: () => void;
+    playSound: (sound: 'click' | 'reveal' | 'bust' | 'cashout' | 'start') => void;
   };
+  lastSound: { type: string; timestamp: number } | null;
 }
 
 export const useMinesStore = create<MinesState>((set, get) => ({
@@ -38,6 +40,8 @@ export const useMinesStore = create<MinesState>((set, get) => ({
       const { currentBet, isActive } = get();
       if (isActive) return;
       set({ currentBet: Math.max(currentBet - 100, 100) });
-    }
-  }
+    },
+    playSound: (type) => set({ lastSound: { type, timestamp: Date.now() } })
+  },
+  lastSound: null
 }));

@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Howl, Howler } from 'howler';
 import { useGameStore } from '../store/useGameStore';
+import { useUiStore } from '../store/useUiStore';
 
-export const useAudio = (muted: boolean) => {
+export const useAudio = () => {
+  const isMuted = useUiStore(state => state.isMuted);
   const isSpinning = useGameStore(state => state.isSpinning);
   
 
@@ -29,7 +31,7 @@ export const useAudio = (muted: boolean) => {
       volume: 0.8
     });
 
-    if (!muted) {
+    if (!isMuted) {
       bgMusic.current.play();
     }
 
@@ -42,8 +44,8 @@ export const useAudio = (muted: boolean) => {
   }, []);
 
   useEffect(() => {
-    Howler.mute(muted);
-  }, [muted]);
+    Howler.mute(isMuted);
+  }, [isMuted]);
 
   useEffect(() => {
     if (isSpinning) {

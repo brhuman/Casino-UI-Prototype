@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useUserStore } from '../../store/useUserStore';
 import { useUiStore } from '../../store/useUiStore';
 import { motion, useSpring, useTransform } from 'framer-motion';
@@ -8,9 +8,10 @@ import { useAudio } from '../../hooks/useAudio';
 export const Header = () => {
   const balance = useUserStore((state) => state.balance);
   const setView = useUiStore((state) => state.setView);
-  const [muted, setMuted] = useState(false);
+  const isMuted = useUiStore((state) => state.isMuted);
+  const setMuted = useUiStore((state) => state.setMuted);
   
-  useAudio(muted);
+  useAudio();
 
   const springBalance = useSpring(balance, { bounce: 0, duration: 800 });
   const displayBalance = useTransform(springBalance, (current) => `$${Math.floor(current).toLocaleString()}`);
@@ -37,8 +38,8 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <button onClick={() => setMuted(!muted)} className="p-2 rounded-full hover:bg-gray-800 transition-colors text-gray-300">
-          {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        <button onClick={() => setMuted(!isMuted)} className="p-2 rounded-full hover:bg-gray-800 transition-colors text-gray-300">
+          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
         </button>
         <button 
           onClick={() => setView('profile')}
