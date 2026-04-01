@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
 import { useUserStore } from '../../store/useUserStore';
 import { Button } from '../ui/Button';
+import { GameButton } from '../ui/GameButton';
 import { soundManager } from '../../game/audio/SoundManager';
+import { Play, RotateCcw } from 'lucide-react';
 
 export const PixiBridge = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -146,15 +148,15 @@ export const PixiBridge = () => {
         
         {/* Top Row: Spin Action */}
         <div className="flex justify-center">
-          <Button
-            type="button"
-            variant="secondary"
-            className="min-h-[64px] w-full max-w-sm rounded-xl border border-cyan-300/30 bg-[linear-gradient(180deg,rgba(130,255,255,0.96),rgba(39,211,255,0.88)_56%,rgba(15,160,202,0.92))] px-8 text-xl font-black tracking-[0.2em] text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(34,211,238,0.2)] hover:scale-[1.02] active:scale-[0.98] disabled:scale-100 disabled:shadow-none transition-all"
-            disabled={!canSpin}
+          <GameButton
             onClick={placeBet}
-          >
-            {isSpinning ? 'SPINNING...' : 'SPIN'}
-          </Button>
+            disabled={!canSpin}
+            isLoading={isSpinning}
+            loadingIcon={RotateCcw}
+            icon={Play}
+            label={isSpinning ? 'SPINNING...' : 'SPIN'}
+            className="w-full max-w-md"
+          />
         </div>
 
         {/* Bottom Row: Stats & Bet */}

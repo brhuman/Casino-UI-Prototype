@@ -11,6 +11,8 @@ export const Header = () => {
   const isMuted = useUiStore((state) => state.isMuted);
   const setMuted = useUiStore((state) => state.setMuted);
   
+  const { level, xp, maxXp, isVip } = useUserStore();
+  
   useAudio();
 
   const springBalance = useSpring(balance, { bounce: 0, duration: 800 });
@@ -21,7 +23,7 @@ export const Header = () => {
   }, [balance, springBalance]);
 
   return (
-    <header className="h-16 w-full flex items-center justify-between px-4 lg:px-8 bg-gray-900/80 backdrop-blur-md border-b border-gray-800 z-50">
+    <header className={`h-16 w-full flex items-center justify-between px-4 lg:px-8 backdrop-blur-md z-50 transition-all duration-500 border-b ${isVip ? 'bg-yellow-950/20 border-yellow-500/50 shadow-[0_0_20px_rgba(250,204,21,0.2)]' : 'bg-gray-900/80 border-gray-800'}`}>
       <div className="flex items-center transition-all">
         <div className="flex items-center">
           <img
@@ -44,18 +46,25 @@ export const Header = () => {
           {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
         </button>
         
-        <button 
-          onClick={() => setView('profile')}
-          className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 p-0.5 rounded-full transition-colors border border-gray-700 cursor-pointer group overflow-hidden"
-        >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700 rounded-full flex items-center justify-center text-neon-pink group-hover:text-neon-cyan transition-colors overflow-hidden">
-            {useUserStore.getState().selectedAvatar ? (
-              <img src={useUserStore.getState().selectedAvatar!} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <User size={18} />
-            )}
-          </div>
-        </button>
+        <div className="relative group">
+          <button 
+            onClick={() => setView('profile')}
+            className={`flex items-center gap-2 p-0.5 rounded-full transition-all border cursor-pointer group overflow-visible relative ${isVip ? 'bg-yellow-500/20 border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.3)]' : 'bg-gray-800 border-gray-700 hover:bg-gray-700'}`}
+          >
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700 rounded-full flex items-center justify-center text-neon-fuchsia group-hover:text-neon-cyan transition-colors overflow-hidden">
+              {useUserStore.getState().selectedAvatar ? (
+                <img src={useUserStore.getState().selectedAvatar!} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User size={18} />
+              )}
+            </div>
+            
+            {/* Level Badge */}
+            <div className={`absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-black border-2 border-gray-900 shadow-lg ${isVip ? 'bg-yellow-400 text-black' : 'bg-neon-purple text-white'}`}>
+              {level}
+            </div>
+          </button>
+        </div>
       </div>
     </header>
   );

@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-neon-pink: #ff00ff;
-  --color-neon-blue: #00ffff;
-  --color-neon-purple: #8a2be2;
+  --color-neon-purple: #9333ea;
+  --color-neon-fuchsia: #d946ef;
+  --color-neon-cyan: #00ffff;
 }
 
 @layer base {
@@ -32,4 +32,38 @@
 
 .animate-tilt {
   animation: tilt 10s infinite linear;
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(2, 4, 10, 0.8);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9333ea; /* Official Neon Purple */
+  border-radius: 10px;
+  border: 2px solid #02040a;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffff; /* Official Neon Cyan */
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #9333ea rgba(2, 4, 10, 0.8);
+}
+
+/* Ensure layout stability */
+html {
+  scrollbar-gutter: stable;
 }

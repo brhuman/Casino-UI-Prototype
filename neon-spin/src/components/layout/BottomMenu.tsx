@@ -1,5 +1,7 @@
 import { Home, Gamepad2, Layers, User, Bomb } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useUiStore } from '../../store/useUiStore';
+import { useUserStore } from '../../store/useUserStore';
 import type { ViewType } from '../../store/useUiStore';
 
 const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
@@ -12,9 +14,14 @@ const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
 
 export const BottomMenu = () => {
   const { currentView, setView } = useUiStore();
+  const isVip = useUserStore(state => state.isVip);
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full h-20 bg-gray-950/90 backdrop-blur-3xl border-t border-white/10 z-50 flex justify-around items-center px-4 md:px-12 lg:px-32 pb-safe shadow-[0_-15px_50px_rgba(0,0,0,0.8)]">
+    <nav className={`fixed bottom-0 left-0 w-full h-20 backdrop-blur-3xl z-50 flex justify-center items-center gap-2 sm:gap-10 px-4 pb-safe transition-all duration-500 ${
+      isVip 
+        ? 'bg-yellow-950/20 border-t border-yellow-500/50 shadow-[0_-15px_30px_rgba(250,204,21,0.2)]' 
+        : 'bg-gray-950/80 border-t border-white/5 shadow-[0_-20px_60px_rgba(0,0,0,0.9)]'
+    }`}>
       {MENU_ITEMS.map((item) => {
         const isActive = currentView === item.id;
         const Icon = item.icon;
@@ -22,29 +29,31 @@ export const BottomMenu = () => {
           <button
             key={item.id}
             onClick={() => setView(item.id)}
-            className={`flex flex-col items-center justify-center min-w-[64px] h-full py-4 transition-all duration-300 relative group ${
-              isActive ? 'text-neon-cyan' : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 group relative min-w-[64px]"
           >
-            {/* Glow effect on active */}
             {isActive && (
-              <div className="absolute top-0 w-14 h-1 bg-neon-cyan shadow-[0_0_20px_#00ffff] rounded-full animate-pulse" />
+              <motion.div
+                layoutId="active-glow"
+                className="absolute -top-1 w-8 h-1 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]"
+              />
             )}
-            
-            <div className={`flex flex-col items-center justify-center transition-transform duration-300 ${isActive ? 'scale-110 -translate-y-1' : 'group-hover:scale-105'}`}>
-               <Icon size={isActive ? 24 : 22} className={isActive ? "drop-shadow-[0_0_12px_rgba(0,255,255,0.9)]" : ""} />
-               
-               <span className={`mt-1.5 text-[10px] font-black tracking-[0.25em] uppercase transition-all duration-300 ${
-                 isActive ? 'opacity-100 text-neon-cyan shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'opacity-60 group-hover:opacity-100'
-               }`}>
-                 {item.label}
-               </span>
+            <div className={`p-2 rounded-xl transition-all duration-300 ${
+              isActive 
+                ? 'text-white' 
+                : 'text-white/40 group-hover:text-white/80'
+            }`}>
+              <Icon 
+                size={24} 
+                className={isActive ? 'drop-shadow-[0_0_8px_white]' : ''} 
+              />
             </div>
-            
-            {/* Hover Indicator */}
-            {!isActive && (
-              <div className="absolute top-0 w-0 h-0.5 bg-gray-700 transition-all duration-300 group-hover:w-10 group-hover:bg-gray-400 rounded-full" />
-            )}
+            <span className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.1em] transition-all duration-300 ${
+              isActive 
+                ? 'text-white' 
+                : 'text-white/30 group-hover:text-white/60'
+            }`}>
+              {item.label}
+            </span>
           </button>
         );
       })}

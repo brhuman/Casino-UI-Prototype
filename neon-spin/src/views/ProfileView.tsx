@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Activity, Clock, Plus, TrendingUp, History, Award, Info, Volume2, Camera } from 'lucide-react';
+import { User, Plus, Info, Volume2, Camera } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
 import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 import { useState, useRef } from 'react';
 
-const AVATARS = [
+const PRESET_AVATARS = [
   '/avatars/avatar_1.png',
   '/avatars/avatar_2.png',
   '/avatars/avatar_3.png',
@@ -15,20 +15,30 @@ const AVATARS = [
 ];
 
 export const ProfileView = () => {
+  const username = useUserStore(state => state.username);
   const balance = useUserStore(state => state.balance);
   const totalBets = useUserStore(state => state.totalBets);
   const totalWinAmount = useUserStore(state => state.totalWinAmount);
   const biggestWin = useUserStore(state => state.biggestWin);
   const globalVolume = useUserStore(state => state.globalVolume);
   const selectedAvatar = useUserStore(state => state.selectedAvatar);
+  const customAvatars = useUserStore(state => state.customAvatars);
+  const isVip = useUserStore(state => state.isVip);
+  const xp = useUserStore(state => state.xp);
+  const maxXp = useUserStore(state => state.maxXp);
+  const level = useUserStore(state => state.level);
   
   const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
   const setAvatar = useUserStore(state => state.actions.setAvatar);
+  const addCustomAvatar = useUserStore(state => state.actions.addCustomAvatar);
   const updateBalance = useUserStore(state => state.actions.updateBalance);
+  const setVip = useUserStore(state => state.actions.setVip);
   const setShowAboutModal = useUiStore(state => state.setShowAboutModal);
 
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const allAvatars = [...PRESET_AVATARS, ...customAvatars];
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,7 +46,7 @@ export const ProfileView = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
-        setAvatar(base64String);
+        addCustomAvatar(base64String);
         setIsSelectingAvatar(false);
       };
       reader.readAsDataURL(file);
@@ -44,180 +54,119 @@ export const ProfileView = () => {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="w-full max-w-4xl mx-auto h-full flex flex-col gap-6 sm:gap-8 pb-12 pt-4 sm:pt-8 px-4"
-    >
-      <Card className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 p-6 sm:p-8 bg-gradient-to-r from-gray-900/80 to-gray-800/40 border-neon-purple/30">
-        <div 
-          className="relative group shrink-0 cursor-pointer"
-          onClick={() => setIsSelectingAvatar(!isSelectingAvatar)}
-        >
-          <div className="absolute -inset-1 bg-gradient-to-r from-neon-pink to-neon-purple rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-black flex items-center justify-center border-2 border-neon-purple overflow-hidden">
-             {selectedAvatar ? (
-               <img src={selectedAvatar} alt="Profile" className="w-full h-full object-cover" />
-             ) : (
-               <User size={48} className="text-white sm:size-56" />
-             )}
-             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-               <Camera className="text-white" size={24} />
-             </div>
+    <div className="w-full max-w-2xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
+      {/* Dynamic Background */}
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_profile_background.png')] bg-cover bg-center bg-no-repeat" />
+      
+      <Card className="relative z-10 flex flex-col p-0 bg-gray-900/40 border-white/5 backdrop-blur-3xl overflow-hidden rounded-[2rem]">
+        {/* 1. IDENTITY SECTION (Top) */}
+        <div className="relative p-8 flex flex-col items-center text-center gap-6 bg-gradient-to-b from-white/5 to-transparent border-b border-white/5">
+          <div 
+            className="relative group cursor-pointer"
+            onClick={() => setIsSelectingAvatar(!isSelectingAvatar)}
+          >
+            <div className="absolute -inset-2 bg-gradient-to-r from-neon-cyan via-white/50 to-neon-purple rounded-full blur-xl opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+            <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-black flex items-center justify-center border-4 border-white/10 overflow-hidden shadow-2xl">
+               {selectedAvatar ? (
+                 <img src={selectedAvatar} alt="Profile" className="w-full h-full object-cover" />
+               ) : (
+                 <User size={64} className="text-white/20" />
+               )}
+               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity">
+                 <Camera className="text-white mb-2" size={32} />
+                 <span className="text-[10px] font-black uppercase text-white tracking-widest">Change</span>
+               </div>
+            </div>
+            {/* Level Badge */}
+            <div className={`absolute -bottom-2 right-2 w-12 h-12 rounded-full border-4 border-gray-900 flex flex-col items-center justify-center text-black font-black shadow-lg transition-transform group-hover:scale-110 ${isVip ? 'bg-yellow-400' : 'bg-neon-cyan'}`}>
+              <span className="text-[8px] leading-none uppercase -mb-0.5 opacity-60">LVL</span>
+              <span className="text-base leading-none">{level}</span>
+            </div>
           </div>
-          <div className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-neon-blue border-4 border-black flex items-center justify-center text-black font-bold text-xs sm:text-sm">
-            1
-          </div>
-        </div>
-        
-        <div className="flex-1 text-center sm:text-left">
-          <h2 className="text-2xl sm:text-4xl font-black italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500 uppercase">
-            VIP_PLAYER_777
-          </h2>
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 mt-3">
-            <p className="text-neon-blue font-mono flex items-center gap-2 text-[10px] sm:text-sm bg-neon-blue/10 px-3 py-1 rounded-full border border-neon-blue/30">
-              <Activity size={14} /> VIP LEVEL 1
-            </p>
-            <span className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500 font-mono">
-              <Clock size={14}/> JOINED: OCT 2026
-            </span>
+
+          <div>
+            <h2 className="text-4xl sm:text-5xl font-black italic tracking-tighter text-white uppercase drop-shadow-lg">
+              {username}
+            </h2>
+            <div className="flex items-center justify-center gap-3 mt-3">
+              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] border transition-all ${isVip ? 'bg-yellow-400/20 text-yellow-500 border-yellow-500/30 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'bg-white/5 text-white/40 border-white/10'}`}>
+                {isVip ? 'VIP ELITE STATUS' : 'STANDARD MEMBER'}
+              </span>
+              <button 
+                onClick={() => setVip(!isVip)}
+                className={`text-[9px] font-black uppercase tracking-widest transition-all px-3 py-1.5 rounded-lg ${isVip ? 'text-white/40 hover:text-red-400 border border-white/5' : 'text-neon-cyan hover:text-white border border-neon-cyan/20 cursor-pointer'}`}
+              >
+                {isVip ? 'Disable VIP' : 'Become VIP'}
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="text-center sm:text-right w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/5">
-          <p className="text-gray-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-1">Total Balance</p>
-          <p className="text-3xl sm:text-4xl font-black text-white font-mono drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-            ${balance.toLocaleString()}
-          </p>
-          <button 
-            onClick={() => setShowAboutModal(true)}
-            className="mt-3 sm:mt-4 flex items-center justify-center sm:justify-end gap-2 text-cyan-400 hover:text-cyan-300 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-colors mx-auto sm:ml-auto group"
-          >
-            <Info size={14} className="group-hover:rotate-12 transition-transform" />
-            About Project
-          </button>
-        </div>
-      </Card>
-
-      <AnimatePresence>
-        {isSelectingAvatar && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden mb-4"
-          >
-            <Card className="p-4 sm:p-6 bg-gray-900/60 border-neon-pink/30 shadow-[0_0_30px_rgba(255,0,255,0.1)]">
-              <h3 className="text-xs sm:text-sm font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Camera size={16} className="text-neon-pink" /> 1. Select Your Avatar
-              </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 sm:gap-4 pb-2">
-                {AVATARS.map((url, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setAvatar(url);
-                      setIsSelectingAvatar(false);
-                    }}
-                    className={`relative w-full rounded-xl overflow-hidden border-2 transition-all hover:scale-105 active:scale-95 ${
-                      selectedAvatar === url ? 'border-neon-pink shadow-[0_0_15px_rgba(255,0,255,0.4)]' : 'border-white/10 hover:border-white/30'
-                    }`}
-                    style={{ aspectRatio: '1/1' }}
-                  >
-                    <img src={url} alt={`Avatar ${i + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full rounded-xl border-2 border-dashed border-white/20 hover:border-neon-blue hover:bg-neon-blue/5 flex flex-col items-center justify-center gap-1 transition-all group"
-                  style={{ aspectRatio: '1/1' }}
-                >
-                  <Plus size={20} className="text-gray-500 group-hover:text-neon-blue transition-colors" />
-                  <span className="text-[7px] sm:text-[9px] font-bold text-gray-500 uppercase group-hover:text-neon-blue">Upload</span>
-                </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileUpload}
-                  accept="image/*"
-                  className="hidden"
-                />
+        {/* 2. RESOURCES SECTION (Center) */}
+        <div className="p-8 flex flex-col gap-10">
+          {/* XP Bar */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" />
+                <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Reputation Points</span>
               </div>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="flex flex-col gap-6">
-        <button 
-          onClick={() => updateBalance(1000)}
-          className="group relative w-full py-5 sm:py-6 rounded-2xl overflow-hidden active:scale-[0.98] transition-all"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-neon-blue via-teal-400 to-neon-blue bg-[length:200%_100%] animate-gradient-x opacity-80 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(255,255,255,0.4)]" />
-          <div className="relative flex items-center justify-center gap-4 text-black font-black text-xl sm:text-2xl uppercase tracking-[0.2em]">
-            <Plus size={24} className="group-hover:rotate-90 transition-transform duration-300" />
-            Add $1.000 Credits
-          </div>
-        </button>
-
-        <Card glass={false} className="p-6 sm:p-8 border-gray-800 bg-black/40">
-           <div className="flex items-center gap-3 mb-6 sm:mb-8">
-             <TrendingUp className="text-neon-pink" size={20} />
-             <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-widest">Performance Statistics</h3>
-           </div>
-           
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
-             <div className="p-4 sm:p-6 rounded-xl bg-gray-900/50 border border-gray-800 flex flex-col gap-2 relative overflow-hidden group">
-               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                 <History size={64} />
-               </div>
-               <span className="text-gray-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Total Bets Made</span>
-               <span className="text-2xl sm:text-3xl font-black text-white font-mono">${totalBets.toLocaleString()}</span>
-               <div className="h-1 w-full bg-gray-800 rounded-full mt-2 overflow-hidden">
-                 <div className="h-full bg-neon-blue w-1/3 shadow-[0_0_10px_#00ffff]" />
-               </div>
-             </div>
-
-             <div className="p-4 sm:p-6 rounded-xl bg-gray-900/50 border border-gray-800 flex flex-col gap-2 relative overflow-hidden group">
-               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                 <Award size={64} />
-               </div>
-               <span className="text-gray-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Biggest Win</span>
-               <span className="text-2xl sm:text-3xl font-black text-neon-pink font-mono">${biggestWin.toLocaleString()}</span>
-               <div className="h-1 w-full bg-gray-800 rounded-full mt-2 overflow-hidden">
-                 <div className="h-full bg-neon-pink w-1/2 shadow-[0_0_10px_#ff00ff]" />
-               </div>
-             </div>
-
-             <div className="p-4 sm:p-6 rounded-xl bg-gray-900/50 border border-gray-800 flex flex-col gap-2 relative overflow-hidden group">
-               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                 <TrendingUp size={64} />
-               </div>
-               <span className="text-gray-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Total Returned</span>
-               <span className="text-2xl sm:text-3xl font-black text-neon-purple font-mono">${totalWinAmount.toLocaleString()}</span>
-               <div className="h-1 w-full bg-gray-800 rounded-full mt-2 overflow-hidden">
-                 <div className="h-full bg-neon-purple w-2/3 shadow-[0_0_10px_#bf00ff]" />
-               </div>
-             </div>
-           </div>
-         </Card>
-
-        {/* Global Settings Card */}
-        <Card className="p-6 bg-gray-900/60 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-lg bg-neon-cyan/10 text-neon-cyan">
-              <Volume2 size={20} />
+              <span className="text-xs font-mono font-black text-white/80 tabular-nums">
+                {Math.floor(xp).toLocaleString()} / {Math.floor(maxXp).toLocaleString()} XP
+              </span>
             </div>
-            <h3 className="text-lg font-black text-white uppercase tracking-widest">Global Settings</h3>
-          </div>
-          
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]">Site Volume</span>
-              <span className="font-mono text-sm font-bold text-neon-cyan">{Math.round(globalVolume * 100)}%</span>
+            <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 p-0.5 overflow-hidden shadow-inner translate-z-0">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${(xp / maxXp) * 100}%` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className={`h-full rounded-full relative z-10 transition-all duration-300 ${isVip ? 'bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600' : 'bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-purple'}`}
+              >
+                <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.4)_50%,transparent_100%)] animate-[shimmer_2s_infinite]" />
+              </motion.div>
             </div>
-            <div className="relative group/slider">
+          </div>
+
+          {/* Balance Block */}
+          <div className="bg-white/[0.02] border border-white/5 rounded-[1.5rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.04] transition-colors group">
+              <div className="text-center sm:text-left">
+                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-2 px-1">Available Credits</p>
+                <h3 className="text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                  ${balance.toLocaleString()}
+                </h3>
+              </div>
+              <button 
+                onClick={() => updateBalance(1000)}
+                className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(255,255,255,0.3)] flex items-center justify-center gap-3 active:bg-cyan-400"
+              >
+                <Plus size={16} strokeWidth={4} /> Add $1,000
+              </button>
+          </div>
+        </div>
+
+        {/* 3. PERFORMANCE STATS (Grid) */}
+        <div className="px-8 pb-8">
+           <div className="grid grid-cols-3 gap-1 bg-white/5 rounded-2xl p-1 border border-white/5 overflow-hidden">
+              <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/40 transition-colors">Wagers</span>
+                <span className="text-sm font-black text-white font-mono tracking-tighter">${totalBets.toLocaleString()}</span>
+              </div>
+              <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat border-x border-white/5">
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-pink transition-colors">Max Payout</span>
+                <span className="text-sm font-black text-neon-pink font-mono tracking-tighter">${biggestWin.toLocaleString()}</span>
+              </div>
+              <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-purple transition-colors">Profit</span>
+                <span className="text-sm font-black text-neon-purple font-mono tracking-tighter">${totalWinAmount.toLocaleString()}</span>
+              </div>
+           </div>
+        </div>
+
+        {/* 4. SETTINGS & INFO (Footer) */}
+        <div className="p-8 pt-0 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-5 bg-black/40 px-5 py-3 rounded-2xl border border-white/5 w-full sm:w-auto group">
+            <Volume2 size={16} className="text-white/30 group-hover:text-white/60 transition-colors" />
+            <div className="flex-1 min-w-[100px] sm:min-w-[140px] flex items-center gap-4">
               <input 
                 type="range" 
                 min="0" 
@@ -225,13 +174,81 @@ export const ProfileView = () => {
                 step="0.01" 
                 value={globalVolume}
                 onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
-                className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-neon-cyan hover:accent-cyan-300 transition-all"
+                className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white hover:accent-neon-cyan transition-all"
               />
-              <div className="absolute -inset-1 rounded-lg bg-neon-cyan/20 blur opacity-0 group-hover/slider:opacity-100 transition duration-500 -z-10" />
+              <span className="font-mono text-[10px] font-bold text-white/60 w-8 tabular-nums">{Math.round(globalVolume * 100)}%</span>
             </div>
           </div>
-        </Card>
-      </div>
-    </motion.div>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setShowAboutModal(true)}
+              className="px-5 py-3 rounded-2xl bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
+            >
+              <Info size={14} /> System Info
+            </button>
+            <span className="text-[10px] font-bold text-white/5 uppercase tracking-[0.4em] hidden sm:block">NEON-SPIN-v1.2</span>
+          </div>
+        </div>
+      </Card>
+
+      {/* Avatar Selection Modal Overlay */}
+      <AnimatePresence>
+        {isSelectingAvatar && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/80 backdrop-blur-md"
+            onClick={() => setIsSelectingAvatar(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="w-full max-w-xl bg-gray-900 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-base font-black text-white uppercase tracking-[0.2em] flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-neon-pink" /> Choose Your Persona
+                </h3>
+                <button 
+                  onClick={() => setIsSelectingAvatar(false)}
+                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
+                >
+                  <Plus size={20} className="rotate-45 text-white/40" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-4 sm:grid-cols-4 gap-4">
+                {allAvatars.map((url: string, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setAvatar(url);
+                      setIsSelectingAvatar(false);
+                    }}
+                    className={`relative aspect-square rounded-2xl overflow-hidden border-4 transition-all hover:scale-105 active:scale-95 group ${
+                      selectedAvatar === url ? 'border-neon-cyan shadow-[0_0_20px_rgba(0,255,255,0.3)] Scale-105' : 'border-white/5 hover:border-white/20'
+                    }`}
+                  >
+                    <img src={url} alt={`Avatar ${i + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="relative aspect-square rounded-2xl border-4 border-dashed border-white/10 hover:border-white/40 hover:bg-white/5 flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 group"
+                >
+                  <Camera size={24} className="text-white/20 group-hover:text-white/60" />
+                  <span className="text-[8px] font-black text-white/20 uppercase tracking-widest group-hover:text-white/60">Upload</span>
+                </button>
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };

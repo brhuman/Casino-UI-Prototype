@@ -5,6 +5,8 @@ import { useMinesStore } from '../store';
 import { useUserStore } from '../../../store/useUserStore';
 import { useWebSocket } from '../../../hooks/useWebSocket';
 import { useMinesAudio } from '../hooks/useMinesAudio';
+import { GameButton } from '../../../components/ui/GameButton';
+import { Play } from 'lucide-react';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
 const canvasInitPromiseMap = new WeakMap<HTMLCanvasElement, Promise<Application>>();
@@ -217,12 +219,12 @@ export const MinesView = () => {
   const potentialWin = (currentBet * multiplier).toFixed(2);
 
   return (
-    <div className="relative flex h-full min-h-0 w-full flex-col items-center justify-center p-4">
+    <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
       {/* Background Graphic */}
-      <div className="pointer-events-none absolute inset-0 z-0 opacity-45 mix-blend-screen bg-[url('/assets/neon_mines_background.png')] bg-cover bg-center bg-no-repeat"
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-45 mix-blend-screen bg-[url('/assets/neon_mines_background.png')] bg-cover bg-center bg-no-repeat"
       />
 
-      <div className="relative z-10 w-full max-w-[800px] flex flex-col h-full overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-4 shadow-[0_30px_90px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.08)] gap-4">
+      <div className="relative z-10 w-full max-w-[1000px] flex flex-col flex-1 max-h-[1000px] min-h-[700px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] gap-6">
         
         {/* Game Canvas Container - flex-1 fills all remaining space */}
         <div className="relative z-10 flex flex-1 min-h-0 w-full shrink flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-emerald-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(16,185,129,0.15)]">
@@ -292,66 +294,69 @@ export const MinesView = () => {
         </div>
 
         {/* Controls Container */}
-        <div className="relative z-20 flex h-[100px] shrink-0 w-full items-center justify-between rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] px-8 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)]">
+        <div className="relative z-20 flex flex-col shrink-0 w-full rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] gap-4">
           
-          {/* Left: Mines Slider */}
-          <div className="flex w-64 flex-col justify-center gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-[0.36em] text-emerald-300/60">Mines</span>
-              <span className="font-mono text-sm font-semibold text-emerald-400">{minesCount}</span>
-            </div>
-            <input disabled={isActive} type="range" min="1" max="24" value={minesCount} onChange={(e) => actions.setMinesCount(Number(e.target.value))} className="w-full accent-emerald-400" />
-          </div>
-
-          {/* Middle: Multiplier Stat */}
-          <div className="flex flex-col items-center justify-center min-w-[120px] px-4 border-x border-white/5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-300/40">Multiplier</span>
-            <span className="text-2xl font-black font-mono text-neon-pink">{multiplier.toFixed(2)}x</span>
-          </div>
-
-          {/* Right: Bet & Spin */}
-          <div className="flex items-center gap-8">
-            {/* Bet Adjust */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                className="min-h-12 min-w-12 rounded-xl border border-white/10 bg-[linear-gradient(180deg,rgba(36,37,46,0.96),rgba(10,11,18,0.98))] px-0 text-xl text-cyan-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] hover:border-cyan-300/40 hover:bg-cyan-400/10 disabled:opacity-50 transition-colors"
-                disabled={isActive || currentBet <= 100}
-                onClick={actions.decreaseBet}
-              >
-                -
-              </button>
-              <div className="min-w-[90px] text-center">
-                <span className="font-mono text-2xl font-bold tracking-[0.08em] text-white">${currentBet}</span>
-              </div>
-              <button
-                type="button"
-                className="min-h-12 min-w-12 rounded-xl border border-white/10 bg-[linear-gradient(180deg,rgba(36,37,46,0.96),rgba(10,11,18,0.98))] px-0 text-xl text-cyan-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] hover:border-cyan-300/40 hover:bg-cyan-400/10 disabled:opacity-50 transition-colors"
-                disabled={isActive || currentBet >= 5000}
-                onClick={actions.increaseBet}
-              >
-                +
-              </button>
-            </div>
-
-            {/* Main Action */}
+          {/* Top Row: Main Action */}
+          <div className="flex justify-center">
             {isActive ? (
-              <button
+              <GameButton
                 onClick={() => engineRef.current?.cashout()}
-                className="min-h-[64px] min-w-[160px] rounded-xl border border-emerald-300/30 bg-[linear-gradient(180deg,rgba(130,255,180,0.96),rgba(39,255,150,0.88)_56%,rgba(15,202,120,0.92))] px-8 flex flex-col items-center justify-center text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(16,185,129,0.2)] hover:scale-[1.02] disabled:shadow-none transition-transform"
-              >
-                <span className="text-sm font-black tracking-[0.2em] uppercase">Cashout</span>
-                <span className="font-mono font-bold leading-tight">${potentialWin}</span>
-              </button>
+                label={`CASHOUT $${potentialWin}`}
+                icon={Play}
+                className="w-full max-w-md"
+              />
             ) : (
-              <button
+              <GameButton
                 onClick={() => engineRef.current?.startRound(currentBet, { minesCount })}
                 disabled={balance < currentBet}
-                className="min-h-[64px] min-w-[160px] rounded-xl border border-fuchsia-300/30 bg-[linear-gradient(180deg,rgba(255,130,255,0.96),rgba(255,39,211,0.88)_56%,rgba(202,15,160,0.92))] px-8 text-lg font-black tracking-[0.2em] text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(217,70,239,0.2)] hover:scale-[1.02] disabled:shadow-none disabled:opacity-50 transition-transform"
-              >
-                START
-              </button>
+                label="START"
+                icon={Play}
+                className="w-full max-w-md"
+              />
             )}
+          </div>
+
+          {/* Bottom Row: Settings & Stats */}
+          <div className="flex items-center justify-between px-4">
+            {/* Left: Mines Slider */}
+            <div className="flex w-48 flex-col justify-center gap-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neon-fuchsia/60 leading-none">Mines: {minesCount}</span>
+              </div>
+              <input disabled={isActive} type="range" min="1" max="24" value={minesCount} onChange={(e) => actions.setMinesCount(Number(e.target.value))} className="w-full h-1.5 accent-neon-fuchsia" />
+            </div>
+
+            {/* Middle: Multiplier */}
+            <div className="flex flex-col items-center justify-center px-4 border-x border-white/5">
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neon-purple/60 mb-1">Multiplier</span>
+              <span className="text-xl font-black font-mono text-neon-cyan leading-none">{multiplier.toFixed(2)}x</span>
+            </div>
+
+            {/* Right: Bet Adjust */}
+            <div className="flex items-center gap-4">
+              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-widest text-white/40">Bet:</span>
+              <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/5">
+                <button
+                  type="button"
+                  className="h-8 w-8 rounded-md border border-white/10 bg-white/5 text-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  disabled={isActive || currentBet <= 100}
+                  onClick={actions.decreaseBet}
+                >
+                  -
+                </button>
+                <div className="min-w-[70px] text-center">
+                  <span className="font-mono text-lg font-bold text-white">${currentBet}</span>
+                </div>
+                <button
+                  type="button"
+                  className="h-8 w-8 rounded-md border border-white/10 bg-white/5 text-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  disabled={isActive || currentBet >= 5000}
+                  onClick={actions.increaseBet}
+                >
+                  +
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
