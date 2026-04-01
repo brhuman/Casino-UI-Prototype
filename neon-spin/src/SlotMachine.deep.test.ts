@@ -61,7 +61,7 @@ describe('SlotMachine Deep Logic', () => {
     const mockMatrix = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
     const winAmount = 500;
     
-    actions.setResult(mockMatrix, winAmount);
+    actions.setResult(mockMatrix, winAmount, []);
     
     // 3. Verify Final State
     expect(useGameStore.getState().isSpinning).toBe(false);

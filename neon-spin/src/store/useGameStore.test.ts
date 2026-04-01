@@ -43,7 +43,7 @@ describe('useGameStore', () => {
     useGameStore.getState().actions.placeBet();
     
     const mockMatrix = [[1],[1],[1],[1],[1]];
-    useGameStore.getState().actions.setResult(mockMatrix, 500);
+    useGameStore.getState().actions.setResult(mockMatrix, 500, []);
 
     const state = useGameStore.getState();
     const userBalance = useUserStore.getState().balance;

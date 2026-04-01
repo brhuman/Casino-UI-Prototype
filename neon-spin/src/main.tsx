@@ -13,7 +13,7 @@ import { generateResultMatrix, calculateWin } from './game/math/rng';
   for (let i = 0; i < spins; i++) {
     totalBet += bet;
     const matrix = generateResultMatrix();
-    totalWin += calculateWin(matrix, bet);
+    totalWin += calculateWin(matrix, bet).winAmount;
   }
 
   const rtp = (totalWin / totalBet) * 100;

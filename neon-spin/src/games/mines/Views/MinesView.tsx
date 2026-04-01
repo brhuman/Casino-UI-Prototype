@@ -118,15 +118,19 @@ export const MinesView = () => {
         addLog("Creating PIXI Application instance...");
         localApp = new Application();
         
+        const containerW = container.clientWidth || 800;
+        const containerH = container.clientHeight || 800;
+
         addLog("Invoking PIXI.init() (20s timeout)...");
         const piInitPromise = localApp.init({
           canvas,
-          width: 800,
-          height: 800,
+          width: containerW,
+          height: containerH,
           preference: 'webgl',
           backgroundAlpha: 0,
           resolution: window.devicePixelRatio || 1,
           autoDensity: true,
+          resizeTo: container,
         });
 
         const timeoutPromise = new Promise((_, reject) => 
@@ -210,52 +214,16 @@ export const MinesView = () => {
   const potentialWin = (currentBet * multiplier).toFixed(2);
 
   return (
-    <div className="flex flex-col lg:flex-row w-full h-full gap-6">
-      {}
-      <div className="w-full lg:w-80 bg-gray-900/60 border border-gray-800 rounded-2xl p-6 flex flex-col gap-6 backdrop-blur-md shrink-0">
-        <div>
-           <label className="text-gray-400 text-sm font-bold uppercase tracking-widest mb-2 block">Bet Amount</label>
-           <div className="flex items-center bg-black border border-gray-700 rounded-lg overflow-hidden">
-             <button 
-               disabled={isActive} 
-               onClick={actions.decreaseBet}
-               className="px-4 py-3 bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 disabled:opacity-30 border-r border-gray-700"
-             >
-               -
-             </button>
-             <span className="pl-4 text-gray-500">$</span>
-             <input disabled={isActive} type="number" value={currentBet} onChange={(e) => actions.setBet(Number(e.target.value))} className="w-full bg-transparent px-2 py-3 outline-none font-mono" />
-             <button 
-               disabled={isActive} 
-               onClick={actions.increaseBet}
-               className="px-4 py-3 bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 disabled:opacity-30 border-l border-gray-700"
-             >
-               +
-             </button>
-           </div>
-        </div>
+    <div className="relative flex h-full min-h-0 w-full flex-col items-center justify-center p-4">
+      {/* Background Graphic */}
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-45 mix-blend-screen bg-[url('/assets/neon_mines_background.png')] bg-cover bg-center bg-no-repeat"
+      />
 
-        <div>
-           <label className="text-gray-400 text-sm font-bold uppercase tracking-widest mb-2 block">Mines ({minesCount})</label>
-           <input disabled={isActive} type="range" min="1" max="24" value={minesCount} onChange={(e) => actions.setMinesCount(Number(e.target.value))} className="w-full accent-neon-pink" />
-        </div>
-
-        <div className="mt-auto">
-          {isActive ? (
-             <button onClick={() => engineRef.current?.cashout()} className="w-full py-4 rounded-xl font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(0,255,255,0.4)] bg-gradient-to-r from-neon-blue to-teal-400 text-black hover:scale-105 transition-transform">
-               Cashout<br/>
-               <span className="font-mono text-sm block mt-1">${potentialWin}</span>
-             </button>
-          ) : (
-             <button onClick={() => engineRef.current?.startRound(currentBet, { minesCount })} disabled={balance < currentBet} className={`w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-transform ${balance < currentBet ? 'bg-gray-800 text-gray-600' : 'shadow-[0_0_20px_rgba(255,0,255,0.4)] bg-gradient-to-r from-neon-pink to-neon-purple text-white hover:scale-105'}`}>
-               Start Game
-             </button>
-          )}
-        </div>
-      </div>
-
-      {}
-      <div className="flex-1 bg-black/60 border border-gray-800 rounded-2xl flex items-center justify-center overflow-hidden relative shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
+      <div className="relative z-10 w-full max-w-[800px] flex flex-col h-full overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-4 shadow-[0_30px_90px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.08)] gap-4">
+        
+        {/* Game Canvas Container - flex-1 fills all remaining space */}
+        <div className="relative z-10 flex flex-1 min-h-0 w-full shrink flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-emerald-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(16,185,129,0.15)]">
+         
          {!isLoaded && !error && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-gray-900/95 backdrop-blur-md p-8 text-center overscroll-none">
               <div className="w-1/2 h-1 bg-gray-800 rounded-full overflow-hidden mb-8 border border-gray-800">
@@ -317,12 +285,72 @@ export const MinesView = () => {
 
          <div className="absolute top-6 right-6 z-10 bg-gray-900/80 border border-gray-700 px-4 py-2 rounded-lg flex flex-col items-center">
             <span className="text-xs text-gray-500 font-bold tracking-widest uppercase">Multiplier</span>
-            <span className="text-neon-pink font-mono font-bold text-xl">{useMinesStore.getState().multiplier.toFixed(2)}x</span>
+            <span className="text-neon-pink font-mono font-bold text-xl">{multiplier.toFixed(2)}x</span>
          </div>
          
          <div ref={containerRef} className={`w-full h-full flex items-center justify-center transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-            <canvas ref={canvasRef} className="max-w-full max-h-full object-contain drop-shadow-[0_0_30px_rgba(0,255,255,0.1)]" />
+            <canvas ref={canvasRef} className="mx-auto block max-w-full max-h-full drop-shadow-[0_0_30px_rgba(0,255,255,0.1)]" style={{ objectFit: 'contain' }} />
          </div>
+        </div>
+
+        {/* Controls Container */}
+        <div className="relative z-20 flex h-[100px] shrink-0 w-full items-center justify-between rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] px-8 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)]">
+          
+          {/* Left: Mines Slider */}
+          <div className="flex w-64 flex-col justify-center gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-[0.36em] text-emerald-300/60">Mines</span>
+              <span className="font-mono text-sm font-semibold text-emerald-400">{minesCount}</span>
+            </div>
+            <input disabled={isActive} type="range" min="1" max="24" value={minesCount} onChange={(e) => actions.setMinesCount(Number(e.target.value))} className="w-full accent-emerald-400" />
+          </div>
+
+          {/* Right: Bet & Spin */}
+          <div className="flex items-center gap-8">
+            {/* Bet Adjust */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="min-h-12 min-w-12 rounded-xl border border-white/10 bg-[linear-gradient(180deg,rgba(36,37,46,0.96),rgba(10,11,18,0.98))] px-0 text-xl text-cyan-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] hover:border-cyan-300/40 hover:bg-cyan-400/10 disabled:opacity-50 transition-colors"
+                disabled={isActive || currentBet <= 100}
+                onClick={actions.decreaseBet}
+              >
+                -
+              </button>
+              <div className="min-w-[90px] text-center">
+                <span className="font-mono text-2xl font-bold tracking-[0.08em] text-white">${currentBet}</span>
+              </div>
+              <button
+                type="button"
+                className="min-h-12 min-w-12 rounded-xl border border-white/10 bg-[linear-gradient(180deg,rgba(36,37,46,0.96),rgba(10,11,18,0.98))] px-0 text-xl text-cyan-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] hover:border-cyan-300/40 hover:bg-cyan-400/10 disabled:opacity-50 transition-colors"
+                disabled={isActive || currentBet >= 5000}
+                onClick={actions.increaseBet}
+              >
+                +
+              </button>
+            </div>
+
+            {/* Main Action */}
+            {isActive ? (
+              <button
+                onClick={() => engineRef.current?.cashout()}
+                className="min-h-[64px] min-w-[160px] rounded-xl border border-emerald-300/30 bg-[linear-gradient(180deg,rgba(130,255,180,0.96),rgba(39,255,150,0.88)_56%,rgba(15,202,120,0.92))] px-8 flex flex-col items-center justify-center text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(16,185,129,0.2)] hover:scale-[1.02] disabled:shadow-none transition-transform"
+              >
+                <span className="text-sm font-black tracking-[0.2em] uppercase">Cashout</span>
+                <span className="font-mono font-bold leading-tight">${potentialWin}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => engineRef.current?.startRound(currentBet, { minesCount })}
+                disabled={balance < currentBet}
+                className="min-h-[64px] min-w-[160px] rounded-xl border border-fuchsia-300/30 bg-[linear-gradient(180deg,rgba(255,130,255,0.96),rgba(255,39,211,0.88)_56%,rgba(202,15,160,0.92))] px-8 text-lg font-black tracking-[0.2em] text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(217,70,239,0.2)] hover:scale-[1.02] disabled:shadow-none disabled:opacity-50 transition-transform"
+              >
+                START
+              </button>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );

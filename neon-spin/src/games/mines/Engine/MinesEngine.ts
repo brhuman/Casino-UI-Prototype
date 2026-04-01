@@ -33,11 +33,17 @@ export class MinesEngine implements IGameEngine {
   public init(app: Application) {
     this.app = app;
     this.app.stage.addChild(this.container);
-    this.container.x = 400;
-    this.container.y = 400;
+    this.container.x = app.screen.width / 2;
+    this.container.y = app.screen.height / 2;
     this.container.addChild(this.gridContainer);
 
     this.drawGrid();
+
+    // Re-center when canvas resizes
+    this.app.renderer.on('resize', (w: number, h: number) => {
+      this.container.x = w / 2;
+      this.container.y = h / 2;
+    });
   }
 
   private drawGrid() {
@@ -126,7 +132,7 @@ export class MinesEngine implements IGameEngine {
      
      if (isBust) {
 
-       gsap.to(this.container, { x: 410, duration: 0.05, yoyo: true, repeat: 5, onComplete: () => { this.container.x = 400; }});
+       gsap.to(this.container, { x: this.app.screen.width / 2 + 10, duration: 0.05, yoyo: true, repeat: 5, onComplete: () => { this.container.x = this.app.screen.width / 2; }});
      }
   }
 

@@ -31,7 +31,7 @@ export const Roulette = () => {
   const [bets, setBets] = useState<BetState[]>([]);
   const [chipSize, setChipSize] = useState<number>(10);
   const balance = useUserStore((state: { balance: number }) => state.balance);
-  const setResult = useGameStore((state: { actions: { setResult: (matrix: number[][], winAmount: number) => void } }) => state.actions.setResult);
+  const setResult = useGameStore((state) => state.actions.setResult);
   
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResultNum] = useState<{ val: number; color: string } | null>(null);
@@ -72,7 +72,7 @@ export const Roulette = () => {
     setResultNum(null);
     
 
-    setResult([[]], -totalBet);
+    setResult([[]], -totalBet, []);
 
 
     setTimeout(() => {
@@ -86,7 +86,7 @@ export const Roulette = () => {
       setIsSpinning(false);
       
       if (win > 0) {
-        setResult([[]], win);
+        setResult([[]], win, []);
       }
       setBets([]);
     }, 3000);
