@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { useSettingsStore } from './useSettingsStore';
 
-export type ViewType = 'lobby' | 'slots' | 'mines' | 'roulette' | 'profile';
+export type ViewType = 'lobby' | 'slots' | 'mines' | 'roulette' | 'profile' | 'settings';
 
 interface UiState {
   currentView: ViewType;

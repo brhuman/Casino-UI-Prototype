@@ -3,6 +3,7 @@ import { Crown, Plus, Play, ChevronRight } from 'lucide-react';
 import { useUiStore } from '../store/useUiStore';
 import { useUserStore } from '../store/useUserStore';
 import { LatestWins } from '../components/game/LatestWins';
+import { LeaderboardView } from '../components/game/LeaderboardView';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const HERO_SLIDES = [
@@ -324,8 +325,13 @@ export const LobbyView = () => {
           </section>
 
           {/* 7. LIVE LATEST WINS */}
-          <section className="pb-10">
+          <section>
              <LatestWins />
+          </section>
+
+          {/* 8. GLOBAL LEADERBOARD */}
+          <section className="pb-10">
+             <LeaderboardView />
           </section>
         </div>
       </div>

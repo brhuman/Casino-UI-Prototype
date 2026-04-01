@@ -1,0 +1,106 @@
+import { motion } from 'framer-motion';
+import { Volume2, VolumeX, Shield, Bell, Monitor, Info } from 'lucide-react';
+import { useUserStore } from '../store/useUserStore';
+import { useUiStore } from '../store/useUiStore';
+import { Card } from '../components/ui/Card';
+
+export const SettingsView = () => {
+  const globalVolume = useUserStore(state => state.globalVolume);
+  const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
+  const { isMuted, setMuted, setShowAboutModal } = useUiStore();
+
+  return (
+    <div className="w-full max-w-2xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
+      <div className="flex items-center gap-4 mb-2">
+        <div className="w-2 h-8 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]" />
+        <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">System Settings</h2>
+      </div>
+
+      <Card className="p-8 bg-gray-900/40 border-white/5 backdrop-blur-3xl rounded-[2rem] flex flex-col gap-10">
+        {/* Audio Section */}
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-3">
+            <Volume2 size={20} className="text-neon-cyan" />
+            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">Audio Experience</h3>
+          </div>
+          
+          <div className="space-y-8">
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between items-center px-1">
+                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Master Volume</span>
+                <span className="font-mono text-xs font-bold text-neon-cyan">{Math.round(globalVolume * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-6">
+                <button 
+                  onClick={() => setMuted(!isMuted)}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isMuted ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'}`}
+                >
+                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+                <div className="flex-1 relative flex items-center">
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value={isMuted ? 0 : globalVolume}
+                    onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
+                    disabled={isMuted}
+                    className="w-full h-1.5 bg-white/5 rounded-lg appearance-none cursor-pointer accent-neon-cyan hover:accent-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Display Section (Dummy) */}
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-3">
+            <Monitor size={20} className="text-neon-purple" />
+            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">Visual & Performance</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">High Quality FX</span>
+              <div className="w-10 h-5 bg-neon-purple/20 border border-neon-purple/40 rounded-full relative p-1 cursor-pointer">
+                <div className="w-3 h-3 bg-neon-purple rounded-full absolute right-1" />
+              </div>
+            </div>
+            <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Neon Glow</span>
+              <div className="w-10 h-5 bg-neon-purple/20 border border-neon-purple/40 rounded-full relative p-1 cursor-pointer">
+                <div className="w-3 h-3 bg-neon-purple rounded-full absolute right-1" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Security & Notifications (Dummy) */}
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-3">
+            <Shield size={20} className="text-yellow-400" />
+            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">Security & Alerts</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+             <button className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-all text-left">
+                <Bell size={16} className="text-white/20" />
+                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Notifications</span>
+             </button>
+             <button 
+               onClick={() => setShowAboutModal(true)}
+               className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-all text-left"
+             >
+                <Info size={16} className="text-white/20" />
+                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">System Information</span>
+             </button>
+          </div>
+        </div>
+      </Card>
+
+      <div className="flex justify-center mt-4">
+        <span className="text-[8px] font-black text-white/10 uppercase tracking-[0.5em]">Neon Spin v1.2.4 Build 8823</span>
+      </div>
+    </div>
+  );
+};

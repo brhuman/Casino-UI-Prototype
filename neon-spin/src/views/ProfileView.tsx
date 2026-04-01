@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Plus, Info, Volume2, Camera, Edit3, Check, X } from 'lucide-react';
+import { User, Plus, Info, Camera, Edit3, Check, X } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
 import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 import { useState, useRef } from 'react';
+import { ProfileStatsChart } from '../components/ui/ProfileStatsChart';
+import { AchievementGallery } from '../components/ui/AchievementGallery';
 
 import { PRESET_AVATARS } from '../constants/dummyData';
 
@@ -190,6 +192,12 @@ export const ProfileView = () => {
                 <Plus size={16} strokeWidth={4} /> Add $1,000
               </button>
           </div>
+
+          {/* Statistics Chart */}
+          <div className="mt-2">
+            <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-4 px-1">Balance Performance</h4>
+            <ProfileStatsChart />
+          </div>
         </div>
 
         {/* 3. PERFORMANCE STATS (Grid) */}
@@ -210,24 +218,8 @@ export const ProfileView = () => {
            </div>
         </div>
 
-        {/* 4. SETTINGS & INFO (Footer) */}
-        <div className="p-8 pt-0 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-5 bg-black/40 px-5 py-3 rounded-2xl border border-white/5 w-full sm:w-auto group">
-            <Volume2 size={16} className="text-white/30 group-hover:text-white/60 transition-colors" />
-            <div className="flex-1 min-w-[100px] sm:min-w-[140px] flex items-center gap-4">
-              <input 
-                type="range" 
-                min="0" 
-                max="1" 
-                step="0.01" 
-                value={globalVolume}
-                onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
-                className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white hover:accent-neon-cyan transition-all"
-              />
-              <span className="font-mono text-[10px] font-bold text-white/60 w-8 tabular-nums">{Math.round(globalVolume * 100)}%</span>
-            </div>
-          </div>
-
+        {/* 4. INFO (Footer) */}
+        <div className="p-8 pt-0 flex flex-col sm:flex-row items-center justify-end gap-6">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setShowAboutModal(true)}
@@ -238,6 +230,17 @@ export const ProfileView = () => {
           </div>
         </div>
       </Card>
+
+      {/* 5. ACHIEVEMENTS SECTION */}
+      <div className="relative z-10 flex flex-col gap-6 mt-4">
+        <div className="flex items-center justify-between px-4">
+          <h3 className="text-xl font-black text-white uppercase italic tracking-tighter flex items-center gap-3">
+            <div className="w-1.5 h-6 bg-neon-purple rounded-full shadow-[0_0_10px_#9333ea]" /> Milestones
+          </h3>
+          <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">Showcase your glory</span>
+        </div>
+        <AchievementGallery />
+      </div>
 
       {/* Avatar Selection Modal Overlay */}
       <AnimatePresence>

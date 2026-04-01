@@ -5,6 +5,7 @@ import { SlotView } from './views/SlotView';
 import { ProfileView } from './views/ProfileView';
 import { MinesView } from './games/mines/Views/MinesView';
 import { RouletteView } from './games/roulette/Views/RouletteView';
+import { SettingsView } from './views/SettingsView';
 import { AboutModal } from './components/ui/AboutModal';
 import { useEffect } from 'react';
 import { soundManager } from './game/audio/SoundManager';
@@ -80,6 +81,18 @@ function App() {
               className="flex-1 flex flex-col"
             >
               <RouletteView />
+            </motion.div>
+          )}
+          {currentView === 'settings' && (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+              transition={{ duration: 0.3 }}
+              className="flex-1 flex flex-col"
+            >
+              <SettingsView />
             </motion.div>
           )}
         </AnimatePresence>

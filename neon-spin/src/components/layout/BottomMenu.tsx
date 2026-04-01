@@ -1,4 +1,4 @@
-import { Home, Gamepad2, Layers, User, Bomb } from 'lucide-react';
+import { Home, Gamepad2, CircleDashed, User, Bomb, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useUiStore } from '../../store/useUiStore';
 import { useUserStore } from '../../store/useUserStore';
@@ -8,8 +8,9 @@ const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
   { id: 'lobby', label: 'Lobby', icon: Home },
   { id: 'slots', label: 'Slots', icon: Gamepad2 },
   { id: 'mines', label: 'Mines', icon: Bomb },
-  { id: 'roulette', label: 'Roulette', icon: Layers },
+  { id: 'roulette', label: 'Roulette', icon: CircleDashed },
   { id: 'profile', label: 'Profile', icon: User },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 export const BottomMenu = () => {

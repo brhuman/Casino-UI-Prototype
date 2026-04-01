@@ -16,6 +16,8 @@ interface UserState {
   level: number;
   xp: number;
   maxXp: number;
+  achievements: string[];
+  balanceHistory: { time: string; amount: number }[];
   actions: {
     login: (token: string, userId: string, username: string, balance: number) => void;
     logout: () => void;
@@ -45,6 +47,8 @@ export const useUserStore = create<UserState>()(
       level: 1,
       xp: 250,
       maxXp: 1000,
+      achievements: [],
+      balanceHistory: [{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), amount: 10000 }],
       actions: {
         login: (token: string, userId: string, username: string, balance: number) => set({ token, userId, username, balance }),
         logout: () => set({ token: null, userId: null, username: 'Guest' }),
@@ -77,6 +81,29 @@ export const useUserStore = create<UserState>()(
             lvl++;
           }
 
+          // Achievement: High Roller (bet > 1000)
+          const newAchievements = [...state.achievements];
+          if (amount < -1000 && !newAchievements.includes('HIGH_ROLLER')) {
+            newAchievements.push('HIGH_ROLLER');
+          }
+          
+          // Achievement: First Win
+          if (amount > 0 && !newAchievements.includes('FIRST_WIN')) {
+            newAchievements.push('FIRST_WIN');
+          }
+
+          // Achievement: Lucky One (multiplier logic would need to be passed, but we can infer from amount vs bet if we had bet info)
+          // For now, let's say big win > 5000
+          if (amount > 5000 && !newAchievements.includes('LUCKY_ONE')) {
+            newAchievements.push('LUCKY_ONE');
+          }
+
+          // Update Balance History (Keep last 20 points)
+          const newHistory = [
+            ...state.balanceHistory,
+            { time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), amount: newBalance }
+          ].slice(-20);
+
           return { 
             balance: newBalance,
             totalBets: newTotalBets,
@@ -84,7 +111,9 @@ export const useUserStore = create<UserState>()(
             biggestWin: newBiggestWin,
             level: lvl,
             xp: newTotalWinAmount,
-            maxXp: currentMax
+            maxXp: currentMax,
+            achievements: newAchievements,
+            balanceHistory: newHistory
           };
         }),
 
@@ -94,7 +123,13 @@ export const useUserStore = create<UserState>()(
           customAvatars: [url, ...state.customAvatars].slice(0, 5), // Keep last 5 custom avatars
           selectedAvatar: url 
         })),
-        setVip: (status: boolean) => set({ isVip: status }),
+        setVip: (status: boolean) => set((state) => {
+          const newAchievements = [...state.achievements];
+          if (status && !newAchievements.includes('VIP_ELITE')) {
+            newAchievements.push('VIP_ELITE');
+          }
+          return { isVip: status, achievements: newAchievements };
+        }),
         setUsername: (username: string) => set({ username }),
       },
     }),
@@ -114,7 +149,9 @@ export const useUserStore = create<UserState>()(
         isVip: state.isVip,
         level: state.level,
         xp: state.xp,
-        maxXp: state.maxXp
+        maxXp: state.maxXp,
+        achievements: state.achievements,
+        balanceHistory: state.balanceHistory
       }),
     }
   )
