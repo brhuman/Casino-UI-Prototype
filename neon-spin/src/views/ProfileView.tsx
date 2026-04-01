@@ -5,14 +5,7 @@ import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 import { useState, useRef } from 'react';
 
-const PRESET_AVATARS = [
-  '/avatars/avatar_1.png',
-  '/avatars/avatar_2.png',
-  '/avatars/avatar_3.png',
-  '/avatars/avatar_4.png',
-  '/avatars/avatar_5.png',
-  '/avatars/avatar_6.png',
-];
+import { PRESET_AVATARS } from '../constants/dummyData';
 
 export const ProfileView = () => {
   const username = useUserStore(state => state.username);
@@ -242,7 +235,6 @@ export const ProfileView = () => {
             >
               <Info size={14} /> System Info
             </button>
-            <span className="text-[10px] font-bold text-white/5 uppercase tracking-[0.4em] hidden sm:block">NEON-SPIN-v1.2</span>
           </div>
         </div>
       </Card>

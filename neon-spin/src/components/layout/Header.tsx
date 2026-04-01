@@ -25,13 +25,16 @@ export const Header = () => {
   return (
     <header className={`h-16 w-full flex items-center justify-between px-4 lg:px-8 backdrop-blur-md z-50 transition-all duration-500 border-b ${isVip ? 'bg-yellow-950/20 border-yellow-500/50 shadow-[0_0_20px_rgba(250,204,21,0.2)]' : 'bg-gray-900/80 border-gray-800'}`}>
       <div className="flex items-center transition-all">
-        <div className="flex items-center">
+        <button 
+          onClick={() => setView('lobby')}
+          className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+        >
           <img
             src="/logo.png"
             alt="Neon Spin"
             className="h-11 w-auto max-w-[220px] object-contain [filter:drop-shadow(0_0_8px_rgba(255,0,200,0.35))_drop-shadow(0_0_14px_rgba(0,220,255,0.28))] sm:h-12 sm:max-w-[260px]"
           />
-        </div>
+        </button>
       </div>
 
       <div className="flex items-center gap-4">

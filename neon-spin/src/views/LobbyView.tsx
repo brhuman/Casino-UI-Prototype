@@ -90,24 +90,35 @@ export const LobbyView = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSlide}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-                className="absolute inset-0"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  const swipeThreshold = 50;
+                  if (info.offset.x > swipeThreshold) {
+                    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+                  } else if (info.offset.x < -swipeThreshold) {
+                    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+                  }
+                }}
+                className="absolute inset-0 cursor-grab active:cursor-grabbing"
               >
                 <img 
                   src={HERO_SLIDES[currentSlide].bg} 
                   alt={HERO_SLIDES[currentSlide].title} 
-                  className="absolute inset-0 w-full h-full object-cover brightness-[0.35] scale-105"
+                  className="absolute inset-0 w-full h-full object-cover brightness-[0.35] scale-105 pointer-events-none"
                 />
                 
                 {/* Repositioned Subtitle (Top Right) */}
                 <motion.div 
                    initial={{ y: -20, opacity: 0 }}
                    animate={{ y: 0, opacity: 1 }}
-                   transition={{ delay: 0.5, duration: 0.6 }}
-                   className="absolute top-10 right-10 sm:top-16 sm:right-16 hidden sm:flex items-center gap-3 bg-black/40 backdrop-blur-xl px-6 py-3 rounded-full border border-white/5"
+                   transition={{ delay: 0.2, duration: 0.4 }}
+                   className="absolute top-10 right-10 sm:top-16 sm:right-16 hidden sm:flex items-center gap-3 bg-black/40 backdrop-blur-xl px-6 py-3 rounded-full border border-white/5 pointer-events-none"
                 >
                    <div className={`w-2 h-2 rounded-full animate-pulse ${
                       HERO_SLIDES[currentSlide].color === 'neon-purple' ? 'bg-neon-purple shadow-[0_0_10px_#9333ea]' : 
@@ -121,11 +132,11 @@ export const LobbyView = () => {
                     </span>
                 </motion.div>
 
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/20 to-transparent p-8 sm:p-20 flex flex-col justify-start pt-16 sm:pt-24">
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/20 to-transparent p-8 sm:p-20 flex flex-col justify-start pt-16 sm:pt-24 pointer-events-none">
                    <motion.div
                      initial={{ x: -50, opacity: 0 }}
                      animate={{ x: 0, opacity: 1 }}
-                     transition={{ delay: 0.3, duration: 0.8 }}
+                     transition={{ delay: 0.1, duration: 0.5 }}
                      className="max-w-xl"
                    >
                      {/* Mobile Subtitle */}
@@ -149,8 +160,11 @@ export const LobbyView = () => {
                        {HERO_SLIDES[currentSlide].description}
                      </p>
                      <button 
-                       onClick={() => setView(HERO_SLIDES[currentSlide].id as any)}
-                       className="group/btn relative px-10 py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:scale-105 active:scale-95 transition-all shadow-[0_15px_60px_rgba(255,255,255,0.2)]"
+                       onClick={(e) => {
+                         e.stopPropagation(); // Prevent drag from triggering
+                         setView(HERO_SLIDES[currentSlide].id as any);
+                       }}
+                       className="group/btn relative px-10 py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:scale-105 active:scale-95 transition-all shadow-[0_15px_60px_rgba(255,255,255,0.2)] pointer-events-auto"
                      >
                        <Play size={16} fill="currentColor" /> {HERO_SLIDES[currentSlide].buttonText}
                        <div className="absolute inset-0 rounded-2xl bg-white blur-xl opacity-0 group-hover/btn:opacity-30 transition-opacity" />
