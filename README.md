@@ -1,6 +1,6 @@
 # 🎰 Neon Spin - PIXI.js & React Demonstration
 
-**Live Demo:** [https://neon-spin-casino.vercel.app/](https://neon-spin-casino.vercel.app/)
+**Live Demo:** [https://neonspin.vercel.app/](https://neonspin.vercel.app/)
 
 ## 🚀 Overview
 **Neon Spin** is a high-performance web application built to demonstrate the seamless integration of **PIXI.js** (WebGL engine) within a modern **React** ecosystem. This project serves as a technical case study for a developer portfolio, focusing on advanced graphics, complex state management, and ultra-smooth UI animations.
