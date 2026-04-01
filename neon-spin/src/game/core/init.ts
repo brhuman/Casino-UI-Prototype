@@ -3,6 +3,8 @@ import { getSymbolTexture, loadAssets } from './loader';
 import { useGameStore } from '../../store/useGameStore';
 import { spinReel } from '../animations/spin';
 import { generateResultMatrix, calculateWin, REELS_COUNT, ROWS_COUNT } from '../math/rng';
+import { soundManager } from '../audio/SoundManager';
+import gsap from 'gsap';
 
 export const SLOT_SYMBOL_SIZE = 118;
 export const SLOT_REEL_SPACING = 14;
@@ -154,10 +156,53 @@ class SlotGame {
     return cont;
   }
 
-  public async startSpin(currentBet: number) {
-    const resultMatrix = generateResultMatrix();
-    const winAmount = calculateWin(resultMatrix, currentBet);
+  public highlightWin(winningLine: {c: number, r: number}[]) {
+    for (let c = 0; c < REELS_COUNT; c++) {
+      for (let r = 0; r < ROWS_COUNT; r++) {
+         const symbolIndex = r + this.reelBufferRows;
+         const symbol = this.reels[c].children[symbolIndex] as Container;
+         if (symbol) {
+           symbol.alpha = 0.25; 
+         }
+      }
+    }
     
+    winningLine.forEach(({c, r}) => {
+       const symbolIndex = r + this.reelBufferRows;
+       const symbol = this.reels[c].children[symbolIndex] as Container;
+       if (symbol) {
+         symbol.alpha = 1.0;
+         gsap.to(symbol.scale, {
+           x: 1.15,
+           y: 1.15,
+           duration: 0.35,
+           yoyo: true,
+           repeat: 3,
+           ease: 'power1.inOut'
+         });
+       }
+    });
+  }
+
+  public async startSpin(currentBet: number) {
+    // Reset symbols alpha and scale before spinning
+    for (let c = 0; c < REELS_COUNT; c++) {
+      for (let r = 0; r < ROWS_COUNT; r++) {
+         const symbolIndex = r + this.reelBufferRows;
+         const symbol = this.reels[c].children[symbolIndex] as Container;
+         if (symbol) {
+           symbol.alpha = 1.0;
+           gsap.killTweensOf(symbol.scale);
+           symbol.scale.set(1.0);
+         }
+      }
+    }
+
+    const resultMatrix = generateResultMatrix();
+    const { winAmount, winningLine } = calculateWin(resultMatrix, currentBet);
+
+    soundManager.playSpin();
+    soundManager.startRolling();
 
     const promises = this.reels.map((reel, index) => {
       return new Promise<void>((resolve) => {
@@ -174,9 +219,14 @@ class SlotGame {
     });
 
     await Promise.all(promises);
+    soundManager.stopRolling();
 
+    if (winAmount > 0) {
+      soundManager.playWin();
+      this.highlightWin(winningLine);
+    }
 
-    useGameStore.getState().actions.setResult(resultMatrix, winAmount);
+    useGameStore.getState().actions.setResult(resultMatrix, winAmount, winningLine);
   }
 
   public destroy() {

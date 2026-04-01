@@ -18,8 +18,8 @@ describe('RNG Math Engine', () => {
       [5, 1, 2],
       [3, 4, 5]
     ];
-    const win = calculateWin(loseMatrix, 100);
-    expect(win).toBe(0);
+    const { winAmount } = calculateWin(loseMatrix, 100);
+    expect(winAmount).toBe(0);
   });
 
   it('calculateWin should calculate 3 of a kind', () => {
@@ -31,8 +31,8 @@ describe('RNG Math Engine', () => {
       [3, 4, 5]
     ];
 
-    const win = calculateWin(winMatrix, 100);
-    expect(win).toBe(1000);
+    const { winAmount } = calculateWin(winMatrix, 100);
+    expect(winAmount).toBe(1000);
   });
 
   it('calculateWin should correctly use wilds', () => {
@@ -44,7 +44,7 @@ describe('RNG Math Engine', () => {
       [3, 4, 5]
     ];
 
-    const win = calculateWin(winMatrix, 100);
-    expect(win).toBe(2000);
+    const { winAmount } = calculateWin(winMatrix, 100);
+    expect(winAmount).toBe(2000);
   });
 });

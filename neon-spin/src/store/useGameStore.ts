@@ -7,9 +7,10 @@ interface GameState {
   isSpinning: boolean;
   lastWinAmount: number;
   matrix: number[][];
+  winningLine: { c: number; r: number }[];
   actions: {
     placeBet: () => void;
-    setResult: (matrix: number[][], winAmount: number) => void;
+    setResult: (matrix: number[][], winAmount: number, winningLine: { c: number; r: number }[]) => void;
     increaseBet: () => void;
     decreaseBet: () => void;
   };
@@ -20,6 +21,7 @@ export const useGameStore = create<GameState>()(
     currentBet: 100,
     isSpinning: false,
     lastWinAmount: 0,
+    winningLine: [],
     matrix: [
       [0,0,0,0,0],
       [0,0,0,0,0],
@@ -33,13 +35,13 @@ export const useGameStore = create<GameState>()(
         if (isSpinning || userBalance < currentBet) return;
         
         useUserStore.getState().actions.updateBalance(-currentBet);
-        set({ isSpinning: true, lastWinAmount: 0 });
+        set({ isSpinning: true, lastWinAmount: 0, winningLine: [] });
       },
-      setResult: (matrix, winAmount) => {
+      setResult: (matrix, winAmount, winningLine) => {
         if (winAmount > 0) {
           useUserStore.getState().actions.updateBalance(winAmount);
         }
-        set({ isSpinning: false, matrix, lastWinAmount: winAmount });
+        set({ isSpinning: false, matrix, lastWinAmount: winAmount, winningLine });
       },
       increaseBet: () => {
         const { currentBet, isSpinning } = get();

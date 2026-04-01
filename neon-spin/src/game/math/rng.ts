@@ -38,29 +38,32 @@ export const generateResultMatrix = (): number[][] => {
   return matrix;
 };
 
-export const calculateWin = (matrix: number[][], currentBet: number): number => {
+export const calculateWin = (matrix: number[][], currentBet: number): { winAmount: number, winningLine: { c: number, r: number }[] } => {
 
   let winAmount = 0;
+  const winningLine: { c: number, r: number }[] = [];
   
   for (let r = 0; r < ROWS_COUNT; r++) {
     let matchCount = 1;
     const firstSymbol = matrix[0][r];
+    const currentLine = [{ c: 0, r }];
     
     for (let c = 1; c < REELS_COUNT; c++) {
       if (matrix[c][r] === firstSymbol || matrix[c][r] === SYMBOLS.WILD) {
         matchCount++;
+        currentLine.push({ c, r });
       } else {
         break;
       }
     }
     
     if (matchCount >= 3) {
-
        const mult = (matchCount === 5 ? 10 : matchCount === 4 ? 4 : 1);
        const symbolBase = (firstSymbol === SYMBOLS.SEVEN ? 10 : firstSymbol === SYMBOLS.BAR ? 5 : 2);
        winAmount += currentBet * mult * symbolBase;
+       winningLine.push(...currentLine);
     }
   }
   
-  return winAmount;
+  return { winAmount, winningLine };
 };
