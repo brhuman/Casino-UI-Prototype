@@ -135,57 +135,62 @@ export const PixiBridge = () => {
       </div>
 
       {/* Controls Container */}
-      <div className="relative z-20 flex h-[100px] shrink-0 w-full items-center justify-between rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] px-8 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)]">
+      <div className="relative z-20 flex flex-col shrink-0 w-full rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] gap-4">
         
-        {/* Left: Balance & Win */}
-        <div className="flex gap-8">
-          <div className="flex flex-col justify-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.36em] text-emerald-300/60">Balance</span>
-            <span className="mt-1 font-mono text-xl font-semibold text-white">${balance.toLocaleString()}</span>
-          </div>
-          <div className="flex flex-col justify-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.36em] text-amber-200/60">Win</span>
-            <span className="mt-1 font-mono text-xl font-semibold text-amber-50">${lastWinAmount.toFixed(2)}</span>
-          </div>
-        </div>
-
-        {/* Right: Bet & Spin */}
-        <div className="flex items-center gap-8">
-          {/* Bet Adjust */}
-          <div className="flex items-center gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-12 min-w-12 rounded-xl border-white/10 bg-[linear-gradient(180deg,rgba(36,37,46,0.96),rgba(10,11,18,0.98))] px-0 text-xl text-cyan-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] hover:border-cyan-300/40 hover:bg-cyan-400/10"
-              disabled={isSpinning || currentBet <= 100}
-              onClick={decreaseBet}
-            >
-              -
-            </Button>
-            <div className="min-w-[90px] text-center">
-              <span className="font-mono text-2xl font-bold tracking-[0.08em] text-white">${currentBet}</span>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-12 min-w-12 rounded-xl border-white/10 bg-[linear-gradient(180deg,rgba(36,37,46,0.96),rgba(10,11,18,0.98))] px-0 text-xl text-cyan-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] hover:border-cyan-300/40 hover:bg-cyan-400/10"
-              disabled={isSpinning || currentBet >= 5000}
-              onClick={increaseBet}
-            >
-              +
-            </Button>
-          </div>
-
-          {/* Spin Action */}
+        {/* Top Row: Spin Action */}
+        <div className="flex justify-center">
           <Button
             type="button"
             variant="secondary"
-            className="min-h-[64px] min-w-[160px] rounded-xl border border-cyan-300/30 bg-[linear-gradient(180deg,rgba(130,255,255,0.96),rgba(39,211,255,0.88)_56%,rgba(15,160,202,0.92))] px-8 text-lg font-black tracking-[0.2em] text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(34,211,238,0.2)] hover:scale-[1.02] disabled:shadow-none"
+            className="min-h-[64px] w-full max-w-sm rounded-xl border border-cyan-300/30 bg-[linear-gradient(180deg,rgba(130,255,255,0.96),rgba(39,211,255,0.88)_56%,rgba(15,160,202,0.92))] px-8 text-xl font-black tracking-[0.2em] text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_20px_rgba(0,0,0,0.3),0_0_30px_rgba(34,211,238,0.2)] hover:scale-[1.02] active:scale-[0.98] disabled:scale-100 disabled:shadow-none transition-all"
             disabled={!canSpin}
             onClick={placeBet}
           >
-            {isSpinning ? 'SPINNING' : 'SPIN'}
+            {isSpinning ? 'SPINNING...' : 'SPIN'}
           </Button>
+        </div>
+
+        {/* Bottom Row: Stats & Bet */}
+        <div className="flex items-center justify-between px-4">
+          {/* Left: Balance & Win */}
+          <div className="flex gap-6 sm:gap-10">
+            <div className="flex flex-col justify-center">
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-300/60 leading-none mb-1">Balance</span>
+              <span className="font-mono text-lg font-semibold text-white leading-none">${balance.toLocaleString()}</span>
+            </div>
+            <div className="flex flex-col justify-center">
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-amber-200/60 leading-none mb-1">Win</span>
+              <span className="font-mono text-lg font-semibold text-amber-50 leading-none">${lastWinAmount.toFixed(2)}</span>
+            </div>
+          </div>
+
+          {/* Right: Bet Adjust */}
+          <div className="flex items-center gap-4">
+            <span className="hidden sm:block text-[10px] font-bold uppercase tracking-widest text-white/40">Total Bet:</span>
+            <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/5">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-8 w-8 rounded-md border-white/10 bg-white/5 p-0 text-lg text-white/70 hover:text-white hover:bg-white/10"
+                disabled={isSpinning || currentBet <= 100}
+                onClick={decreaseBet}
+              >
+                -
+              </Button>
+              <div className="min-w-[70px] text-center">
+                <span className="font-mono text-lg font-bold text-white">${currentBet}</span>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-8 w-8 rounded-md border-white/10 bg-white/5 p-0 text-lg text-white/70 hover:text-white hover:bg-white/10"
+                disabled={isSpinning || currentBet >= 5000}
+                onClick={increaseBet}
+              >
+                +
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </>

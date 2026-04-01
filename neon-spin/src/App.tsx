@@ -5,6 +5,7 @@ import { SlotView } from './views/SlotView';
 import { ProfileView } from './views/ProfileView';
 import { MinesView } from './games/mines/Views/MinesView';
 import { TablesView } from './views/TablesView';
+import { AboutModal } from './components/ui/AboutModal';
 
 function App() {
   const currentView = useUiStore((state) => state.currentView);
@@ -16,6 +17,7 @@ function App() {
       {currentView === 'profile' && <ProfileView />}
       {currentView === 'mines' && <MinesView />}
       {currentView === 'tables' && <TablesView />}
+      <AboutModal />
     </MainLayout>
   );
 }

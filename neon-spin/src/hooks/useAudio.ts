@@ -9,34 +9,35 @@ export const useAudio = () => {
   
 
   const bgMusic = useRef<Howl | null>(null);
+  const spinStartSfx = useRef<Howl | null>(null);
   const spinSfx = useRef<Howl | null>(null);
   const winSfx = useRef<Howl | null>(null);
 
   useEffect(() => {
 
-    bgMusic.current = new Howl({
-      src: ['data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYxLjEuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'],
-      loop: true,
-      volume: 0.3
+    spinStartSfx.current = new Howl({
+      src: ['/sounds/slot_start.mp3'],
+      volume: 0.6
     });
     
     spinSfx.current = new Howl({
-      src: ['data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYxLjEuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'],
+      src: ['/sounds/slot_spin.mp3'],
       loop: true,
-      volume: 0.5
+      volume: 0.4
     });
 
     winSfx.current = new Howl({
-      src: ['data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYxLjEuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'],
+      src: ['/sounds/slot_win.mp3'],
       volume: 0.8
     });
 
-    if (!isMuted) {
+    if (!isMuted && bgMusic.current) {
       bgMusic.current.play();
     }
 
     return () => {
       bgMusic.current?.unload();
+      spinStartSfx.current?.unload();
       spinSfx.current?.unload();
       winSfx.current?.unload();
     };
@@ -49,6 +50,7 @@ export const useAudio = () => {
 
   useEffect(() => {
     if (isSpinning) {
+      spinStartSfx.current?.play();
       spinSfx.current?.play();
     } else {
       spinSfx.current?.stop();

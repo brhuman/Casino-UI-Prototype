@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { User, Activity, Clock, Plus, TrendingUp, History, Award } from 'lucide-react';
+import { User, Activity, Clock, Plus, TrendingUp, History, Award, Info } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
+import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 
 export const ProfileView = () => {
@@ -10,12 +11,13 @@ export const ProfileView = () => {
   const biggestWin = useUserStore(state => state.biggestWin);
 
   const updateBalance = useUserStore(state => state.actions.updateBalance);
+  const setShowAboutModal = useUiStore(state => state.setShowAboutModal);
 
   return (
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="w-full max-w-4xl mx-auto h-full flex flex-col gap-8 pb-12"
+      className="w-full max-w-4xl mx-auto h-full flex flex-col gap-8 pb-12 pt-8"
     >
       <Card className="flex items-center gap-8 p-8 bg-gradient-to-r from-gray-900/80 to-gray-800/40 border-neon-purple/30">
         <div className="relative group">
@@ -47,6 +49,13 @@ export const ProfileView = () => {
           <p className="text-4xl font-black text-white font-mono drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             ${balance.toLocaleString()}
           </p>
+          <button 
+            onClick={() => setShowAboutModal(true)}
+            className="mt-4 flex items-center justify-end gap-2 text-cyan-400 hover:text-cyan-300 text-xs font-black uppercase tracking-widest transition-colors ml-auto group"
+          >
+            <Info size={14} className="group-hover:rotate-12 transition-transform" />
+            About Project
+          </button>
         </div>
       </Card>
 
