@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Plus, Info, Volume2, Camera } from 'lucide-react';
+import { User, Plus, Info, Volume2, Camera, Edit3, Check, X } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
 import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
@@ -33,12 +33,22 @@ export const ProfileView = () => {
   const addCustomAvatar = useUserStore(state => state.actions.addCustomAvatar);
   const updateBalance = useUserStore(state => state.actions.updateBalance);
   const setVip = useUserStore(state => state.actions.setVip);
+  const setUsername = useUserStore(state => state.actions.setUsername);
   const setShowAboutModal = useUiStore(state => state.setShowAboutModal);
 
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(username);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allAvatars = [...PRESET_AVATARS, ...customAvatars];
+
+  const handleNameSave = () => {
+    if (tempName.trim()) {
+      setUsername(tempName.trim());
+      setIsEditingName(false);
+    }
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -84,11 +94,59 @@ export const ProfileView = () => {
             </div>
           </div>
 
-          <div>
-            <h2 className="text-4xl sm:text-5xl font-black italic tracking-tighter text-white uppercase drop-shadow-lg">
-              {username}
-            </h2>
-            <div className="flex items-center justify-center gap-3 mt-3">
+          <div className="w-full max-w-sm flex flex-col items-center gap-4">
+            <AnimatePresence mode="wait">
+              {isEditingName ? (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="flex flex-col items-center gap-4 w-full"
+                >
+                  <input 
+                    autoFocus
+                    type="text"
+                    value={tempName}
+                    onChange={(e) => setTempName(e.target.value.toUpperCase())}
+                    onKeyDown={(e) => e.key === 'Enter' && handleNameSave()}
+                    className="w-full bg-white/5 border-2 border-neon-cyan rounded-2xl px-6 py-4 text-3xl sm:text-4xl font-black italic text-center text-white uppercase tracking-tighter outline-none shadow-[0_0_20px_rgba(0,255,255,0.2)]"
+                    maxLength={16}
+                  />
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={handleNameSave}
+                      className="px-6 py-3 bg-neon-cyan text-black rounded-xl font-black uppercase text-xs flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-lg"
+                    >
+                      <Check size={16} strokeWidth={4} /> Save
+                    </button>
+                    <button 
+                      onClick={() => { setIsEditingName(false); setTempName(username); }}
+                      className="px-6 py-3 bg-white/10 text-white/60 rounded-xl font-black uppercase text-xs flex items-center gap-2 hover:bg-white/20 transition-all"
+                    >
+                      <X size={16} strokeWidth={4} /> Cancel
+                    </button>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={() => { setIsEditingName(true); setTempName(username); }}
+                  className="group/name cursor-pointer flex flex-col items-center gap-2"
+                >
+                  <div className="relative">
+                    <h2 className="text-4xl sm:text-5xl font-black italic tracking-tighter text-white uppercase drop-shadow-lg group-hover/name:text-neon-cyan transition-colors">
+                      {username}
+                    </h2>
+                    <div className="absolute -right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover/name:opacity-100 transition-opacity">
+                      <Edit3 size={24} className="text-neon-cyan animate-pulse" />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="flex items-center justify-center gap-3">
               <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] border transition-all ${isVip ? 'bg-yellow-400/20 text-yellow-500 border-yellow-500/30 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'bg-white/5 text-white/40 border-white/10'}`}>
                 {isVip ? 'VIP ELITE STATUS' : 'STANDARD MEMBER'}
               </span>
@@ -108,22 +166,19 @@ export const ProfileView = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" />
-                <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Reputation Points</span>
+                <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Level {level} Progress</span>
               </div>
               <span className="text-xs font-mono font-black text-white/80 tabular-nums">
                 {Math.floor(xp).toLocaleString()} / {Math.floor(maxXp).toLocaleString()} XP
               </span>
             </div>
             <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 p-0.5 overflow-hidden shadow-inner translate-z-0">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${(xp / maxXp) * 100}%` }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
+              <div 
+                style={{ width: `${(xp / maxXp) * 100}%` }}
                 className={`h-full rounded-full relative z-10 transition-all duration-300 ${isVip ? 'bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600' : 'bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-purple'}`}
               >
                 <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.4)_50%,transparent_100%)] animate-[shimmer_2s_infinite]" />
-              </motion.div>
+              </div>
             </div>
           </div>
 

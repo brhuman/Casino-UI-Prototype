@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Howl } from 'howler';
 import { useMinesStore } from '../store';
 import { useUiStore } from '../../../store/useUiStore';
+import { useUserStore } from '../../../store/useUserStore';
 
 // Small neon-themed sound effects in base64
 const SOUND_ASSETS = {
@@ -13,24 +14,28 @@ const SOUND_ASSETS = {
 };
 
 export const useMinesAudio = () => {
-  const isMuted = useUiStore(state => state.isMuted);
-  const lastSound = useMinesStore(state => state.lastSound);
+  const isMuted = useUiStore((state: any) => state.isMuted);
+  const lastSound = useMinesStore((state: any) => state.lastSound);
+  const globalVolume = useUserStore((state: any) => state.globalVolume);
   
   const sounds = useRef<Record<string, Howl>>({});
 
   useEffect(() => {
-    // Initialize sounds
+    // Initialize sounds with global volume scale and 0.5 cap
+    const volumeFactor = globalVolume * 0.5;
+    
     Object.entries(SOUND_ASSETS).forEach(([key, src]) => {
+      const baseVol = key === 'bust' ? 0.4 : (key === 'cashout' ? 1.0 : 0.5);
       sounds.current[key] = new Howl({ 
         src: [src],
-        volume: key === 'bust' ? 0.4 : (key === 'cashout' ? 1.0 : 0.5)
+        volume: baseVol * volumeFactor
       });
     });
 
     return () => {
       Object.values(sounds.current).forEach(s => s.unload());
     };
-  }, []);
+  }, [globalVolume]);
 
   useEffect(() => {
     // Only play if it's a fresh sound change and not on mount

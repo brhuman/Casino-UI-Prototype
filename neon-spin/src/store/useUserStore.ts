@@ -24,6 +24,7 @@ interface UserState {
     setAvatar: (url: string) => void;
     addCustomAvatar: (url: string) => void;
     setVip: (status: boolean) => void;
+    setUsername: (name: string) => void;
   };
 }
 
@@ -94,6 +95,7 @@ export const useUserStore = create<UserState>()(
           selectedAvatar: url 
         })),
         setVip: (status: boolean) => set({ isVip: status }),
+        setUsername: (username: string) => set({ username }),
       },
     }),
     {

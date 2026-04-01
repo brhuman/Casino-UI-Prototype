@@ -11,10 +11,10 @@ export class SoundManager {
     if (this.spinSound) return;
 
     const globalVol = useUserStore.getState().globalVolume;
-    Howler.volume(globalVol);
+    Howler.volume(globalVol * 0.5);
 
     useUserStore.subscribe((state) => {
-      Howler.volume(state.globalVolume);
+      Howler.volume(state.globalVolume * 0.5);
     });
 
     this.spinSound = new Howl({

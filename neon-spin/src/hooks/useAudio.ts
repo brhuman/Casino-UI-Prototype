@@ -16,7 +16,7 @@ export const useAudio = () => {
   const winSfx = useRef<Howl | null>(null);
 
   useEffect(() => {
-    Howler.volume(globalVolume);
+    Howler.volume(globalVolume * 0.5);
   }, [globalVolume]);
 
   useEffect(() => {

@@ -62,7 +62,11 @@ export const PixiBridge = () => {
         });
 
         if (!isCurrent) return;
-        setIsLoaded(true);
+        
+        // Small delay to ensure PIXI has rendered at least once before showing
+        setTimeout(() => {
+          if (isCurrent) setIsLoaded(true);
+        }, 150);
       } catch (err: unknown) {
         if (isCurrent) {
           setError((err as Error).message || 'Failed to load game assets.');
@@ -118,26 +122,28 @@ export const PixiBridge = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {!isLoaded && !error && (
+          {(!isLoaded || error) && (
             <motion.div
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#02040a]/90 backdrop-blur-sm"
+              className={`absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#02040a] backdrop-blur-sm transition-all duration-500 ${isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             >
-              <div className="mb-4 h-2 w-64 overflow-hidden rounded-full border border-gray-700 bg-gray-800">
-                <div
-                  className="h-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 transition-all duration-200"
-                  style={{ width: `${progress * 100}%` }}
-                />
-              </div>
-              <p className="animate-pulse font-mono flex items-center gap-2 text-cyan-400">LOADING <span className="text-white">{Math.round(progress * 100)}%</span></p>
-            </motion.div>
-          )}
-
-          {error && (
-            <motion.div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#02040a]">
-              <p className="mb-4 text-red-500">{error}</p>
-              <Button onClick={() => window.location.reload()} variant="outline">Retry</Button>
+              {!error ? (
+                <>
+                  <div className="mb-4 h-2 w-64 overflow-hidden rounded-full border border-gray-700 bg-gray-800">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 transition-all duration-200"
+                      style={{ width: `${progress * 100}%` }}
+                    />
+                  </div>
+                  <p className="animate-pulse font-mono flex items-center gap-2 text-cyan-400">LOADING <span className="text-white">{Math.round(progress * 100)}%</span></p>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-8 text-center">
+                  <p className="mb-6 text-red-500 font-bold uppercase tracking-widest">{error}</p>
+                  <Button onClick={() => window.location.reload()} variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white">Retry Connection</Button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
