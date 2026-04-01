@@ -11,7 +11,7 @@ export const Header = () => {
   const isMuted = useUiStore((state) => state.isMuted);
   const setMuted = useUiStore((state) => state.setMuted);
   
-  const { level, xp, maxXp, isVip } = useUserStore();
+  const { level, isVip } = useUserStore();
   
   useAudio();
 
