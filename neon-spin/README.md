@@ -1,73 +1,25 @@
-# React + TypeScript + Vite
+# 🎰 Neon Spin - PIXI.js & React Demonstration
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live Demo:** [https://neon-spin-casino.vercel.app/](https://neon-spin-casino.vercel.app/)
 
-Currently, two official plugins are available:
+## 🚀 Overview
+**Neon Spin** is a high-performance web application built to demonstrate the seamless integration of **PIXI.js** (WebGL engine) within a modern **React** ecosystem. This project serves as a technical case study for a developer portfolio, focusing on advanced graphics, complex state management, and ultra-smooth UI animations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠 Tech Stack
+- **Frontend**: React 19 + TypeScript + Vite
+- **Graphics**: PIXI.js (WebGL rendering)
+- **Animation**: Framer Motion + GSAP
+- **State**: Zustand (Global Store)
+- **Styling**: Tailwind CSS (Glassmorphism & Neon Design)
 
-## React Compiler
+## 💎 Key Features
+- **Custom Game Engines**: Slot machines and Roulette implemented with raw PIXI.js graphics and optimized sprite handling.
+- **Responsive Architecture**: Fully optimized UX for desktop and mobile (breakpoints handled via Tailwind and custom ResizeObservers).
+- **Global State synchronization**: Real-time balance and statistics tracking across multiple game modules.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
+> [!IMPORTANT]
+> **This is a technical demonstration.** No real money gambling is involved. All credits are virtual and provided for testing the interface and game logic only.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+*Created as a showcase of modern web graphics capabilities.*

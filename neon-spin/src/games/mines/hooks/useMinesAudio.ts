@@ -6,10 +6,10 @@ import { useUiStore } from '../../../store/useUiStore';
 // Small neon-themed sound effects in base64
 const SOUND_ASSETS = {
   click: '/sounds/ui_click.mp3',
-  reveal: '/sounds/mine_reveal.mp3',
+  reveal: '/sounds/mine_reveal_pleasant.mp3',
   bust: '/sounds/mine_bust.mp3',
   cashout: '/sounds/slot_win.mp3',
-  start: '/sounds/slot_start.mp3'
+  start: '/sounds/ui_click.mp3'
 };
 
 export const useMinesAudio = () => {
@@ -23,7 +23,7 @@ export const useMinesAudio = () => {
     Object.entries(SOUND_ASSETS).forEach(([key, src]) => {
       sounds.current[key] = new Howl({ 
         src: [src],
-        volume: key === 'bust' ? 0.8 : (key === 'cashout' ? 1.0 : 0.5)
+        volume: key === 'bust' ? 0.4 : (key === 'cashout' ? 1.0 : 0.5)
       });
     });
 

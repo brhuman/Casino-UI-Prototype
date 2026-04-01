@@ -26,7 +26,7 @@ export const PixiBridge = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let isInterrupted = false;
+    let isCurrent = true;
     let localApp: Application | null = null;
     let unsubscribe: (() => void) | null = null;
 
@@ -35,6 +35,10 @@ export const PixiBridge = () => {
         if (!canvas.isConnected) return;
 
         localApp = new Application();
+        if (!isCurrent) {
+          localApp.destroy(true);
+          return;
+        }
         appRef.current = localApp;
 
         await localApp.init({
@@ -48,39 +52,36 @@ export const PixiBridge = () => {
           resolution: 1,
         });
 
-        if (isInterrupted) return;
+        if (!isCurrent) return;
 
         soundManager.init();
-        unsubscribe = await initGameConfig(localApp, (p: number) => setProgress(p));
+        unsubscribe = await initGameConfig(localApp, (p: number) => {
+          if (isCurrent) setProgress(p);
+        });
 
-        if (isInterrupted) return;
+        if (!isCurrent) return;
         setIsLoaded(true);
       } catch (err: unknown) {
-        if (!isInterrupted) setError((err as Error).message || 'Failed to load game assets.');
-        console.error('[PixiBridge] init error:', err);
+        if (isCurrent) {
+          setError((err as Error).message || 'Failed to load game assets.');
+          console.error('[PixiBridge] init error:', err);
+        }
       }
     };
 
     setup();
 
     return () => {
-      isInterrupted = true;
-      const app = appRef.current;
-      appRef.current = null;
-
-      if (app) {
-        try {
-          app.destroy(true, { children: true, texture: true });
-        } catch (_) {
-          // no-op during teardown
-        }
-      }
-
-      if (unsubscribe) {
-        unsubscribe();
+      isCurrent = false;
+      setIsLoaded(false);
+      setProgress(0);
+      if (unsubscribe) unsubscribe();
+      if (appRef.current) {
+        appRef.current.destroy(true, { children: true, texture: true });
+        appRef.current = null;
       }
     };
-  }, []);
+  }, [canvasRef]);
 
   return (
     <>

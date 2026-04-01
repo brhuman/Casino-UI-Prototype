@@ -26,7 +26,7 @@ export const AboutModal = () => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -38,16 +38,12 @@ export const AboutModal = () => {
           
           <button 
             onClick={handleClose}
-            className="absolute top-6 right-6 p-2 text-gray-400 hover:text-white transition-colors"
+            className="absolute top-6 right-6 p-2 text-gray-400 hover:text-white transition-colors cursor-pointer"
           >
             <X size={24} />
           </button>
 
           <div className="p-10 pt-12 text-center">
-            <div className="mx-auto w-24 h-24 mb-6 flex items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/30">
-              <img src="/logo.png" alt="Logo" className="w-16 h-auto" />
-            </div>
-
             <h2 className="text-3xl font-black italic tracking-tighter text-white uppercase mb-4">
               Project Case Study
             </h2>
@@ -82,9 +78,9 @@ export const AboutModal = () => {
 
               <button
                 onClick={handleClose}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-black uppercase tracking-[0.2em] shadow-[0_4px_15px_rgba(6,182,212,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-black uppercase tracking-[0.2em] shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/10"
               >
-                Let's Explore
+                Continue
               </button>
             </div>
           </div>
