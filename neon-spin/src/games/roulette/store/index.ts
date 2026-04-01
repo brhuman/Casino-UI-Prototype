@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface TablesState {
+interface RouletteState {
   isSpinning: boolean;
   lastResult: number | null;
   currentBet: number;
@@ -12,7 +12,7 @@ interface TablesState {
   };
 }
 
-export const useTablesStore = create<TablesState>((set) => ({
+export const useRouletteStore = create<RouletteState>((set) => ({
   isSpinning: false,
   lastResult: null,
   currentBet: 100,

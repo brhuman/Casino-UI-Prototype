@@ -71,6 +71,8 @@ class SlotGame {
   private readonly reelBufferRows = 1;
   private readonly reelVisibleWidth = SLOT_REEL_WIDTH;
   private readonly reelVisibleHeight = SLOT_REEL_HEIGHT;
+  private isDestroyed = false;
+  private isSpinning = false;
 
   constructor(app: Application, parent: Container) {
     this.app = app;
@@ -185,6 +187,10 @@ class SlotGame {
   }
 
   public async startSpin(currentBet: number) {
+    if (this.isDestroyed || this.isSpinning) return;
+    this.isSpinning = true;
+
+    console.log('[SlotGame] Starting Spin...');
     // Reset symbols alpha and scale before spinning
     for (let c = 0; c < REELS_COUNT; c++) {
       for (let r = 0; r < ROWS_COUNT; r++) {
@@ -218,7 +224,24 @@ class SlotGame {
       });
     });
 
-    await Promise.all(promises);
+    let wasResolved = false;
+    const spinTimeout = setTimeout(() => {
+      if (wasResolved || this.isDestroyed) return;
+      wasResolved = true;
+      console.warn('[SlotGame] Spin took too long! Force resolving...');
+      useGameStore.getState().actions.setResult(resultMatrix, winAmount, winningLine);
+      this.isSpinning = false;
+      soundManager.stopRolling();
+    }, 12000);
+
+    try {
+      await Promise.all(promises);
+      if (wasResolved || this.isDestroyed) return;
+      wasResolved = true;
+    } finally {
+      clearTimeout(spinTimeout);
+    }
+    
     soundManager.stopRolling();
 
     if (winAmount > 0) {
@@ -227,9 +250,15 @@ class SlotGame {
     }
 
     useGameStore.getState().actions.setResult(resultMatrix, winAmount, winningLine);
+    this.isSpinning = false;
+    console.log('[SlotGame] Spin Completed.');
   }
 
   public destroy() {
+    this.isDestroyed = true;
+    gsap.killTweensOf(this.container);
+    this.reels.forEach(reel => gsap.killTweensOf(reel));
+    this.container.destroy({ children: true });
     this.reels = [];
   }
 }

@@ -1,25 +1,22 @@
 import { create } from 'zustand';
 import { useSettingsStore } from './useSettingsStore';
 
-export type ViewType = 'lobby' | 'slots' | 'mines' | 'tables' | 'profile';
+export type ViewType = 'lobby' | 'slots' | 'mines' | 'roulette' | 'profile';
 
 interface UiState {
   currentView: ViewType;
   isMuted: boolean;
   showAboutModal: boolean;
-  isMenuOpen: boolean;
   setView: (view: ViewType) => void;
   setMuted: (muted: boolean) => void;
   setShowAboutModal: (show: boolean) => void;
-  toggleMenu: () => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
   currentView: 'lobby',
   isMuted: useSettingsStore.getState().isMuted,
   showAboutModal: false,
-  isMenuOpen: false,
-  setView: (view) => set({ currentView: view, isMenuOpen: false }),
+  setView: (view) => set({ currentView: view }),
   setMuted: (muted) => {
     set({ isMuted: muted });
     // Keep SettingsStore in sync for persistence
@@ -28,5 +25,4 @@ export const useUiStore = create<UiState>((set) => ({
     }
   },
   setShowAboutModal: (show) => set({ showAboutModal: show }),
-  toggleMenu: () => set((state) => ({ isMenuOpen: !state.isMenuOpen })),
 }));

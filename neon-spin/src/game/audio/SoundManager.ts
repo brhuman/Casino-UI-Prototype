@@ -1,4 +1,5 @@
 import { Howl, Howler } from 'howler';
+import { useUserStore } from '../../store/useUserStore';
 
 export class SoundManager {
   private spinSound: Howl | null = null;
@@ -9,23 +10,27 @@ export class SoundManager {
     // Only load sounds when ready, prevents multiple initializations
     if (this.spinSound) return;
 
-    // Use Howler global settings if needed
-    Howler.volume(0.8);
+    const globalVol = useUserStore.getState().globalVolume;
+    Howler.volume(globalVol);
+
+    useUserStore.subscribe((state) => {
+      Howler.volume(state.globalVolume);
+    });
 
     this.spinSound = new Howl({
-      src: ['/sounds/spin.wav'],
-      volume: 0.6,
+      src: ['/assets/spin.mp3'],
+      volume: 0.3 * 1.0,
     });
 
     this.rollingSound = new Howl({
-      src: ['/sounds/rolling.wav'],
-      volume: 0.4,
+      src: ['/assets/rolling.mp3'],
+      volume: 0.3 * 1.0,
       loop: true,
     });
 
     this.winSound = new Howl({
-      src: ['/sounds/win.wav'],
-      volume: 0.9,
+      src: ['/assets/win.mp3'],
+      volume: 1.0,
     });
   }
 
@@ -45,6 +50,14 @@ export class SoundManager {
 
   public playWin() {
     this.winSound?.play();
+  }
+
+  public stopAll() {
+    this.spinSound?.stop();
+    this.rollingSound?.stop();
+    this.winSound?.stop();
+    // Also global stop just in case
+    Howler.stop();
   }
 }
 

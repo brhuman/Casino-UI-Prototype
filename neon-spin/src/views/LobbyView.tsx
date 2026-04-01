@@ -48,7 +48,7 @@ export const LobbyView = () => {
 
           <div 
             className="group relative h-48 rounded-xl overflow-hidden cursor-pointer border border-gray-800 hover:border-neon-purple transition-all duration-300"
-            onClick={() => setView('tables')}
+            onClick={() => setView('roulette')}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
             <div className="absolute inset-0 bg-gray-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">

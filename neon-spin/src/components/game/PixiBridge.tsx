@@ -76,9 +76,15 @@ export const PixiBridge = () => {
       setIsLoaded(false);
       setProgress(0);
       if (unsubscribe) unsubscribe();
+      
       if (appRef.current) {
-        appRef.current.destroy(true, { children: true, texture: true });
+        const app = appRef.current;
         appRef.current = null;
+        try {
+          app.destroy(true, { children: true, texture: true });
+        } catch (e) {
+          console.warn('[PixiBridge] Destroy error:', e);
+        }
       }
     };
   }, [canvasRef]);

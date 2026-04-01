@@ -9,10 +9,14 @@ interface UserState {
   totalBets: number;
   totalWinAmount: number;
   biggestWin: number;
+  globalVolume: number;
+  selectedAvatar: string | null;
   actions: {
     login: (token: string, userId: string, username: string, balance: number) => void;
     logout: () => void;
     updateBalance: (amount: number) => void;
+    setGlobalVolume: (volume: number) => void;
+    setAvatar: (url: string) => void;
   };
 }
 
@@ -26,6 +30,8 @@ export const useUserStore = create<UserState>()(
       totalBets: 0,
       totalWinAmount: 0,
       biggestWin: 0,
+      globalVolume: 0.3,
+      selectedAvatar: null,
       actions: {
         login: (token, userId, username, balance) => set({ token, userId, username, balance }),
         logout: () => set({ token: null, userId: null, username: 'Guest' }),
@@ -42,6 +48,9 @@ export const useUserStore = create<UserState>()(
           }
           return updates;
         }),
+
+        setGlobalVolume: (volume) => set({ globalVolume: volume }),
+        setAvatar: (url) => set({ selectedAvatar: url }),
       },
     }),
     {
@@ -53,7 +62,9 @@ export const useUserStore = create<UserState>()(
         balance: state.balance,
         totalBets: state.totalBets,
         totalWinAmount: state.totalWinAmount,
-        biggestWin: state.biggestWin
+        biggestWin: state.biggestWin,
+        globalVolume: state.globalVolume,
+        selectedAvatar: state.selectedAvatar
       }),
     }
   )

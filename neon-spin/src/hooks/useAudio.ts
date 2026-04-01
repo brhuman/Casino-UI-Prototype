@@ -2,16 +2,22 @@ import { useEffect, useRef } from 'react';
 import { Howl, Howler } from 'howler';
 import { useGameStore } from '../store/useGameStore';
 import { useUiStore } from '../store/useUiStore';
+import { useUserStore } from '../store/useUserStore';
 
 export const useAudio = () => {
   const isMuted = useUiStore(state => state.isMuted);
   const isSpinning = useGameStore(state => state.isSpinning);
+  const globalVolume = useUserStore(state => state.globalVolume);
   
 
   const bgMusic = useRef<Howl | null>(null);
   const spinStartSfx = useRef<Howl | null>(null);
   const spinSfx = useRef<Howl | null>(null);
   const winSfx = useRef<Howl | null>(null);
+
+  useEffect(() => {
+    Howler.volume(globalVolume);
+  }, [globalVolume]);
 
   useEffect(() => {
 
