@@ -1,8 +1,17 @@
-import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
-import { loadAssets } from './loader';
+import { Application, Container, Graphics, Sprite } from 'pixi.js';
+import { getSymbolTexture, loadAssets } from './loader';
 import { useGameStore } from '../../store/useGameStore';
 import { spinReel } from '../animations/spin';
 import { generateResultMatrix, calculateWin, REELS_COUNT, ROWS_COUNT } from '../math/rng';
+
+export const SLOT_SYMBOL_SIZE = 118;
+export const SLOT_REEL_SPACING = 14;
+export const SLOT_STAGE_PADDING = 8;
+export const SLOT_REEL_WIDTH =
+  REELS_COUNT * SLOT_SYMBOL_SIZE + (REELS_COUNT - 1) * SLOT_REEL_SPACING;
+export const SLOT_REEL_HEIGHT = ROWS_COUNT * SLOT_SYMBOL_SIZE;
+export const SLOT_STAGE_WIDTH = SLOT_REEL_WIDTH + (SLOT_STAGE_PADDING * 2);
+export const SLOT_STAGE_HEIGHT = SLOT_REEL_HEIGHT + (SLOT_STAGE_PADDING * 2);
 
 export const initGameConfig = async (app: Application, onProgress: (p: number) => void) => {
   console.log('[PIXI] initGameConfig starting...');
@@ -17,8 +26,6 @@ export const initGameConfig = async (app: Application, onProgress: (p: number) =
     mainContainer.eventMode = 'passive';
 
     console.log(`[PIXI] Screen size: ${app.screen.width}x${app.screen.height}`);
-    mainContainer.x = app.screen.width / 2;
-    mainContainer.y = app.screen.height / 2;
     app.stage.addChild(mainContainer);
     console.log('[PIXI] Main container added to stage.');
 
@@ -56,23 +63,20 @@ class SlotGame {
   public container: Container;
   reelsContainer: Container;
   reels: Container[] = [];
-  symbolSize = 180;
-  reelSpacing = 25;
+  symbolSize = SLOT_SYMBOL_SIZE;
+  reelSpacing = SLOT_REEL_SPACING;
   app: Application;
+  private readonly reelBufferRows = 1;
+  private readonly reelVisibleWidth = SLOT_REEL_WIDTH;
+  private readonly reelVisibleHeight = SLOT_REEL_HEIGHT;
 
   constructor(app: Application, parent: Container) {
     this.app = app;
     this.container = new Container();
-    
 
-    const totalWidth = (REELS_COUNT * this.symbolSize) + ((REELS_COUNT - 1) * this.reelSpacing);
-    const totalHeight = ROWS_COUNT * this.symbolSize;
-    
-    this.container.x = -totalWidth / 2;
-    this.container.y = -totalHeight / 2;
+    this.container.x = SLOT_STAGE_PADDING;
+    this.container.y = SLOT_STAGE_PADDING;
     parent.addChild(this.container);
-
-    this.buildBg(totalWidth, totalHeight);
 
     this.reelsContainer = new Container();
     this.container.addChild(this.reelsContainer);
@@ -80,32 +84,11 @@ class SlotGame {
     this.buildReels();
   }
 
-  private buildBg(w: number, h: number) {
-     const bg = new Graphics();
-     const innerPanel = new Graphics();
-
-     bg.roundRect(-20, -20, w + 40, h + 40, 20);
-     bg.fill({ color: 0x000000, alpha: 0.92 });
-     bg.stroke({ width: 2, color: 0xff00ff, alpha: 0.45 });
-     this.container.addChild(bg);
-
-     innerPanel.roundRect(0, 0, w, h, 16);
-     innerPanel.fill({ color: 0x050505, alpha: 0.98 });
-     innerPanel.stroke({ width: 1, color: 0x1a1a1a, alpha: 0.9 });
-     this.container.addChild(innerPanel);
-  }
-
   private buildReels() {
     for (let i = 0; i < REELS_COUNT; i++) {
       const reelContainer = new Container();
       reelContainer.x = i * (this.symbolSize + this.reelSpacing);
-      
-
-      for (let j = -1; j < ROWS_COUNT + 1; j++) {
-        const symbol = this.createMockSymbol(Math.floor(Math.random() * 6));
-        symbol.y = j * this.symbolSize;
-        reelContainer.addChild(symbol);
-      }
+      this.renderReel(reelContainer, this.makeSpinFrame());
       
       this.reels.push(reelContainer);
       this.reelsContainer.addChild(reelContainer);
@@ -113,42 +96,61 @@ class SlotGame {
     
 
     const mask = new Graphics();
-    mask.rect(0, 0, (REELS_COUNT * (this.symbolSize + this.reelSpacing)), ROWS_COUNT * this.symbolSize);
+    mask.rect(0, 0, this.reelVisibleWidth, this.reelVisibleHeight);
     mask.fill(0xffffff);
     this.reelsContainer.addChild(mask);
     this.reelsContainer.mask = mask;
   }
 
-  private createMockSymbol(id: number) {
+  private renderReel(reelContainer: Container, symbolIds: number[]) {
+    reelContainer.removeChildren();
+
+    symbolIds.forEach((id, index) => {
+      const symbol = this.createSymbol(id);
+      symbol.y = (index - this.reelBufferRows) * this.symbolSize;
+      reelContainer.addChild(symbol);
+    });
+  }
+
+  private makeSpinFrame() {
+    return Array.from({ length: ROWS_COUNT + (this.reelBufferRows * 2) }, () =>
+      Math.floor(Math.random() * 6)
+    );
+  }
+
+  private makeFinalFrame(resultColumn: number[]) {
+    return [
+      Math.floor(Math.random() * 6),
+      ...resultColumn,
+      Math.floor(Math.random() * 6),
+    ];
+  }
+
+  private createSymbol(id: number) {
     const cont = new Container();
     const bg = new Graphics();
-    bg.roundRect(5, 5, this.symbolSize - 10, this.symbolSize - 10, 15);
+    const panelInsetX = 12;
+    const panelInsetY = 14;
+    const panelWidth = this.symbolSize - (panelInsetX * 2);
+    const panelHeight = this.symbolSize - (panelInsetY * 2);
     
     const colors = [0xff00ff, 0xff3333, 0x00ffff, 0x00ff00, 0xffff00, 0xffaa00];
-    const texts = ["W", "7", "BAR", "MEL", "BEL", "CHE"];
     
-    bg.fill({ color: colors[id % colors.length], alpha: 0.72 });
-    bg.stroke({ width: 3, color: colors[id % colors.length], alpha: 0.95 });
+    bg.roundRect(panelInsetX, panelInsetY, panelWidth, panelHeight, 18);
+    bg.fill({ color: colors[id % colors.length], alpha: 0.22 });
+    bg.stroke({ width: 2, color: colors[id % colors.length], alpha: 0.92 });
+
+    const icon = Sprite.from(getSymbolTexture(id));
+    icon.anchor.set(0.5);
+    icon.x = this.symbolSize / 2;
+    icon.y = this.symbolSize / 2;
+
+    const maxIconWidth = panelWidth * 0.82;
+    const maxIconHeight = panelHeight * 0.82;
+    const iconScale = Math.min(maxIconWidth / icon.width, maxIconHeight / icon.height);
+    icon.scale.set(iconScale);
     
-    const textStyle = new TextStyle({
-      fontFamily: 'Arial Black',
-      fontSize: 42,
-      fontWeight: 'bold',
-      fill: colors[id % colors.length] === 0xffff00 ? 0x111111 : 0xffffff,
-      dropShadow: {
-        color: colors[id % colors.length],
-        blur: 15,
-        distance: 0,
-        alpha: 1
-      }
-    });
-    
-    const text = new Text({ text: texts[id % texts.length], style: textStyle });
-    text.anchor.set(0.5);
-    text.x = this.symbolSize / 2;
-    text.y = this.symbolSize / 2;
-    
-    cont.addChild(bg, text);
+    cont.addChild(bg, icon);
     return cont;
   }
 
@@ -159,8 +161,15 @@ class SlotGame {
 
     const promises = this.reels.map((reel, index) => {
       return new Promise<void>((resolve) => {
-
-         spinReel(reel, index, resultMatrix[index], this.symbolSize, () => resolve());
+         spinReel(
+           reel,
+           index,
+           resultMatrix[index],
+           this.symbolSize,
+           () => this.renderReel(reel, this.makeSpinFrame()),
+           () => this.renderReel(reel, this.makeFinalFrame(resultMatrix[index])),
+           () => resolve()
+         );
       });
     });
 

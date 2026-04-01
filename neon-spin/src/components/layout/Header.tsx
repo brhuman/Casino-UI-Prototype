@@ -21,9 +21,12 @@ export const Header = () => {
 
   return (
     <header className="h-16 w-full flex items-center justify-between px-4 lg:px-8 bg-gray-900/80 backdrop-blur-md border-b border-gray-800 z-50">
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-neon-pink to-neon-purple shadow-[0_0_10px_#ff00ff] border border-white/20"></div>
-        <h1 className="text-xl font-bold tracking-widest uppercase bg-clip-text text-transparent bg-gradient-to-r from-neon-pink to-neon-blue hidden sm:block">Neon Spin</h1>
+      <div className="flex items-center">
+        <img
+          src="/logo.png"
+          alt="Neon Spin"
+          className="h-11 w-auto max-w-[220px] object-contain [filter:drop-shadow(0_0_8px_rgba(255,0,200,0.35))_drop-shadow(0_0_14px_rgba(0,220,255,0.28))] sm:h-12 sm:max-w-[260px]"
+        />
       </div>
 
       <div className="flex bg-black/50 rounded-full px-4 py-1.5 border border-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] items-center">
