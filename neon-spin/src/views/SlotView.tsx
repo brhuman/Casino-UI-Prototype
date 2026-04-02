@@ -1,5 +1,4 @@
 import { PixiBridge } from '../components/game/PixiBridge';
-import { GlobalChat } from '../components/game/GlobalChat';
 import { useSettingsStore } from '../store/useSettingsStore';
 
 
@@ -30,7 +29,6 @@ export const SlotView = () => {
 
         {/* Global Chat Integration */}
         <div className="w-full">
-           <GlobalChat />
         </div>
       </div>
     </div>

@@ -5,7 +5,6 @@ import { useUserStore } from '../../../store/useUserStore';
 import { Play, RotateCcw, Trophy } from 'lucide-react';
 import { GameButton } from '../../../components/ui/GameButton';
 import { AnimatePresence, motion } from 'framer-motion';
-import { GlobalChat } from '../../../components/game/GlobalChat';
 import { useSettingsStore } from '../../../store/useSettingsStore';
 
 export const RouletteView: React.FC = () => {
@@ -114,11 +113,6 @@ export const RouletteView: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Global Chat Integration */}
-        <section className="mt-8 pb-12 w-full max-w-5xl">
-           <GlobalChat />
-        </section>
       </div>
     </div>
   );
