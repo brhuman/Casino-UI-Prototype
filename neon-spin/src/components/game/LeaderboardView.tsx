@@ -3,8 +3,10 @@ import { useUserStore } from '../../store/useUserStore';
 import { DUMMY_NICKNAMES } from '../../constants/dummyData';
 import { Trophy, Medal } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const LeaderboardView = () => {
+  const { t } = useTranslation();
   const username = useUserStore((state) => state.username);
   const totalWinAmount = useUserStore((state) => state.totalWinAmount);
 
@@ -21,12 +23,12 @@ export const LeaderboardView = () => {
   }, [username, totalWinAmount]);
 
   return (
-    <div className="w-full bg-white/5 border border-white/10 rounded-[3rem] overflow-hidden backdrop-blur-xl">
-      <div className="p-8 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
-        <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter flex items-center gap-3">
-          <Trophy size={24} className="text-yellow-400" /> Champions League
+    <div className="w-full bg-white/5 border border-white/10 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl">
+      <div className="p-10 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+        <h3 className="text-3xl sm:text-4xl font-black text-white italic uppercase tracking-tighter flex items-center gap-4">
+          <div className="w-2 h-8 bg-yellow-400 rounded-full shadow-[0_0_15px_#facc15]" /> {t('lobby.champions_league')}
         </h3>
-        <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">Updated Moments ago</span>
+        <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">{t('lobby.updated_moments_ago')}</span>
       </div>
 
       <div className="p-4">
@@ -61,7 +63,7 @@ export const LeaderboardView = () => {
                       {player.name}
                     </span>
                     {player.isCurrentUser && (
-                      <span className="text-[9px] font-black text-neon-cyan/50 uppercase tracking-widest">You are here</span>
+                      <span className="text-[9px] font-black text-neon-cyan/50 uppercase tracking-widest">{t('lobby.you_are_here')}</span>
                     )}
                   </div>
                 </div>
@@ -71,7 +73,7 @@ export const LeaderboardView = () => {
                     <span className={`text-lg font-mono font-black ${isTop3 ? 'text-white' : 'text-white/60'}`}>
                       ${player.amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </span>
-                    <span className="block text-[8px] font-black text-white/10 uppercase tracking-widest">Total Win</span>
+                    <span className="block text-[8px] font-black text-white/10 uppercase tracking-widest">{t('lobby.total_win')}</span>
                   </div>
                 </div>
               </motion.div>

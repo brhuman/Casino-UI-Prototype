@@ -1,4 +1,5 @@
-import { Home, Gamepad2, CircleDashed, User, Bomb, Settings } from 'lucide-react';
+import { Home, User, Settings } from 'lucide-react';
+import { SlotsIcon, MinesIcon, RouletteIcon } from '../ui/GameIcons';
 import { motion } from 'framer-motion';
 import { useUiStore } from '../../store/useUiStore';
 import { useUserStore } from '../../store/useUserStore';
@@ -6,9 +7,9 @@ import type { ViewType } from '../../store/useUiStore';
 
 const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
   { id: 'lobby', label: 'Lobby', icon: Home },
-  { id: 'slots', label: 'Slots', icon: Gamepad2 },
-  { id: 'mines', label: 'Mines', icon: Bomb },
-  { id: 'roulette', label: 'Roulette', icon: CircleDashed },
+  { id: 'slots', label: 'Slots', icon: SlotsIcon },
+  { id: 'mines', label: 'Mines', icon: MinesIcon },
+  { id: 'roulette', label: 'Roulette', icon: RouletteIcon },
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];

@@ -1,14 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLiveWinsStore } from '../../store/useLiveWinsStore';
 import { useEffect } from 'react';
-import { TrendingUp, UserPlus, Trophy } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { DUMMY_NICKNAMES, PRESET_AVATARS } from '../../constants/dummyData';
+import { useTranslation } from 'react-i18next';
 
 export const LatestWins = () => {
   const wins = useLiveWinsStore((state) => state.wins);
   const registrations = useLiveWinsStore((state) => state.registrations);
   const addWin = useLiveWinsStore((state) => state.actions.addWin);
   const addRegistration = useLiveWinsStore((state) => state.actions.addRegistration);
+  const { t } = useTranslation();
 
   // Randomized Win Spawner
   useEffect(() => {
@@ -61,70 +63,52 @@ export const LatestWins = () => {
   }, [addRegistration]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 pt-10 pb-16 px-4">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14 pt-4 pb-12">
       {/* 1. LIVE WINNERS COLUMN */}
-      <section className="flex flex-col gap-6 relative">
-        <div className="flex items-center justify-between border-b border-white/10 pb-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-yellow-500/10 rounded-2xl border border-yellow-500/20">
-              <Trophy className="text-yellow-400" size={24} strokeWidth={2.5} />
-            </div>
-            <div>
-              <h2 className="text-2xl font-black text-white uppercase italic tracking-tighter leading-none mb-1">Win Stream</h2>
-              <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">Latest payouts in real-time</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 bg-neon-cyan/5 px-3 py-1.5 rounded-full border border-neon-cyan/20">
-            <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse shadow-[0_0_8px_#00ffff]" />
-            <span className="text-[10px] font-black text-neon-cyan uppercase tracking-widest">Live</span>
+      <section className="flex flex-col gap-8 relative">
+        <div className="flex items-center justify-between px-2">
+          <h2 className="text-3xl sm:text-4xl font-black text-white uppercase italic tracking-tighter flex items-center gap-4">
+             <div className="w-2 h-8 bg-neon-purple rounded-full shadow-[0_0_15px_#9333ea]" /> {t('lobby.win_stream')}
+          </h2>
+          <div className="flex items-center gap-2 bg-neon-cyan/5 px-4 py-2 rounded-full border border-neon-cyan/20 backdrop-blur-md">
+            <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse shadow-[0_0_10px_#00ffff]" />
+            <span className="text-[10px] font-black text-neon-cyan uppercase tracking-[0.2em]">{t('lobby.live')}</span>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 min-h-[580px] overflow-hidden">
+        <div className="flex flex-col gap-4 min-h-[580px]">
           <AnimatePresence initial={false} mode="popLayout">
             {wins.slice(0, 6).map((win) => (
               <motion.div 
                 key={win.id} 
                 layout
-                initial={{ opacity: 0, y: -40, scale: 0.9, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: 40, scale: 0.9, filter: 'blur(10px)', transition: { duration: 0.3 } }}
-                transition={{ 
-                  type: 'spring', 
-                  stiffness: 400, 
-                  damping: 30,
-                  layout: { duration: 0.4, type: 'spring', stiffness: 400, damping: 30 }
-                }}
-                className={`flex items-center justify-between p-5 h-[94px] rounded-2xl border backdrop-blur-3xl transition-all group/win ${win.isPremium ? 'bg-yellow-500/5 border-yellow-500/30 hover:bg-yellow-500/10 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.07]'}`}
+                initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, x: 20, filter: 'blur(10px)', transition: { duration: 0.2 } }}
+                className={`flex items-center justify-between p-6 rounded-[2rem] border backdrop-blur-xl transition-all group/win ${win.isPremium ? 'bg-yellow-400/5 border-yellow-500/20 shadow-[0_0_30px_rgba(250,204,21,0.05)]' : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.06] hover:border-white/10'}`}
               >
-                 <div className="flex items-center gap-4">
-                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center border transition-all overflow-hidden relative ${win.isPremium ? 'border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.4)]' : 'bg-gradient-to-br from-white/10 to-transparent border-white/10 group-hover/win:border-neon-cyan/40'}`}>
+                 <div className="flex items-center gap-5">
+                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-all overflow-hidden relative shadow-2xl ${win.isPremium ? 'border-yellow-400/40 bg-yellow-400/10' : 'bg-black/40 border-white/5 group-hover/win:border-neon-cyan/40'}`}>
                      {win.avatar ? (
                        <img src={win.avatar} alt="Winner" className="w-full h-full object-cover" />
                      ) : (
-                       <TrendingUp size={18} className={`${win.isPremium ? 'text-yellow-400' : 'text-white/40 group-hover/win:text-neon-cyan'}`} />
-                     )}
-                     {win.isPremium && (
-                       <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/20 to-transparent pointer-events-none" />
+                       <TrendingUp size={20} className={`${win.isPremium ? 'text-yellow-400' : 'text-white/40 group-hover/win:text-neon-cyan'}`} />
                      )}
                    </div>
-                   <div className="flex flex-col">
-                     <div className="flex items-center gap-1.5">
-                       <span className={`font-black uppercase italic tracking-tighter text-base leading-tight ${win.isPremium ? 'text-yellow-400' : 'text-white'}`}>{win.game}</span>
-                       {win.isPremium && <div className="w-1 h-1 rounded-full bg-yellow-400 animate-pulse" />}
-                     </div>
-                     <span className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">{win.player}</span>
+                   <div className="flex flex-col gap-1">
+                     <span className={`font-black uppercase italic tracking-tighter text-lg leading-none ${win.isPremium ? 'text-yellow-400' : 'text-white'}`}>{win.game}</span>
+                     <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">{win.player}</span>
                    </div>
                  </div>
                  
-                 <div className="flex items-center gap-8">
-                   <div className="hidden sm:flex flex-col items-end">
-                     <span className={`${win.isPremium ? 'text-yellow-400' : 'text-neon-purple'} font-black text-sm italic leading-tight`}>{win.multiplier}</span>
-                     <span className="text-white/20 text-[8px] font-black uppercase tracking-widest">Multiplier</span>
+                 <div className="flex items-center gap-10">
+                   <div className="hidden sm:flex flex-col items-end gap-1">
+                     <span className={`${win.isPremium ? 'text-yellow-500' : 'text-neon-purple'} font-black text-sm italic tracking-tighter`}>{win.multiplier}</span>
+                     <span className="text-white/10 text-[8px] font-black uppercase tracking-widest whitespace-nowrap">{t('lobby.multiplier')}</span>
                    </div>
-                   <div className="text-right min-w-[90px]">
-                     <span className={`${win.isPremium ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.45)]' : 'text-neon-cyan drop-shadow-[0_0_10px_rgba(0,255,255,0.45)]'} font-mono font-black block text-xl leading-tight`}>+${win.amount}</span>
-                     <span className="text-white/10 text-[9px] font-black uppercase block tracking-widest mt-1">Just now</span>
+                   <div className="text-right min-w-[100px]">
+                     <span className={`${win.isPremium ? 'text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.4)]' : 'text-neon-cyan drop-shadow-[0_0_15px_rgba(0,255,255,0.4)]'} font-mono font-black block text-2xl tracking-tighter`}>+${win.amount}</span>
+                     <span className="text-white/10 text-[9px] font-black uppercase block tracking-[0.2em] mt-1">{t('lobby.just_now')}</span>
                    </div>
                  </div>
               </motion.div>
@@ -134,59 +118,47 @@ export const LatestWins = () => {
       </section>
 
       {/* 2. RECENT REGISTRATIONS COLUMN */}
-      <section className="flex flex-col gap-6 relative">
-        <div className="flex items-center justify-between border-b border-white/10 pb-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-neon-purple/10 rounded-2xl border border-neon-purple/20">
-              <UserPlus className="text-neon-purple" size={24} strokeWidth={2.5} />
-            </div>
-            <div>
-              <h2 className="text-2xl font-black text-white uppercase italic tracking-tighter leading-none mb-1">New Arrivals</h2>
-              <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">Recent player registrations</p>
-            </div>
-          </div>
-          <div className="flex gap-1.5 p-2 bg-white/5 rounded-xl border border-white/5">
+      <section className="flex flex-col gap-8 relative">
+        <div className="flex items-center justify-between px-2">
+          <h2 className="text-3xl sm:text-4xl font-black text-white uppercase italic tracking-tighter flex items-center gap-4">
+             <div className="w-2 h-8 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]" /> {t('lobby.new_arrivals')}
+          </h2>
+          <div className="flex gap-2 p-2 bg-white/5 rounded-2xl border border-white/5">
              {[1,2,3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/20 animate-pulse" style={{ animationDelay: `${i * 0.3}s` }} />)}
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 min-h-[580px] overflow-hidden">
+        <div className="flex flex-col gap-4 min-h-[580px]">
           <AnimatePresence initial={false} mode="popLayout">
             {registrations.slice(0, 6).map((reg) => (
               <motion.div 
                 key={reg.id} 
                 layout
-                initial={{ opacity: 0, y: -40, scale: 0.9, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: 40, scale: 0.9, filter: 'blur(10px)', transition: { duration: 0.3 } }}
-                transition={{ 
-                  type: 'spring', 
-                  stiffness: 400, 
-                  damping: 30,
-                  layout: { duration: 0.4, type: 'spring', stiffness: 400, damping: 30 }
-                }}
-                className="flex items-center justify-between p-5 h-[94px] rounded-2xl bg-white/[0.015] border border-white/5 hover:bg-white/[0.05] transition-all group/reg"
+                initial={{ opacity: 0, x: 20, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, x: -20, filter: 'blur(10px)', transition: { duration: 0.2 } }}
+                className="flex items-center justify-between p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group/reg shadow-xl"
               >
-                 <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-neon-purple/20 via-black to-neon-purple/5 flex items-center justify-center border border-white/10 group-hover/reg:border-neon-purple/40 transition-all shadow-2xl relative">
+                 <div className="flex items-center gap-5">
+                   <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-neon-purple/20 via-black to-neon-purple/5 flex items-center justify-center border border-white/10 group-hover/reg:border-neon-purple/40 transition-all shadow-2xl relative">
                      <div className="absolute inset-0 rounded-full bg-neon-purple/5 group-hover/reg:bg-neon-purple/15 transition-colors" />
                      <span className="relative text-[10px] font-black text-neon-purple tracking-tighter whitespace-nowrap">
                        {reg.player.split('_')[1]?.slice(0, 2) || 'NS'}
                      </span>
                    </div>
-                   <div className="flex flex-col">
-                     <span className="text-white font-black uppercase italic tracking-tighter text-lg leading-tight mb-0.5">{reg.player}</span>
+                   <div className="flex flex-col gap-1">
+                     <span className="text-white font-black uppercase italic tracking-tighter text-xl leading-none">{reg.player}</span>
                      <div className="flex items-center gap-2">
-                        <span className="text-emerald-400 font-black text-[9px] uppercase tracking-widest">Established member</span>
-                        <div className="w-1 h-1 rounded-full bg-emerald-400/30" />
+                        <span className="text-emerald-400 font-black text-[9px] uppercase tracking-widest opacity-60">{t('lobby.verified_member')}</span>
+                        <div className="w-1 h-1 rounded-full bg-emerald-400/40" />
                      </div>
                    </div>
                  </div>
                  
-                 <div className="text-right flex flex-col items-end">
-                   <span className="text-white/20 text-[9px] font-black uppercase tracking-[0.3em] mb-1">{reg.time}</span>
-                   <div className="h-1 w-12 bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full w-full bg-neon-purple animate-shimmer" />
+                 <div className="text-right flex flex-col items-end gap-2">
+                   <span className="text-white/20 text-[9px] font-black uppercase tracking-[0.4em]">{t(`lobby.${reg.time.toLowerCase().replace(' ', '_')}`)}</span>
+                   <div className="h-1 w-16 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full w-full bg-neon-purple animate-pulse" />
                    </div>
                  </div>
               </motion.div>

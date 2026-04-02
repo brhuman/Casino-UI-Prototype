@@ -1,0 +1,121 @@
+{
+  "common": {
+    "play": "Play",
+    "save": "Save",
+    "cancel": "Cancel",
+    "change": "Change",
+    "vip_elite": "VIP ELITE STATUS",
+    "standard_member": "STANDARD MEMBER",
+    "disable_vip": "Disable VIP",
+    "become_vip": "Become VIP",
+    "level": "Level",
+    "progress": "Progress",
+    "about": {
+      "title": "Project Overview",
+      "subtitle": "Neon Spin Tech Demo",
+      "desc": "Premium PIXI.js & React integration with advanced state management.",
+      "tech_stack": "Core Technologies",
+      "github": "View GitHub Source",
+      "disclaimer": "Technical demo only. No real money gambling involved.",
+      "continue": "Enter System",
+      "dont_show": "Don't show this briefing again"
+    }
+  },
+  "lobby": {
+    "hero": {
+      "slots": {
+        "title": "Neon Slots",
+        "subtitle": "WILD MULTIPLIERS & HUGE WINS",
+        "description": "Experience the classic thrill with a futuristic neon twist. Triple your fortune today!",
+        "button": "SPIN TO WIN"
+      },
+      "roulette": {
+        "title": "Cyber Roulette",
+        "subtitle": "THE ULTIMATE TABLE EXPERIENCE",
+        "description": "Place your bets on the high-tech wheel. Precision gaming meets pure luck.",
+        "button": "PLACE BETS"
+      },
+      "mines": {
+        "title": "Neon Mines",
+        "subtitle": "STRATEGIZE & EXPLODE PROFITS",
+        "description": "The most intense logic game in the metaverse. How far dare you go?",
+        "button": "START MINING"
+      }
+    },
+    "stats": {
+      "active_players": "Active Players",
+      "total_payout": "Total Payout",
+      "luck_factor": "Luck Factor",
+      "system_check": "System Check",
+      "verified": "Verified",
+      "high": "High"
+    },
+    "universe": "Game Universe",
+    "games": {
+      "slots": "Neon Spin",
+      "roulette": "Cyber Wheel",
+      "mines": "Neon Mines",
+      "premium_slot": "Premium Slot",
+      "live_table": "Live Table",
+      "logic_game": "Logic Game",
+      "playing": "Playing"
+    },
+    "cta": {
+      "vip_title_active": "VIP Elite Club",
+      "vip_title_inactive": "Level Up to VIP",
+      "vip_desc_active": "EXCLUSIVE PRIVILEGES FULLY ACTIVE",
+      "vip_desc_inactive": "GET DOUBLE REWARDS & GOLDEN INTERFACE",
+      "vip_button_active": "Manage VIP Membership",
+      "vip_button_inactive": "Join the Elite Now",
+      "recharge_title": "Fast Recharge",
+      "recharge_desc": "INSTANTLY ADD $5,000 CREDITS TO BANK",
+      "recharge_button": "Top Up $5,000 Now"
+    },
+    "win_stream": "Win Stream",
+    "new_arrivals": "New Arrivals",
+    "live": "Live",
+    "multiplier": "Multiplier",
+    "just_now": "Just now",
+    "verified_member": "Verified Member",
+    "champions_league": "Champions League",
+    "updated_moments_ago": "Updated Moments ago",
+    "you_are_here": "You are here",
+    "total_win": "Total Win"
+  },
+  "profile": {
+    "available_credits": "Available Credits",
+    "add_credits": "Add $1,000",
+    "milestones": "Milestones",
+    "showcase": "Showcase your glory",
+    "wagers": "Wagers",
+    "max_payout": "Max Payout",
+    "profit": "Profit",
+    "choose_persona": "Choose Your Persona",
+    "upload": "Upload"
+  },
+  "settings": {
+    "title": "System Settings",
+    "audio": {
+      "title": "Audio Experience",
+      "master_volume": "Master Volume"
+    },
+    "visual": {
+      "title": "Visual & Performance",
+      "quality_fx": "High Quality FX",
+      "neon_glow": "Neon Glow"
+    },
+    "security": {
+      "title": "Security & Alerts",
+      "notifications": "Notifications",
+      "system_info": "System Information"
+    },
+    "language": {
+      "title": "Language",
+      "select": "Choose Language",
+      "en": "English",
+      "uk": "Ukrainian",
+      "ru": "Russian",
+      "pl": "Polish"
+    }
+  }
+}

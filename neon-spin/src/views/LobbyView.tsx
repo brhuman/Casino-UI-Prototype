@@ -1,46 +1,52 @@
-import { useState, useEffect } from 'react';
-import { Crown, Plus, Play, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Crown, Plus, Play } from 'lucide-react';
+import { SlotsIcon, MinesIcon, RouletteIcon } from '../components/ui/GameIcons';
 import { useUiStore } from '../store/useUiStore';
 import { useUserStore } from '../store/useUserStore';
 import { LatestWins } from '../components/game/LatestWins';
 import { LeaderboardView } from '../components/game/LeaderboardView';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
-const HERO_SLIDES = [
-  {
-    id: 'slots',
-    title: 'Neon Slots',
-    subtitle: 'WILD MULTIPLIERS & HUGE WINS',
-    description: 'Experience the classic thrill with a futuristic neon twist. Triple your fortune today!',
-    buttonText: 'SPIN TO WIN',
-    bg: '/assets/banner_slots.png',
-    color: 'neon-purple'
-  },
-  {
-    id: 'roulette',
-    title: 'Cyber Roulette',
-    subtitle: 'THE ULTIMATE TABLE EXPERIENCE',
-    description: 'Place your bets on the high-tech wheel. Precision gaming meets pure luck.',
-    buttonText: 'PLACE BETS',
-    bg: '/assets/banner_roulette.png',
-    color: 'neon-cyan'
-  },
-  {
-    id: 'mines',
-    title: 'Neon Mines',
-    subtitle: 'STRATEGIZE & EXPLODE PROFITS',
-    description: 'The most intense logic game in the metaverse. How far dare you go?',
-    buttonText: 'START MINING',
-    bg: '/assets/banner_mines.png',
-    color: 'neon-fuchsia'
-  }
-];
+
 
 export const LobbyView = () => {
+  const { t } = useTranslation();
   const setView = useUiStore((state) => state.setView);
   const isVip = useUserStore((state) => state.isVip);
   const setVip = useUserStore((state) => state.actions.setVip);
   const updateBalance = useUserStore((state) => state.actions.updateBalance);
+
+  const HERO_SLIDES = useMemo(() => [
+    {
+      id: 'slots',
+      title: t('lobby.hero.slots.title'),
+      subtitle: t('lobby.hero.slots.subtitle'),
+      description: t('lobby.hero.slots.description'),
+      buttonText: t('lobby.hero.slots.button'),
+      bg: '/assets/banner_slots.png',
+      color: 'neon-purple'
+    },
+    {
+      id: 'roulette',
+      title: t('lobby.hero.roulette.title'),
+      subtitle: t('lobby.hero.roulette.subtitle'),
+      description: t('lobby.hero.roulette.description'),
+      buttonText: t('lobby.hero.roulette.button'),
+      bg: '/assets/banner_roulette.png',
+      color: 'neon-cyan'
+    },
+    {
+      id: 'mines',
+      title: t('lobby.hero.mines.title'),
+      subtitle: t('lobby.hero.mines.subtitle'),
+      description: t('lobby.hero.mines.description'),
+      buttonText: t('lobby.hero.mines.button'),
+      bg: '/assets/banner_mines.png',
+      color: 'neon-fuchsia'
+    }
+  ], [t]);
+
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -111,7 +117,7 @@ export const LobbyView = () => {
                 <img 
                   src={HERO_SLIDES[currentSlide].bg} 
                   alt={HERO_SLIDES[currentSlide].title} 
-                  className="absolute inset-0 w-full h-full object-cover brightness-[0.35] scale-105 pointer-events-none"
+                  className="absolute inset-0 w-full h-full object-cover brightness-[0.7] contrast-[1.1] scale-105 pointer-events-none"
                 />
                 
                 {/* Repositioned Subtitle (Top Right) */}
@@ -133,7 +139,7 @@ export const LobbyView = () => {
                     </span>
                 </motion.div>
 
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/20 to-transparent p-8 sm:p-20 flex flex-col justify-start pt-16 sm:pt-24 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/10 to-transparent p-8 sm:p-20 flex flex-col justify-start pt-16 sm:pt-24 pointer-events-none">
                    <motion.div
                      initial={{ x: -50, opacity: 0 }}
                      animate={{ x: 0, opacity: 1 }}
@@ -157,7 +163,7 @@ export const LobbyView = () => {
                          {HERO_SLIDES[currentSlide].title.split(' ')[1]}
                        </span>
                      </h1>
-                     <p className="text-sm sm:text-lg text-white/50 mb-8 leading-relaxed max-w-md font-medium">
+                     <p className="text-sm sm:text-lg text-white/80 mb-8 leading-relaxed max-w-md font-medium drop-shadow-md">
                        {HERO_SLIDES[currentSlide].description}
                      </p>
                      <button 
@@ -190,10 +196,10 @@ export const LobbyView = () => {
           {/* 4. STATS BAR / SOCIAL PROOF */}
           <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-2">
              {[
-               { label: 'Active Players', value: '1,248', color: 'text-neon-cyan' },
-               { label: 'Total Payout', value: '$2.4M', color: 'text-neon-fuchsia' },
-               { label: 'Luck Factor', value: 'High', color: 'text-yellow-400' },
-               { label: 'System Check', value: 'Verified', color: 'text-green-400' }
+               { label: t('lobby.stats.active_players'), value: '1,248', color: 'text-neon-cyan' },
+               { label: t('lobby.stats.total_payout'), value: '$2.4M', color: 'text-neon-fuchsia' },
+               { label: t('lobby.stats.luck_factor'), value: t('lobby.stats.high'), color: 'text-yellow-400' },
+               { label: t('lobby.stats.system_check'), value: t('lobby.stats.verified'), color: 'text-green-400' }
              ].map((stat, i) => (
                <div key={i} className="bg-white/5 border border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-md group hover:bg-white/[0.08] transition-all">
                  <span className="text-[11px] font-black text-white/20 uppercase tracking-[0.4em] mb-3 group-hover:text-white/40 transition-colors">{stat.label}</span>
@@ -206,7 +212,7 @@ export const LobbyView = () => {
           <section>
             <div className="flex items-center justify-between mb-10 px-4">
               <h2 className="text-3xl sm:text-4xl font-black text-white uppercase italic tracking-tighter flex items-center gap-4">
-                 <div className="w-2 h-8 bg-neon-purple rounded-full shadow-[0_0_15px_#9333ea]" /> Game Universe
+                 <div className="w-2 h-8 bg-neon-purple rounded-full shadow-[0_0_15px_#9333ea]" /> {t('lobby.universe')}
               </h2>
             </div>
 
@@ -219,15 +225,15 @@ export const LobbyView = () => {
                 <img src="/assets/slots_thumb.png" alt="Slots" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                 <div className="absolute bottom-10 left-10 right-10 flex flex-col gap-4">
-                  <span className="w-fit px-5 py-2 bg-neon-purple/20 text-neon-purple border border-neon-purple/30 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] backdrop-blur-md">Premium Slot</span>
-                  <h3 className="text-4xl font-black text-white uppercase italic tracking-tighter">Neon Spin</h3>
+                  <span className="w-fit px-5 py-2 bg-neon-purple/20 text-neon-purple border border-neon-purple/30 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] backdrop-blur-md">{t('lobby.games.premium_slot')}</span>
+                  <h3 className="text-4xl font-black text-white uppercase italic tracking-tighter">{t('lobby.games.slots')}</h3>
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex -space-x-2">
                        {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-gray-800" />)}
-                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">4.8k Playing</span>
+                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">4.8k {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-purple transition-all group-hover:scale-110 shadow-lg">
-                       <ChevronRight size={24} />
+                       <SlotsIcon size={24} />
                     </button>
                   </div>
                 </div>
@@ -241,15 +247,15 @@ export const LobbyView = () => {
                 <img src="/assets/roulette_thumb.png" alt="Roulette" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                 <div className="absolute bottom-10 left-10 right-10 flex flex-col gap-4">
-                  <span className="w-fit px-5 py-2 bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] backdrop-blur-md">Live Table</span>
-                  <h3 className="text-4xl font-black text-white uppercase italic tracking-tighter">Cyber Wheel</h3>
+                  <span className="w-fit px-5 py-2 bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] backdrop-blur-md">{t('lobby.games.live_table')}</span>
+                  <h3 className="text-4xl font-black text-white uppercase italic tracking-tighter">{t('lobby.games.roulette')}</h3>
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex -space-x-2">
                        {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-gray-800" />)}
-                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">1.2k Playing</span>
+                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">1.2k {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-cyan transition-all group-hover:scale-110 shadow-lg">
-                       <ChevronRight size={24} />
+                       <RouletteIcon size={24} />
                     </button>
                   </div>
                 </div>
@@ -260,18 +266,18 @@ export const LobbyView = () => {
                 className="group relative aspect-[4/5] rounded-[3rem] overflow-hidden cursor-pointer border border-white/5 hover:border-neon-fuchsia transition-all duration-500 shadow-2xl"
                 onClick={() => setView('mines')}
               >
-                <img src="/assets/mines_thumb.png" alt="Mines" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <img src="/assets/mines_thumb.png" alt="Mines" className="absolute inset-0 w-full h-full object-cover object-left transition-transform duration-1000 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                 <div className="absolute bottom-10 left-10 right-10 flex flex-col gap-4">
-                  <span className="w-fit px-5 py-2 bg-neon-fuchsia/20 text-neon-fuchsia border border-neon-fuchsia/30 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] backdrop-blur-md">Logic Game</span>
-                  <h3 className="text-4xl font-black text-white uppercase italic tracking-tighter">Neon Mines</h3>
+                  <span className="w-fit px-5 py-2 bg-neon-fuchsia/20 text-neon-fuchsia border border-neon-fuchsia/30 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] backdrop-blur-md">{t('lobby.games.logic_game')}</span>
+                  <h3 className="text-4xl font-black text-white uppercase italic tracking-tighter">{t('lobby.games.mines')}</h3>
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex -space-x-2">
                        {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-gray-800" />)}
-                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">842 Playing</span>
+                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">842 {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-fuchsia transition-all group-hover:scale-110 shadow-lg">
-                       <ChevronRight size={24} />
+                       <MinesIcon size={24} />
                     </button>
                   </div>
                 </div>
@@ -291,14 +297,14 @@ export const LobbyView = () => {
                    </div>
                    <div>
                       <h4 className="text-4xl font-black text-white uppercase italic tracking-tighter">
-                        {isVip ? 'VIP Elite Club' : 'Level Up to VIP'}
+                        {isVip ? t('lobby.cta.vip_title_active') : t('lobby.cta.vip_title_inactive')}
                       </h4>
                       <p className="text-xs font-black text-white/40 uppercase tracking-[0.2em] mt-3">
-                        {isVip ? 'EXCLUSIVE PRIVILEGES FULLY ACTIVE' : 'GET DOUBLE REWARDS & GOLDEN INTERFACE'}
+                        {isVip ? t('lobby.cta.vip_desc_active') : t('lobby.cta.vip_desc_inactive')}
                       </p>
                    </div>
                    <button className={`w-fit px-10 py-4 rounded-2xl text-xs font-black uppercase transition-all shadow-xl ${isVip ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white hover:bg-white hover:text-black'}`}>
-                     {isVip ? 'Manage VIP Membership' : 'Join the Elite Now'}
+                     {isVip ? t('lobby.cta.vip_button_active') : t('lobby.cta.vip_button_inactive')}
                    </button>
                 </div>
                 <Crown size={300} className="absolute -bottom-20 -right-20 text-white/[0.02] -rotate-12 pointer-events-none" />
@@ -313,11 +319,11 @@ export const LobbyView = () => {
                       <Plus size={32} className="text-white" strokeWidth={3} />
                    </div>
                    <div>
-                      <h4 className="text-4xl font-black text-white uppercase italic tracking-tighter">Fast Recharge</h4>
-                      <p className="text-xs font-black text-white/40 uppercase tracking-[0.2em] mt-3">INSTANTLY ADD $5,000 CREDITS TO BANK</p>
+                      <h4 className="text-4xl font-black text-white uppercase italic tracking-tighter">{t('lobby.cta.recharge_title')}</h4>
+                      <p className="text-xs font-black text-white/40 uppercase tracking-[0.2em] mt-3">{t('lobby.cta.recharge_desc')}</p>
                    </div>
                    <button className="w-fit px-10 py-4 rounded-2xl bg-neon-cyan text-black text-xs font-black uppercase hover:bg-white transition-all shadow-[0_0_30px_rgba(0,255,255,0.4)]">
-                     Top Up $5,000 Now
+                     {t('lobby.cta.recharge_button')}
                    </button>
                 </div>
                 <Plus size={300} className="absolute -bottom-20 -right-20 text-white/[0.02] pointer-events-none" />

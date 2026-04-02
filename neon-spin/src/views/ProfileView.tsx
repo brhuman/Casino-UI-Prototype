@@ -1,11 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Plus, Info, Camera, Edit3, Check, X } from 'lucide-react';
+import { User, Plus, Camera, Edit3, Check, X } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
-import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 import { useState, useRef } from 'react';
-import { ProfileStatsChart } from '../components/ui/ProfileStatsChart';
 import { AchievementGallery } from '../components/ui/AchievementGallery';
+import { useTranslation } from 'react-i18next';
 
 import { PRESET_AVATARS } from '../constants/dummyData';
 
@@ -15,7 +14,6 @@ export const ProfileView = () => {
   const totalBets = useUserStore(state => state.totalBets);
   const totalWinAmount = useUserStore(state => state.totalWinAmount);
   const biggestWin = useUserStore(state => state.biggestWin);
-  const globalVolume = useUserStore(state => state.globalVolume);
   const selectedAvatar = useUserStore(state => state.selectedAvatar);
   const customAvatars = useUserStore(state => state.customAvatars);
   const isVip = useUserStore(state => state.isVip);
@@ -23,13 +21,13 @@ export const ProfileView = () => {
   const maxXp = useUserStore(state => state.maxXp);
   const level = useUserStore(state => state.level);
   
-  const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
+  const { t } = useTranslation();
+  
   const setAvatar = useUserStore(state => state.actions.setAvatar);
   const addCustomAvatar = useUserStore(state => state.actions.addCustomAvatar);
   const updateBalance = useUserStore(state => state.actions.updateBalance);
   const setVip = useUserStore(state => state.actions.setVip);
   const setUsername = useUserStore(state => state.actions.setUsername);
-  const setShowAboutModal = useUiStore(state => state.setShowAboutModal);
 
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -79,12 +77,12 @@ export const ProfileView = () => {
                )}
                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity">
                  <Camera className="text-white mb-2" size={32} />
-                 <span className="text-[10px] font-black uppercase text-white tracking-widest">Change</span>
+                 <span className="text-[10px] font-black uppercase text-white tracking-widest">{t('common.change')}</span>
                </div>
             </div>
             {/* Level Badge */}
             <div className={`absolute -bottom-2 right-2 w-12 h-12 rounded-full border-4 border-gray-900 flex flex-col items-center justify-center text-black font-black shadow-lg transition-transform group-hover:scale-110 ${isVip ? 'bg-yellow-400' : 'bg-neon-cyan'}`}>
-              <span className="text-[8px] leading-none uppercase -mb-0.5 opacity-60">LVL</span>
+              <span className="text-[8px] leading-none uppercase -mb-0.5 opacity-60">{t('common.level')}</span>
               <span className="text-base leading-none">{level}</span>
             </div>
           </div>
@@ -112,13 +110,13 @@ export const ProfileView = () => {
                       onClick={handleNameSave}
                       className="px-6 py-3 bg-neon-cyan text-black rounded-xl font-black uppercase text-xs flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-lg"
                     >
-                      <Check size={16} strokeWidth={4} /> Save
+                      <Check size={16} strokeWidth={4} /> {t('common.save')}
                     </button>
                     <button 
                       onClick={() => { setIsEditingName(false); setTempName(username); }}
                       className="px-6 py-3 bg-white/10 text-white/60 rounded-xl font-black uppercase text-xs flex items-center gap-2 hover:bg-white/20 transition-all"
                     >
-                      <X size={16} strokeWidth={4} /> Cancel
+                      <X size={16} strokeWidth={4} /> {t('common.cancel')}
                     </button>
                   </div>
                 </motion.div>
@@ -143,13 +141,13 @@ export const ProfileView = () => {
 
             <div className="flex items-center justify-center gap-3">
               <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] border transition-all ${isVip ? 'bg-yellow-400/20 text-yellow-500 border-yellow-500/30 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'bg-white/5 text-white/40 border-white/10'}`}>
-                {isVip ? 'VIP ELITE STATUS' : 'STANDARD MEMBER'}
+                {isVip ? t('common.vip_elite') : t('common.standard_member')}
               </span>
               <button 
                 onClick={() => setVip(!isVip)}
                 className={`text-[9px] font-black uppercase tracking-widest transition-all px-3 py-1.5 rounded-lg ${isVip ? 'text-white/40 hover:text-red-400 border border-white/5' : 'text-neon-cyan hover:text-white border border-neon-cyan/20 cursor-pointer'}`}
               >
-                {isVip ? 'Disable VIP' : 'Become VIP'}
+                {isVip ? t('common.disable_vip') : t('common.become_vip')}
               </button>
             </div>
           </div>
@@ -161,7 +159,7 @@ export const ProfileView = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Level {level} Progress</span>
+                <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">{t('common.level')} {level} {t('common.progress')}</span>
               </div>
               <span className="text-xs font-mono font-black text-white/80 tabular-nums">
                 {Math.floor(xp).toLocaleString()} / {Math.floor(maxXp).toLocaleString()} XP
@@ -180,7 +178,7 @@ export const ProfileView = () => {
           {/* Balance Block */}
           <div className="bg-white/[0.02] border border-white/5 rounded-[1.5rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.04] transition-colors group">
               <div className="text-center sm:text-left">
-                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-2 px-1">Available Credits</p>
+                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-2 px-1">{t('profile.available_credits')}</p>
                 <h3 className="text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   ${balance.toLocaleString()}
                 </h3>
@@ -189,14 +187,17 @@ export const ProfileView = () => {
                 onClick={() => updateBalance(1000)}
                 className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(255,255,255,0.3)] flex items-center justify-center gap-3 active:bg-cyan-400"
               >
-                <Plus size={16} strokeWidth={4} /> Add $1,000
+                <Plus size={16} strokeWidth={4} /> {t('profile.add_credits')}
               </button>
           </div>
 
-          {/* Statistics Chart */}
+          {/* Milestones (Achievements) Section */}
           <div className="mt-2">
-            <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-4 px-1">Balance Performance</h4>
-            <ProfileStatsChart />
+            <div className="flex items-center justify-between px-1 mb-4">
+              <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">{t('profile.milestones')}</h4>
+              <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">{t('profile.showcase')}</span>
+            </div>
+            <AchievementGallery />
           </div>
         </div>
 
@@ -204,43 +205,21 @@ export const ProfileView = () => {
         <div className="px-8 pb-8">
            <div className="grid grid-cols-3 gap-1 bg-white/5 rounded-2xl p-1 border border-white/5 overflow-hidden">
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/40 transition-colors">Wagers</span>
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/40 transition-colors">{t('profile.wagers')}</span>
                 <span className="text-sm font-black text-white font-mono tracking-tighter">${totalBets.toLocaleString()}</span>
               </div>
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat border-x border-white/5">
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-pink transition-colors">Max Payout</span>
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-pink transition-colors">{t('profile.max_payout')}</span>
                 <span className="text-sm font-black text-neon-pink font-mono tracking-tighter">${biggestWin.toLocaleString()}</span>
               </div>
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-purple transition-colors">Profit</span>
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-purple transition-colors">{t('profile.profit')}</span>
                 <span className="text-sm font-black text-neon-purple font-mono tracking-tighter">${totalWinAmount.toLocaleString()}</span>
               </div>
-           </div>
-        </div>
-
-        {/* 4. INFO (Footer) */}
-        <div className="p-8 pt-0 flex flex-col sm:flex-row items-center justify-end gap-6">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setShowAboutModal(true)}
-              className="px-5 py-3 rounded-2xl bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
-            >
-              <Info size={14} /> System Info
-            </button>
           </div>
         </div>
       </Card>
 
-      {/* 5. ACHIEVEMENTS SECTION */}
-      <div className="relative z-10 flex flex-col gap-6 mt-4">
-        <div className="flex items-center justify-between px-4">
-          <h3 className="text-xl font-black text-white uppercase italic tracking-tighter flex items-center gap-3">
-            <div className="w-1.5 h-6 bg-neon-purple rounded-full shadow-[0_0_10px_#9333ea]" /> Milestones
-          </h3>
-          <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">Showcase your glory</span>
-        </div>
-        <AchievementGallery />
-      </div>
 
       {/* Avatar Selection Modal Overlay */}
       <AnimatePresence>
@@ -261,7 +240,7 @@ export const ProfileView = () => {
             >
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-base font-black text-white uppercase tracking-[0.2em] flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-neon-pink" /> Choose Your Persona
+                  <div className="w-2 h-2 rounded-full bg-neon-pink" /> {t('profile.choose_persona')}
                 </h3>
                 <button 
                   onClick={() => setIsSelectingAvatar(false)}

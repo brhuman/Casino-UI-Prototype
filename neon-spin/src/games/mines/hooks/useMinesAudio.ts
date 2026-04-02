@@ -25,7 +25,7 @@ export const useMinesAudio = () => {
     const volumeFactor = globalVolume * 0.5;
     
     Object.entries(SOUND_ASSETS).forEach(([key, src]) => {
-      const baseVol = key === 'bust' ? 0.4 : (key === 'cashout' ? 1.0 : 0.5);
+      const baseVol = key === 'bust' ? 0.27 : (key === 'cashout' ? 1.0 : 0.5);
       sounds.current[key] = new Howl({ 
         src: [src],
         volume: baseVol * volumeFactor
