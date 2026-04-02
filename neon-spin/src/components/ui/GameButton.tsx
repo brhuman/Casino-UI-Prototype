@@ -30,8 +30,8 @@ export const GameButton: React.FC<GameButtonProps> = ({
         font-black uppercase tracking-[0.3em] text-lg
         transition-all duration-300
         ${disabled || isLoading
-          ? 'bg-gray-800 text-gray-600 cursor-not-allowed opacity-50'
-          : 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:scale-[1.05] active:scale-[0.95] hover:shadow-[0_0_40px_rgba(147,51,234,0.3)] shadow-xl'
+          ? 'bg-white/5 text-white/20 cursor-not-allowed opacity-30 border border-white/5'
+          : 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:scale-[1.05] active:scale-[0.95] hover:shadow-[0_0_40px_rgba(147,51,234,0.3)] shadow-xl border border-white/10'
         }
         ${className}
       `}

@@ -28,7 +28,7 @@ export const LeaderboardView = () => {
         <h3 className="text-3xl sm:text-4xl font-black text-white italic uppercase tracking-tighter flex items-center gap-4">
           <div className="w-2 h-8 bg-yellow-400 rounded-full shadow-[0_0_15px_#facc15]" /> {t('lobby.champions_league')}
         </h3>
-        <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">{t('lobby.updated_moments_ago')}</span>
+        <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em]">{t('lobby.updated_moments_ago')}</span>
       </div>
 
       <div className="p-4">
@@ -36,7 +36,7 @@ export const LeaderboardView = () => {
           {leaderboardData.map((player, index) => {
             const isTop3 = index < 3;
             const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Medal : null;
-            const rankColor = index === 0 ? 'text-yellow-400' : index === 1 ? 'text-gray-300' : index === 2 ? 'text-orange-400' : 'text-white/20';
+            const rankColor = index === 0 ? 'text-yellow-400' : index === 1 ? 'text-white' : index === 2 ? 'text-orange-400' : 'text-white/60';
 
             return (
               <motion.div
@@ -63,17 +63,17 @@ export const LeaderboardView = () => {
                       {player.name}
                     </span>
                     {player.isCurrentUser && (
-                      <span className="text-[9px] font-black text-neon-cyan/50 uppercase tracking-widest">{t('lobby.you_are_here')}</span>
+                      <span className="text-[9px] font-black text-neon-cyan/85 uppercase tracking-widest">{t('lobby.you_are_here')}</span>
                     )}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <span className={`text-lg font-mono font-black ${isTop3 ? 'text-white' : 'text-white/60'}`}>
+                    <span className={`text-lg font-mono font-black ${isTop3 ? 'text-white' : 'text-white/80'}`}>
                       ${player.amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </span>
-                    <span className="block text-[8px] font-black text-white/10 uppercase tracking-widest">{t('lobby.total_win')}</span>
+                    <span className="block text-[8px] font-black text-white/50 uppercase tracking-widest">{t('lobby.total_win')}</span>
                   </div>
                 </div>
               </motion.div>

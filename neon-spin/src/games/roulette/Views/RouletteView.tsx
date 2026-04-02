@@ -82,7 +82,7 @@ export const RouletteView: React.FC = () => {
             {/* Left: Info */}
             <div className="flex gap-8">
               <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Balance</span>
+                <span className="text-[9px] font-bold text-white/80 uppercase tracking-widest mb-1">Balance</span>
                 <span className="font-mono text-lg font-bold text-white tracking-tight leading-none">${Math.floor(balance).toLocaleString()}</span>
               </div>
               <div className="flex flex-col">

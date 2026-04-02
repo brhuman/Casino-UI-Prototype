@@ -233,8 +233,8 @@ export const MinesView = () => {
         <div className="relative z-10 flex flex-1 min-h-0 w-full shrink flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-emerald-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(16,185,129,0.15)]">
          
          {!isLoaded && !error && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-gray-900/95 backdrop-blur-md p-8 text-center overscroll-none">
-              <div className="w-1/2 h-1 bg-gray-800 rounded-full overflow-hidden mb-8 border border-gray-800">
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/95 backdrop-blur-md p-8 text-center overscroll-none">
+              <div className="w-1/2 h-1 bg-white/10 rounded-full overflow-hidden mb-8 border border-white/10">
                 <div className="h-full bg-gradient-to-r from-neon-blue via-neon-pink to-neon-purple animate-pulse w-full"></div>
               </div>
               
@@ -243,23 +243,23 @@ export const MinesView = () => {
                 <p className="text-neon-pink font-mono animate-pulse text-[10px] uppercase tracking-widest">Initializing Visual Systems</p>
               </div>
               
-              <div className={`w-full max-w-2xl bg-black/60 border border-gray-800 rounded-2xl p-6 font-mono text-[11px] transition-all duration-500 overflow-hidden relative ${showFullLogs ? 'h-[60vh]' : 'h-48'}`}>
-                <div className="flex justify-between items-center mb-4 border-b border-gray-800 pb-2">
-                   <span className="text-gray-500 uppercase text-[9px] font-bold">System Initialization Log</span>
+              <div className={`w-full max-w-2xl bg-black/60 border border-white/10 rounded-2xl p-6 font-mono text-[11px] transition-all duration-500 overflow-hidden relative ${showFullLogs ? 'h-[60vh]' : 'h-48'}`}>
+                <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                   <span className="text-white/60 uppercase text-[9px] font-bold">System Initialization Log</span>
                    <button onClick={() => setShowFullLogs(!showFullLogs)} className="text-neon-blue hover:underline text-[9px] uppercase font-bold">
                      {showFullLogs ? 'Minimize View' : 'Expand View'}
                    </button>
                 </div>
                 <div className="overflow-y-auto h-[calc(100%-40px)] scrollbar-hide flex flex-col-reverse text-left">
                   {[...debugLogs].reverse().map((log, i) => (
-                    <div key={i} className={`mb-1 pl-3 border-l-2 ${log.includes('ERROR') ? 'border-red-500 text-red-400' : 'border-neon-blue/30 text-gray-400'}`}>
+                    <div key={i} className={`mb-1 pl-3 border-l-2 ${log.includes('ERROR') ? 'border-red-500 text-red-400' : 'border-neon-blue/30 text-white/70'}`}>
                       {log}
                     </div>
                   ))}
                 </div>
               </div>
               
-              <p className="mt-8 text-gray-600 font-mono text-[9px] uppercase tracking-widest">If stuck for more than 20 seconds, please click RELOAD</p>
+              <p className="mt-8 text-white/50 font-mono text-[9px] uppercase tracking-widest">If stuck for more than 20 seconds, please click RELOAD</p>
             </div>
          )}
 
@@ -269,7 +269,7 @@ export const MinesView = () => {
                   <span className="text-red-500 text-4xl font-bold">!</span>
                </div>
                <h3 className="text-red-500 text-2xl font-bold mb-2 uppercase tracking-tighter">Initialization Failed</h3>
-               <p className="text-gray-400 mb-8 font-mono text-sm max-w-xl mx-auto">{error}</p>
+               <p className="text-white/80 mb-8 font-mono text-sm max-w-xl mx-auto">{error}</p>
                
                {errorStack && (
                  <div className="w-full max-w-2xl bg-red-950/20 border border-red-900/40 rounded-xl p-6 mb-10 text-left relative group">
@@ -297,7 +297,7 @@ export const MinesView = () => {
         </div>
 
         {/* Controls Container */}
-        <div className="relative z-20 flex flex-col shrink-0 w-full rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] gap-4">
+        <div className="relative z-20 flex flex-col shrink-0 w-full rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] gap-4">
           
           {/* Top Row: Main Action */}
           <div className="flex justify-center">
@@ -324,24 +324,24 @@ export const MinesView = () => {
             {/* Left: Mines Slider */}
             <div className="flex w-48 flex-col justify-center gap-1">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neon-fuchsia/60 leading-none">Mines: {minesCount}</span>
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neon-fuchsia/90 leading-none">Mines: {minesCount}</span>
               </div>
               <input disabled={isActive} type="range" min="1" max="24" value={minesCount} onChange={(e) => actions.setMinesCount(Number(e.target.value))} className="w-full h-1.5 accent-neon-fuchsia" />
             </div>
 
             {/* Middle: Multiplier */}
             <div className="flex flex-col items-center justify-center px-4 border-x border-white/5">
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neon-purple/60 mb-1">Multiplier</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neon-purple/90 mb-1">Multiplier</span>
               <span className="text-xl font-black font-mono text-neon-cyan leading-none">{multiplier.toFixed(2)}x</span>
             </div>
 
             {/* Right: Bet Adjust */}
             <div className="flex items-center gap-4">
-              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-widest text-white/40">Bet:</span>
-              <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/5">
+              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-widest text-white/70">Bet:</span>
+              <div className="flex items-center gap-2 bg-black/40 p-1 rounded-2xl border border-white/5">
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md border border-white/10 bg-white/5 text-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  className="h-8 w-8 rounded-xl border border-white/10 bg-white/5 text-lg text-white/90 hover:text-white hover:bg-white/10 transition-all font-black"
                   disabled={isActive || currentBet <= 100}
                   onClick={actions.decreaseBet}
                 >
@@ -352,7 +352,7 @@ export const MinesView = () => {
                 </div>
                 <button
                   type="button"
-                  className="h-8 w-8 rounded-md border border-white/10 bg-white/5 text-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  className="h-8 w-8 rounded-xl border border-white/10 bg-white/5 text-lg text-white/90 hover:text-white hover:bg-white/10 transition-all font-black"
                   disabled={isActive || currentBet >= 5000}
                   onClick={actions.increaseBet}
                 >

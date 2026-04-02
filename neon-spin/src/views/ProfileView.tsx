@@ -61,7 +61,7 @@ export const ProfileView = () => {
       {/* Dynamic Background */}
       <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_profile_background.png')] bg-cover bg-center bg-no-repeat" />
       
-      <Card className="relative z-10 flex flex-col p-0 bg-gray-900/40 border-white/5 backdrop-blur-3xl overflow-hidden rounded-[2rem]">
+      <Card className="relative z-10 flex flex-col p-0 bg-white/5 border-white/10 backdrop-blur-3xl overflow-hidden rounded-[3rem]">
         {/* 1. IDENTITY SECTION (Top) */}
         <div className="relative p-8 flex flex-col items-center text-center gap-6 bg-gradient-to-b from-white/5 to-transparent border-b border-white/5">
           <div 
@@ -81,7 +81,7 @@ export const ProfileView = () => {
                </div>
             </div>
             {/* Level Badge */}
-            <div className={`absolute -bottom-2 right-2 w-12 h-12 rounded-full border-4 border-gray-900 flex flex-col items-center justify-center text-black font-black shadow-lg transition-transform group-hover:scale-110 ${isVip ? 'bg-yellow-400' : 'bg-neon-cyan'}`}>
+            <div className={`absolute -bottom-2 right-2 w-12 h-12 rounded-full border-4 border-black flex flex-col items-center justify-center text-black font-black shadow-lg transition-transform group-hover:scale-110 ${isVip ? 'bg-yellow-400' : 'bg-neon-cyan'}`}>
               <span className="text-[8px] leading-none uppercase -mb-0.5 opacity-60">{t('common.level')}</span>
               <span className="text-base leading-none">{level}</span>
             </div>
@@ -140,12 +140,12 @@ export const ProfileView = () => {
             </AnimatePresence>
 
             <div className="flex items-center justify-center gap-3">
-              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] border transition-all ${isVip ? 'bg-yellow-400/20 text-yellow-500 border-yellow-500/30 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'bg-white/5 text-white/40 border-white/10'}`}>
+              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] border transition-all ${isVip ? 'bg-yellow-400/20 text-yellow-500 border-yellow-500/30 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'bg-white/10 text-white/80 border-white/20'}`}>
                 {isVip ? t('common.vip_elite') : t('common.standard_member')}
               </span>
               <button 
                 onClick={() => setVip(!isVip)}
-                className={`text-[9px] font-black uppercase tracking-widest transition-all px-3 py-1.5 rounded-lg ${isVip ? 'text-white/40 hover:text-red-400 border border-white/5' : 'text-neon-cyan hover:text-white border border-neon-cyan/20 cursor-pointer'}`}
+                className={`text-[9px] font-black uppercase tracking-widest transition-all px-3 py-1.5 rounded-lg ${isVip ? 'text-white/60 hover:text-red-400 border border-white/10' : 'text-neon-cyan hover:text-white border border-neon-cyan/40 cursor-pointer'}`}
               >
                 {isVip ? t('common.disable_vip') : t('common.become_vip')}
               </button>
@@ -176,9 +176,9 @@ export const ProfileView = () => {
           </div>
 
           {/* Balance Block */}
-          <div className="bg-white/10 border border-white/10 rounded-[2.5rem] p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.15] transition-all group shadow-xl">
+          <div className="bg-white/5 border border-white/10 rounded-[3rem] p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.08] transition-all group shadow-xl backdrop-blur-2xl">
               <div className="text-center sm:text-left">
-                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-2 px-1">{t('profile.available_credits')}</p>
+                <p className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em] mb-2 px-1">{t('profile.available_credits')}</p>
                 <h3 className="text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   ${balance.toLocaleString()}
                 </h3>
@@ -194,8 +194,8 @@ export const ProfileView = () => {
           {/* Milestones (Achievements) Section */}
           <div className="mt-2">
             <div className="flex items-center justify-between px-1 mb-4">
-              <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">{t('profile.milestones')}</h4>
-              <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">{t('profile.showcase')}</span>
+              <h4 className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em]">{t('profile.milestones')}</h4>
+              <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em]">{t('profile.showcase')}</span>
             </div>
             <AchievementGallery />
           </div>
@@ -203,17 +203,17 @@ export const ProfileView = () => {
 
         {/* 3. PERFORMANCE STATS (Grid) */}
         <div className="px-8 pb-8">
-           <div className="grid grid-cols-3 gap-1 bg-white/5 rounded-2xl p-1 border border-white/5 overflow-hidden">
+           <div className="grid grid-cols-3 gap-1 bg-white/5 rounded-2xl p-1 border border-white/10 overflow-hidden">
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/40 transition-colors">{t('profile.wagers')}</span>
+                <span className="text-[8px] font-black text-white/60 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/80 transition-colors">{t('profile.wagers')}</span>
                 <span className="text-sm font-black text-white font-mono tracking-tighter">${totalBets.toLocaleString()}</span>
               </div>
-              <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat border-x border-white/5">
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-pink transition-colors">{t('profile.max_payout')}</span>
+              <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat border-x border-white/10">
+                <span className="text-[8px] font-black text-white/60 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-pink transition-colors">{t('profile.max_payout')}</span>
                 <span className="text-sm font-black text-neon-pink font-mono tracking-tighter">${biggestWin.toLocaleString()}</span>
               </div>
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-purple transition-colors">{t('profile.profit')}</span>
+                <span className="text-[8px] font-black text-white/60 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-neon-purple transition-colors">{t('profile.profit')}</span>
                 <span className="text-sm font-black text-neon-purple font-mono tracking-tighter">${totalWinAmount.toLocaleString()}</span>
               </div>
           </div>
@@ -235,7 +235,7 @@ export const ProfileView = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-xl bg-gray-900 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl"
+              className="w-full max-w-xl bg-black border border-white/10 rounded-[3rem] p-8 shadow-2xl backdrop-blur-3xl"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-8">

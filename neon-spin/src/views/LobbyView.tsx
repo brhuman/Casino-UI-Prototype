@@ -155,7 +155,7 @@ export const LobbyView = () => {
                      {/* Mobile Subtitle */}
                      <div className="sm:hidden flex items-center gap-3 mb-4">
                         <div className={`w-2 h-2 rounded-full bg-neon-cyan`} />
-                        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/50">
+                        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/70">
                           {HERO_SLIDES[currentSlide].subtitle}
                         </span>
                      </div>
@@ -208,7 +208,7 @@ export const LobbyView = () => {
                { label: t('lobby.stats.system_check'), value: t('lobby.stats.verified'), color: 'text-green-400' }
              ].map((stat, i) => (
                <div key={i} className="bg-white/5 border border-white/10 rounded-[2rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-2xl group hover:bg-white/[0.08] transition-all shadow-lg">
-                 <span className="text-[13px] font-black text-white/70 uppercase tracking-[0.4em] mb-3 group-hover:text-white/90 transition-colors tracking-widest">{stat.label}</span>
+                 <span className="text-[13px] font-black text-white/90 uppercase tracking-[0.4em] mb-3 group-hover:text-white transition-colors tracking-widest">{stat.label}</span>
                  <span className={`text-2xl font-black italic uppercase ${stat.color} tracking-tighter`}>{stat.value}</span>
                </div>
              ))}
@@ -236,7 +236,7 @@ export const LobbyView = () => {
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex -space-x-2">
                        {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-gray-800" />)}
-                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">4.8k {t('lobby.games.playing')}</span>
+                       <span className="text-[10px] font-black text-white/60 flex items-center ml-4 uppercase">4.8k {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-purple transition-all group-hover:scale-110 shadow-lg">
                        <SlotsIcon size={32} />
@@ -258,7 +258,7 @@ export const LobbyView = () => {
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex -space-x-2">
                        {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-gray-800" />)}
-                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">1.2k {t('lobby.games.playing')}</span>
+                       <span className="text-[10px] font-black text-white/60 flex items-center ml-4 uppercase">1.2k {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-cyan transition-all group-hover:scale-110 shadow-lg">
                        <RouletteIcon size={32} />
@@ -280,7 +280,7 @@ export const LobbyView = () => {
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex -space-x-2">
                        {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-gray-800" />)}
-                       <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">842 {t('lobby.games.playing')}</span>
+                       <span className="text-[10px] font-black text-white/60 flex items-center ml-4 uppercase">842 {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-fuchsia transition-all group-hover:scale-110 shadow-lg">
                        <MinesIcon size={32} />
@@ -306,7 +306,7 @@ export const LobbyView = () => {
                       <h4 className="text-2xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
                         {isVip ? t('lobby.cta.vip_title_active') : t('lobby.cta.vip_title_inactive')}
                       </h4>
-                      <p className="text-[10px] sm:text-sm font-black text-white/60 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
+                      <p className="text-[10px] sm:text-sm font-black text-white/80 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
                         {isVip ? t('lobby.cta.vip_desc_active') : t('lobby.cta.vip_desc_inactive')}
                       </p>
                    </div>
@@ -333,7 +333,7 @@ export const LobbyView = () => {
                       <h4 className="text-2xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
                         {t('lobby.cta.recharge_title')}
                       </h4>
-                      <p className="text-[10px] sm:text-sm font-black text-white/60 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
+                      <p className="text-[10px] sm:text-sm font-black text-white/80 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
                         {t('lobby.cta.recharge_desc')}
                       </p>
                    </div>

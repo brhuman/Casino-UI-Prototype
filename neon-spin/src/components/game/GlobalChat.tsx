@@ -115,7 +115,7 @@ export const GlobalChat = () => {
                     <span className={`text-[10px] font-black uppercase tracking-widest ${msg.user.color}`}>
                       {msg.user.name}
                     </span>
-                    <span className="text-[8px] text-white/20 font-bold uppercase tracking-widest">
+                    <span className="text-[8px] text-white/50 font-bold uppercase tracking-widest">
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -139,7 +139,7 @@ export const GlobalChat = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type your message..."
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-neon-cyan/40 transition-all font-medium"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm text-white placeholder:text-white/50 focus:outline-none focus:border-neon-cyan/40 transition-all font-medium"
             />
           </div>
           <button 

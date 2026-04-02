@@ -94,14 +94,14 @@ export const Roulette = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto h-full flex flex-col gap-6">
-      <div className="flex items-center gap-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+      <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-2xl">
         <Layers className="text-neon-blue" size={32} />
         <h2 className="text-2xl font-bold text-white uppercase tracking-widest">Neon Roulette</h2>
         
         <div className="ml-auto flex gap-2">
           {lastResults.map((r, i) => (
-            <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md border border-gray-700
-              ${r.color === 'red' ? 'bg-red-600' : r.color === 'black' ? 'bg-gray-900' : 'bg-green-600'} text-white`}
+            <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md border border-white/10
+              ${r.color === 'red' ? 'bg-red-600' : r.color === 'black' ? 'bg-black' : 'bg-green-600'} text-white`}
             >
               {r.val}
             </div>
@@ -111,7 +111,7 @@ export const Roulette = () => {
 
       <div className="flex-1 flex flex-col lg:flex-row gap-6">
         {}
-        <div className="flex-1 bg-gray-900/40 p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
+        <div className="flex-1 bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-2xl flex flex-col justify-between">
            <div className="flex justify-center mb-10 mt-10">
               <div className="relative w-64 h-64 border-4 border-gray-800 rounded-full flex items-center justify-center overflow-hidden">
                  <div className="absolute inset-0 bg-[repeating-conic-gradient(#ff0000_0_10deg,#111_10deg_20deg)] opacity-20"></div>
@@ -141,17 +141,17 @@ export const Roulette = () => {
            <div className="grid grid-cols-5 gap-4">
               {[
                 { type: 'red', label: 'RED 2x', color: 'bg-red-900/50 hover:bg-red-600 text-red-500 border-red-900' },
-                { type: 'black', label: 'BLK 2x', color: 'bg-gray-800/50 hover:bg-gray-700 text-gray-400 border-gray-700' },
-                { type: 'green', label: 'GRN 14x', color: 'bg-green-900/50 hover:bg-green-600 text-green-500 border-green-900' },
-                { type: 'even', label: 'EVEN 2x', color: 'bg-blue-900/30 hover:bg-blue-800 text-blue-400 border-blue-900' },
-                { type: 'odd', label: 'ODD 2x', color: 'bg-blue-900/30 hover:bg-blue-800 text-blue-400 border-blue-900' },
+                { type: 'black', label: 'BLK 2x', color: 'bg-white/5 hover:bg-white/10 text-white/90 border-white/10' },
+                { type: 'green', label: 'GRN 14x', color: 'bg-green-900/30 hover:bg-green-600 text-green-400 border-green-900/50' },
+                { type: 'even', label: 'EVEN 2x', color: 'bg-blue-900/30 hover:bg-blue-800 text-blue-400 border-blue-900/50' },
+                { type: 'odd', label: 'ODD 2x', color: 'bg-blue-900/30 hover:bg-blue-800 text-blue-400 border-blue-900/50' },
               ].map(bt => {
                 const betAmt = bets.find(b => b.type === bt.type)?.amount || 0;
                 return (
                   <button 
                     key={bt.type}
                     onClick={() => placeBet(bt.type as BetType)}
-                    className={`relative p-4 rounded-xl border-2 transition-colors font-bold tracking-wider ${bt.color}`}
+                    className={`relative p-4 rounded-2xl border transition-all font-bold tracking-wider ${bt.color}`}
                   >
                     {bt.label}
                     {betAmt > 0 && (
@@ -166,16 +166,16 @@ export const Roulette = () => {
         </div>
 
         {}
-        <div className="w-full lg:w-80 bg-gray-900/60 p-6 rounded-2xl border border-gray-800 flex flex-col gap-6">
+        <div className="w-full lg:w-80 bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-2xl flex flex-col gap-6">
            <div>
-              <label className="text-gray-400 text-sm font-bold uppercase tracking-widest mb-2 block">Chip Size</label>
+              <label className="text-white/90 text-sm font-bold uppercase tracking-widest mb-2 block">Chip Size</label>
               <div className="flex gap-2">
                  {[10, 50, 100, 500].map(size => (
-                   <button 
-                     key={size}
-                     onClick={() => setChipSize(size)}
-                     className={`flex-1 py-3 rounded-lg font-bold border ${chipSize === size ? 'bg-neon-pink text-white border-neon-pink shadow-[0_0_10px_rgba(255,0,255,0.4)]' : 'bg-gray-800 text-gray-400 border-gray-700'}`}
-                   >
+                    <button 
+                      key={size}
+                      onClick={() => setChipSize(size)}
+                      className={`flex-1 py-3 rounded-xl font-bold border transition-all ${chipSize === size ? 'bg-neon-fuchsia text-white border-neon-fuchsia shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'bg-white/5 text-white/80 border-white/10 hover:bg-white/10'}`}
+                    >
                      ${size}
                    </button>
                  ))}
@@ -183,25 +183,24 @@ export const Roulette = () => {
            </div>
 
            <div className="mt-auto">
-              <div className="flex justify-between text-gray-400 mb-2 uppercase tracking-wide text-sm font-bold">
+               <div className="flex justify-between text-white/70 mb-2 uppercase tracking-wide text-sm font-bold">
                  <span>Total Bet</span>
                  <span className="text-white">${totalBet}</span>
               </div>
-              <button 
-                onClick={spin}
-                disabled={isSpinning || totalBet === 0 || balance < totalBet}
-                className={`w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-transform ${isSpinning || totalBet === 0 || balance < totalBet ? 'bg-gray-800 text-gray-600' : 'bg-gradient-to-r from-neon-blue to-teal-400 text-black hover:scale-105 shadow-[0_0_20px_rgba(0,255,255,0.4)]'}`}
-              >
-                {isSpinning ? 'Rolling...' : 'Spin'}
-              </button>
-              
-              <button 
-                onClick={() => setBets([])}
-                disabled={isSpinning || bets.length === 0}
-                className="w-full mt-4 py-3 rounded-xl font-bold tracking-widest uppercase transition-all bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700"
-              >
-                Clear Bets
-              </button>
+               <button 
+                 onClick={spin}
+                 disabled={isSpinning || totalBet === 0 || balance < totalBet}
+                 className={`w-full py-4 rounded-2xl font-bold tracking-widest uppercase transition-all ${isSpinning || totalBet === 0 || balance < totalBet ? 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed' : 'bg-gradient-to-r from-neon-blue to-teal-400 text-black hover:scale-105 shadow-[0_0_20px_rgba(0,255,255,0.4)]'}`}
+               >
+                 {isSpinning ? 'Rolling...' : 'Spin'}
+               </button>
+                            <button 
+                 onClick={() => setBets([])}
+                 disabled={isSpinning || bets.length === 0}
+                 className="w-full mt-4 py-3 rounded-2xl font-bold tracking-widest uppercase transition-all bg-white/5 text-white/70 border border-white/10 hover:text-white hover:bg-white/10"
+               >
+                 Clear Bets
+               </button>
            </div>
         </div>
       </div>
