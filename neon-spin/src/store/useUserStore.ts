@@ -87,15 +87,14 @@ export const useUserStore = create<UserState>()(
             newAchievements.push('HIGH_ROLLER');
           }
           
-          // Achievement: First Win
-          if (amount > 0 && !newAchievements.includes('FIRST_WIN')) {
-            newAchievements.push('FIRST_WIN');
+          // Achievement: Bonus Collector (simulated by total recharge/balance increase not from wins if we had more state, but for now let's use a threshold)
+          if (newBalance > 20000 && !newAchievements.includes('BONUS_COLLECTOR')) {
+            newAchievements.push('BONUS_COLLECTOR');
           }
-
-          // Achievement: Lucky One (multiplier logic would need to be passed, but we can infer from amount vs bet if we had bet info)
-          // For now, let's say big win > 5000
-          if (amount > 5000 && !newAchievements.includes('LUCKY_ONE')) {
-            newAchievements.push('LUCKY_ONE');
+          
+          // Achievement: Ultimate Whale (Career payout)
+          if (newTotalWinAmount >= 50000 && !newAchievements.includes('ULTIMATE_WHALE')) {
+            newAchievements.push('ULTIMATE_WHALE');
           }
 
           // Update Balance History (Keep last 20 points)

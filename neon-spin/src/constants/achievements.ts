@@ -1,4 +1,4 @@
-import { Trophy, Target, Zap, Crown, Flame, Star, Coins, Gem, Shield, Heart, Infinity, Rocket } from 'lucide-react';
+import { Gift, Target, Zap, Crown, Flame, Star, Coins, Gem, Shield, Heart, Infinity, Rocket } from 'lucide-react';
 
 export interface Achievement {
   id: string;
@@ -10,11 +10,11 @@ export interface Achievement {
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
-    id: 'FIRST_WIN',
-    title: 'First Win',
-    description: 'Your very first victory in the casino.',
-    icon: Trophy,
-    color: 'text-green-400'
+    id: 'BONUS_COLLECTOR',
+    title: 'Bonus Collector',
+    description: 'Claimed over $10,000 in promotional bonuses.',
+    icon: Gift,
+    color: 'text-pink-400'
   },
   {
     id: 'HIGH_ROLLER',
