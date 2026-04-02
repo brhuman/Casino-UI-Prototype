@@ -7,17 +7,19 @@ import { MinesView } from './games/mines/Views/MinesView';
 import { RouletteView } from './games/roulette/Views/RouletteView';
 import { SettingsView } from './views/SettingsView';
 import { AboutModal } from './components/ui/AboutModal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { soundManager } from './game/audio/SoundManager';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSettingsStore } from './store/useSettingsStore';
 import { useTranslation } from 'react-i18next';
+import { LoadingView } from './components/ui/LoadingView';
 
 function App() {
   const { i18n } = useTranslation();
   const { currentView, setShowAboutModal } = useUiStore();
   const { language, highQualityFx, neonGlow, hasSeenWelcome } = useSettingsStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Sync i18next with store language
   useEffect(() => {
@@ -93,84 +95,98 @@ function App() {
   }, [currentView]);
 
   return (
-    <div className={`${!highQualityFx ? 'fx-off' : ''} ${!neonGlow ? 'glow-off' : ''} min-h-screen flex flex-col`}>
-      <MainLayout>
-        <AnimatePresence>
-          {currentView === 'lobby' && (
-            <motion.div
-              key="lobby"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col"
-            >
-              <LobbyView />
-            </motion.div>
-          )}
-          {currentView === 'slots' && (
-            <motion.div
-              key="slots"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col"
-            >
-              <SlotView />
-            </motion.div>
-          )}
-          {currentView === 'profile' && (
-            <motion.div
-              key="profile"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col"
-            >
-              <ProfileView />
-            </motion.div>
-          )}
-          {currentView === 'mines' && (
-            <motion.div
-              key="mines"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col"
-            >
-              <MinesView />
-            </motion.div>
-          )}
-          {currentView === 'roulette' && (
-            <motion.div
-              key="roulette"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col"
-            >
-              <RouletteView />
-            </motion.div>
-          )}
-          {currentView === 'settings' && (
-            <motion.div
-              key="settings"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col"
-            >
-              <SettingsView />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </MainLayout>
-      <AboutModal />
+    <div className={`${!highQualityFx ? 'fx-off' : ''} ${!neonGlow ? 'glow-off' : ''} h-screen w-full bg-black overflow-hidden relative`}>
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <LoadingView key="loader" onComplete={() => setIsLoading(false)} />
+        ) : (
+          <motion.div
+            key="main"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="h-full w-full flex flex-col"
+          >
+            <MainLayout>
+              <AnimatePresence mode="wait">
+                {currentView === 'lobby' && (
+                  <motion.div
+                    key="lobby"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 flex flex-col"
+                  >
+                    <LobbyView />
+                  </motion.div>
+                )}
+                {currentView === 'slots' && (
+                  <motion.div
+                    key="slots"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 flex flex-col"
+                  >
+                    <SlotView />
+                  </motion.div>
+                )}
+                {currentView === 'profile' && (
+                  <motion.div
+                    key="profile"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 flex flex-col"
+                  >
+                    <ProfileView />
+                  </motion.div>
+                )}
+                {currentView === 'mines' && (
+                  <motion.div
+                    key="mines"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 flex flex-col"
+                  >
+                    <MinesView />
+                  </motion.div>
+                )}
+                {currentView === 'roulette' && (
+                  <motion.div
+                    key="roulette"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 flex flex-col"
+                  >
+                    <RouletteView />
+                  </motion.div>
+                )}
+                {currentView === 'settings' && (
+                  <motion.div
+                    key="settings"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 flex flex-col"
+                  >
+                    <SettingsView />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </MainLayout>
+            <AboutModal />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
