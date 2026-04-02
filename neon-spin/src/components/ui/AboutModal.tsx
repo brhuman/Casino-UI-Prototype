@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldCheck, Cpu, Layers, Zap, ExternalLink } from 'lucide-react';
 import { useUiStore } from '../../store/useUiStore';
@@ -8,19 +7,7 @@ export const AboutModal = () => {
   const { t } = useTranslation();
   const showAboutModal = useUiStore((state) => state.showAboutModal);
   const setShowAboutModal = useUiStore((state) => state.setShowAboutModal);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
-
-  useEffect(() => {
-    const hasBeenShown = localStorage.getItem('about_modal_shown');
-    if (!hasBeenShown) {
-      setShowAboutModal(true);
-    }
-  }, [setShowAboutModal]);
-
   const handleClose = () => {
-    if (dontShowAgain) {
-      localStorage.setItem('about_modal_shown', 'true');
-    }
     setShowAboutModal(false);
   };
 
@@ -98,18 +85,6 @@ export const AboutModal = () => {
               >
                 {t('common.about.continue')}
               </button>
-
-              <label className="flex items-center gap-3 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  checked={dontShowAgain}
-                  onChange={(e) => setDontShowAgain(e.target.checked)}
-                  className="w-5 h-5 rounded-lg border-white/10 bg-white/5 text-neon-cyan focus:ring-neon-cyan transition-all"
-                />
-                <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] group-hover:text-white/60 transition-colors">
-                  {t('common.about.dont_show')}
-                </span>
-              </label>
             </div>
           </div>
         </motion.div>

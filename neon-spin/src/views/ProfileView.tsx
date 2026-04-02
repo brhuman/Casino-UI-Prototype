@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Plus, Camera, Edit3, Check, X } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
+import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 import { useState, useRef } from 'react';
 import { AchievementGallery } from '../components/ui/AchievementGallery';
@@ -28,6 +29,8 @@ export const ProfileView = () => {
   const updateBalance = useUserStore(state => state.actions.updateBalance);
   const setVip = useUserStore(state => state.actions.setVip);
   const setUsername = useUserStore(state => state.actions.setUsername);
+
+  const setShowAboutModal = useUiStore(state => state.setShowAboutModal);
 
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -148,6 +151,12 @@ export const ProfileView = () => {
                 className={`text-[9px] font-black uppercase tracking-widest transition-all px-3 py-1.5 rounded-lg ${isVip ? 'text-white/60 hover:text-red-400 border border-white/10' : 'text-neon-cyan hover:text-white border border-neon-cyan/40 cursor-pointer'}`}
               >
                 {isVip ? t('common.disable_vip') : t('common.become_vip')}
+              </button>
+              <button 
+                onClick={() => setShowAboutModal(true)}
+                className="text-[9px] font-black uppercase tracking-widest text-white/40 hover:text-white border border-white/10 px-3 py-1.5 rounded-lg transition-all"
+              >
+                {t('common.about.title') || 'Info'}
               </button>
             </div>
           </div>
