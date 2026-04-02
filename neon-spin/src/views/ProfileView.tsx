@@ -60,13 +60,13 @@ export const ProfileView = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-2 sm:px-4 relative">
       {/* Dynamic Background */}
       <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_profile_background.png')] bg-cover bg-center bg-no-repeat" />
       
-      <Card className="relative z-10 flex flex-col p-0 bg-white/5 border-white/10 backdrop-blur-3xl overflow-hidden rounded-[3rem]">
+      <Card className="relative z-10 flex flex-col p-0 bg-white/5 border-white/10 backdrop-blur-3xl overflow-hidden rounded-[2.5rem] sm:rounded-[3.rem]">
         {/* 1. IDENTITY SECTION (Top) */}
-        <div className="relative p-8 flex flex-col items-center text-center gap-6 bg-gradient-to-b from-white/5 to-transparent border-b border-white/5">
+        <div className="relative p-6 sm:p-8 flex flex-col items-center text-center gap-6 bg-gradient-to-b from-white/5 to-transparent border-b border-white/5">
           <div 
             className="relative group cursor-pointer"
             onClick={() => setIsSelectingAvatar(!isSelectingAvatar)}
@@ -105,7 +105,7 @@ export const ProfileView = () => {
                     value={tempName}
                     onChange={(e) => setTempName(e.target.value.toUpperCase())}
                     onKeyDown={(e) => e.key === 'Enter' && handleNameSave()}
-                    className="w-full bg-white/5 border-2 border-neon-cyan rounded-2xl px-6 py-4 text-3xl sm:text-4xl font-black italic text-center text-white uppercase tracking-tighter outline-none shadow-[0_0_20px_rgba(0,255,255,0.2)]"
+                    className="w-full bg-white/5 border-2 border-neon-cyan rounded-2xl px-4 py-3 sm:px-6 sm:py-4 text-2xl sm:text-4xl font-black italic text-center text-white uppercase tracking-tighter outline-none shadow-[0_0_20px_rgba(0,255,255,0.2)]"
                     maxLength={16}
                   />
                   <div className="flex gap-3">
@@ -134,8 +134,8 @@ export const ProfileView = () => {
                     <h2 className="text-4xl sm:text-5xl font-black italic tracking-tighter text-white uppercase drop-shadow-lg group-hover/name:text-neon-cyan transition-colors">
                       {username}
                     </h2>
-                    <div className="absolute -right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover/name:opacity-100 transition-opacity">
-                      <Edit3 size={24} className="text-neon-cyan animate-pulse" />
+                    <div className="absolute -right-8 sm:-right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover/name:opacity-100 transition-opacity">
+                      <Edit3 size={20} className="text-neon-cyan animate-pulse sm:w-6 sm:h-6" />
                     </div>
                   </div>
                 </motion.div>
@@ -163,18 +163,18 @@ export const ProfileView = () => {
         </div>
 
         {/* 2. RESOURCES SECTION (Center) */}
-        <div className="p-8 flex flex-col gap-10">
+        <div className="p-6 sm:p-8 flex flex-col gap-8 sm:gap-10">
           {/* XP Bar */}
           <div className="space-y-4">
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">{t('common.level')} {level} {t('common.progress')}</span>
               </div>
-              <span className="text-xs font-mono font-black text-white/80 tabular-nums">
+              <span className="text-xs font-mono font-black text-white/80 tabular-nums text-[10px] sm:text-xs">
                 {Math.floor(xp).toLocaleString()} / {Math.floor(maxXp).toLocaleString()} XP
               </span>
             </div>
-            <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 p-0.5 overflow-hidden shadow-inner translate-z-0">
+            <div className="h-2.5 sm:h-3 w-full bg-black/40 rounded-full border border-white/5 p-0.5 overflow-hidden shadow-inner translate-z-0">
               <div 
                 style={{ width: `${(xp / maxXp) * 100}%` }}
                 className={`h-full rounded-full relative z-10 transition-all duration-300 ${isVip ? 'bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600' : 'bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-purple'}`}
@@ -185,10 +185,10 @@ export const ProfileView = () => {
           </div>
 
           {/* Balance Block */}
-          <div className="bg-white/5 border border-white/10 rounded-[3rem] p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.08] transition-all group shadow-xl backdrop-blur-2xl">
+          <div className="bg-white/5 border border-white/10 rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.08] transition-all group shadow-xl backdrop-blur-2xl">
               <div className="text-center sm:text-left">
                 <p className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em] mb-2 px-1">{t('profile.available_credits')}</p>
-                <h3 className="text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <h3 className="text-4xl sm:text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   ${balance.toLocaleString()}
                 </h3>
               </div>
@@ -211,7 +211,7 @@ export const ProfileView = () => {
         </div>
 
         {/* 3. PERFORMANCE STATS (Grid) */}
-        <div className="px-8 pb-8">
+        <div className="px-6 pb-6 sm:px-8 sm:pb-8">
            <div className="grid grid-cols-3 gap-1 bg-white/5 rounded-2xl p-1 border border-white/10 overflow-hidden">
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
                 <span className="text-[8px] font-black text-white/60 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/80 transition-colors">{t('profile.wagers')}</span>
