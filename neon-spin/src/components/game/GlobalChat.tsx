@@ -93,7 +93,7 @@ export const GlobalChat = () => {
         </h2>
       </div>
 
-      <div className="relative w-full h-[500px] border border-white/10 bg-white/5 backdrop-blur-3xl rounded-[3rem] overflow-hidden flex flex-col shadow-2xl">
+      <div className="relative w-full h-[600px] border border-white/10 bg-white/5 backdrop-blur-3xl rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl">
         {/* Messages area */}
         <div 
           ref={scrollRef}

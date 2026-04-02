@@ -21,6 +21,47 @@ function App() {
     soundManager.stopAll();
   }, [currentView]);
 
+  // Dynamic SEO Metadata
+  useEffect(() => {
+    const metaDescription = document.querySelector('meta[name="description"]');
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    
+    const viewMetadata = {
+      lobby: {
+        title: 'Neon Spin | The Ultimate Cyberpunk Gaming Experience',
+        description: 'Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights.'
+      },
+      slots: {
+        title: 'Neon Slots | Spin to Win in the Cybercity',
+        description: 'Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits.'
+      },
+      mines: {
+        title: 'Cyber Mines | High-Stakes Logic Game',
+        description: 'Can you navigate the grid without hitting a mine? Multiply your balance in this high-tension logic game for the bold.'
+      },
+      roulette: {
+        title: 'Neon Roulette | The Wheel of Fortune',
+        description: 'Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win.'
+      },
+      profile: {
+        title: 'User Profile | Neon Spin Identity',
+        description: 'Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League.'
+      },
+      settings: {
+        title: 'Settings | Optimize Your Experience',
+        description: 'Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session.'
+      }
+    };
+
+    const metadata = viewMetadata[currentView as keyof typeof viewMetadata] || viewMetadata.lobby;
+    
+    document.title = metadata.title;
+    if (metaDescription) metaDescription.setAttribute('content', metadata.description);
+    if (ogTitle) ogTitle.setAttribute('content', metadata.title);
+    if (ogDescription) ogDescription.setAttribute('content', metadata.description);
+  }, [currentView]);
+
   return (
     <div className={`${!highQualityFx ? 'fx-off' : ''} ${!neonGlow ? 'glow-off' : ''} min-h-screen flex flex-col`}>
       <MainLayout>

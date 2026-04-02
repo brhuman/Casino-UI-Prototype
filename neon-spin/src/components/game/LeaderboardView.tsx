@@ -23,16 +23,17 @@ export const LeaderboardView = () => {
   }, [username, totalWinAmount]);
 
   return (
-    <div className="w-full bg-white/5 border border-white/10 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl">
-      <div className="p-10 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-        <h3 className="text-3xl sm:text-4xl font-black text-white italic uppercase tracking-tighter flex items-center gap-4">
-          <div className="w-2 h-8 bg-yellow-400 rounded-full shadow-[0_0_15px_#facc15]" /> {t('lobby.champions_league')}
-        </h3>
-        <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em]">{t('lobby.updated_moments_ago')}</span>
+    <div className="flex flex-col gap-8 h-full">
+      <div className="flex items-center justify-between px-4">
+        <h2 className="text-3xl sm:text-4xl font-black text-white uppercase italic tracking-tighter flex items-center gap-4">
+          <div className="w-2 h-8 bg-yellow-400 rounded-full shadow-[0_0_15px_#facc15]" /> 
+          {t('lobby.champions_league')}
+        </h2>
+        <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em]">{t('lobby.updated_moments_ago')}</span>
       </div>
 
-      <div className="p-4">
-        <div className="flex flex-col gap-2">
+      <div className="relative w-full h-[600px] bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden backdrop-blur-3xl shadow-2xl flex flex-col">
+        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-3 custom-scrollbar">
           {leaderboardData.map((player, index) => {
             const isTop3 = index < 3;
             const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Medal : null;
@@ -44,36 +45,38 @@ export const LeaderboardView = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
+                className={`flex items-center justify-between p-5 rounded-full transition-all group/item ${
                   player.isCurrentUser 
-                    ? 'bg-neon-cyan/30 border border-neon-cyan/40 shadow-[0_0_20px_rgba(0,255,255,0.2)]' 
-                    : 'bg-white/[0.08] border border-white/5 hover:bg-white/[0.15]'
+                    ? 'bg-neon-cyan/20 border border-neon-cyan/30 shadow-[0_0_25px_rgba(0,255,255,0.1)]' 
+                    : 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20'
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-black/40 flex items-center justify-center border border-white/5 font-black text-xs">
+                <div className="flex items-center gap-5">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center border font-black text-xs transition-all ${
+                    player.isCurrentUser ? 'bg-black/40 border-neon-cyan/20' : 'bg-black/40 border-white/5 group-hover/item:border-white/20'
+                  }`}>
                     {isTop3 && RankIcon ? (
-                      <RankIcon size={18} className={rankColor} />
+                      <RankIcon size={20} className={rankColor} />
                     ) : (
                       <span className={rankColor}>#{index + 1}</span>
                     )}
                   </div>
                   <div className="flex flex-col">
-                    <span className={`text-sm font-black uppercase tracking-tight ${player.isCurrentUser ? 'text-neon-cyan' : 'text-white'}`}>
+                    <span className={`text-md font-black uppercase italic tracking-tighter ${player.isCurrentUser ? 'text-neon-cyan' : 'text-white'}`}>
                       {player.name}
                     </span>
                     {player.isCurrentUser && (
-                      <span className="text-[9px] font-black text-neon-cyan/85 uppercase tracking-widest">{t('lobby.you_are_here')}</span>
+                      <span className="text-[9px] font-black text-neon-cyan/85 uppercase tracking-[0.2em] leading-none mt-1">{t('lobby.you_are_here')}</span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-8">
                   <div className="text-right">
-                    <span className={`text-lg font-mono font-black ${isTop3 ? 'text-white' : 'text-white/80'}`}>
+                    <span className={`text-xl font-mono font-black tabular-nums ${isTop3 ? 'text-white font-black' : 'text-white/90'}`}>
                       ${player.amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </span>
-                    <span className="block text-[8px] font-black text-white/50 uppercase tracking-widest">{t('lobby.total_win')}</span>
+                    <span className="block text-[8px] font-black text-white/50 uppercase tracking-[0.2em] mt-0.5">{t('lobby.total_win')}</span>
                   </div>
                 </div>
               </motion.div>

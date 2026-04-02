@@ -11,6 +11,15 @@ Hello! This is my test project, where I am experimenting with modern technologie
 - **Animation**: Framer Motion + GSAP
 - **State**: Zustand (Global Store)
 - **Styling**: Tailwind CSS (Glassmorphism & Neon Design)
+- **Testing**: Vitest + React Testing Library
+
+## 🧪 Testing & Quality Assurance
+This project includes a suite of automated unit tests for the core game logic:
+- **Core Logic Tests**: Verified `useUserStore` balance calculations, level-up mechanics, and achievement triggers.
+- **Reliability**: All tests pass in the current build environment, ensuring the stable foundation of the gaming platform.
+- **How to run**: Simply execute `npm run test:raw -- src/store/useUserStore.test.ts` to see the core logic tests.
+
+For a deep dive into our testing strategy, check out [test.md](./neon-spin/test.md).
 
 ## 💎 Key Features
 - **Custom Game Engines**: Slot machines and Roulette implemented with raw PIXI.js graphics and optimized sprite handling.
