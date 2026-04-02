@@ -32,12 +32,12 @@ export const BottomMenu = () => {
             <button
               key={item.id}
               onClick={() => setView(item.id)}
-              className="flex flex-col items-center justify-center gap-1 transition-all duration-300 group relative min-w-[60px]"
+              className="flex flex-col items-center justify-center gap-1 transition-all duration-300 group relative min-w-[60px] sm:px-[10px]"
             >
               {isActive && (
                 <motion.div
                   layoutId="active-glow"
-                  className="absolute -top-1 w-4 sm:w-10 h-1 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]"
+                  className="absolute -top-4 w-4 sm:w-10 h-1 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]"
                 />
               )}
               <div className={`transition-all duration-300 ${
