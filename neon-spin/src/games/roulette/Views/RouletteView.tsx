@@ -30,7 +30,7 @@ export const RouletteView: React.FC = () => {
       <div className="relative z-10 w-full max-w-5xl flex flex-col flex-1 max-h-[1000px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] gap-6">
         
         {/* Game Area */}
-        <div className="flex-1 flex items-center justify-center relative bg-black/60 rounded-[1.5rem] border border-white/5 shadow-inner overflow-hidden p-4 sm:p-8">
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden p-4 sm:p-8">
         
         <div className="w-full h-full flex items-center justify-center relative">
           <RoulettePixiBridge />

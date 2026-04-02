@@ -5,6 +5,7 @@ import { useUiStore } from '../store/useUiStore';
 import { useUserStore } from '../store/useUserStore';
 import { LatestWins } from '../components/game/LatestWins';
 import { LeaderboardView } from '../components/game/LeaderboardView';
+import { GlobalChat } from '../components/game/GlobalChat';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -335,7 +336,12 @@ export const LobbyView = () => {
              <LatestWins />
           </section>
 
-          {/* 8. GLOBAL LEADERBOARD */}
+          {/* 8. GLOBAL CHAT */}
+          <section>
+             <GlobalChat />
+          </section>
+
+          {/* 9. GLOBAL LEADERBOARD */}
           <section className="pb-10">
              <LeaderboardView />
           </section>
