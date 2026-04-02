@@ -23,18 +23,3 @@ Hello! This is my test project, where I am experimenting with modern technologie
 
 ---
 Created as a showcase of modern web graphics capabilities.
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
