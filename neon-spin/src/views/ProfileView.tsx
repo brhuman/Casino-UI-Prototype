@@ -163,7 +163,7 @@ export const ProfileView = () => {
         </div>
 
         {/* 2. RESOURCES SECTION (Center) */}
-        <div className="p-6 sm:p-8 flex flex-col gap-8 sm:gap-10">
+        <div className="px-0 py-6 sm:p-8 flex flex-col gap-8 sm:gap-10">
           {/* XP Bar */}
           <div className="space-y-4">
             <div className="flex justify-between items-end">
@@ -185,7 +185,7 @@ export const ProfileView = () => {
           </div>
 
           {/* Balance Block */}
-          <div className="bg-white/5 border border-white/10 rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.08] transition-all group shadow-xl backdrop-blur-2xl">
+          <div className="bg-white/5 border-y sm:border border-white/10 sm:rounded-[3rem] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.08] transition-all group shadow-xl backdrop-blur-2xl">
               <div className="text-center sm:text-left">
                 <p className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em] mb-2 px-1">{t('profile.available_credits')}</p>
                 <h3 className="text-4xl sm:text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
@@ -201,7 +201,7 @@ export const ProfileView = () => {
           </div>
 
           {/* Milestones (Achievements) Section */}
-          <div className="mt-2">
+          <div className="mt-2 px-4 sm:px-0">
             <div className="flex items-center justify-between px-1 mb-4">
               <h4 className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em]">{t('profile.milestones')}</h4>
               <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em]">{t('profile.showcase')}</span>
@@ -211,7 +211,7 @@ export const ProfileView = () => {
         </div>
 
         {/* 3. PERFORMANCE STATS (Grid) */}
-        <div className="px-6 pb-6 sm:px-8 sm:pb-8">
+        <div className="px-0 pb-6 sm:px-8 sm:pb-8">
            <div className="grid grid-cols-3 gap-1 bg-white/5 rounded-2xl p-1 border border-white/10 overflow-hidden">
               <div className="flex flex-col items-center justify-center py-6 px-2 hover:bg-white/5 transition-colors group/stat">
                 <span className="text-[8px] font-black text-white/60 uppercase tracking-[0.2em] mb-2 group-hover/stat:text-white/80 transition-colors">{t('profile.wagers')}</span>
