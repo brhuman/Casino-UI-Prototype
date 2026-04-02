@@ -7,7 +7,6 @@ import { useWebSocket } from '../../../hooks/useWebSocket';
 import { useMinesAudio } from '../hooks/useMinesAudio';
 import { GameButton } from '../../../components/ui/GameButton';
 import { Play } from 'lucide-react';
-import { GlobalChat } from '../../../components/game/GlobalChat';
 import { useSettingsStore } from '../../../store/useSettingsStore';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
@@ -363,11 +362,6 @@ export const MinesView = () => {
             </div>
           </div>
         </div>
-
-        {/* Global Chat Integration */}
-        <section className="mt-8 pb-12 w-full max-w-[1000px]">
-           <GlobalChat />
-        </section>
       </div>
     </div>
   );

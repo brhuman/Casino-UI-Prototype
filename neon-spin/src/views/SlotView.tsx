@@ -27,9 +27,6 @@ export const SlotView = () => {
           <PixiBridge />
         </div>
 
-        {/* Global Chat Integration */}
-        <div className="w-full">
-        </div>
       </div>
     </div>
   );
