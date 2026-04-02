@@ -27,7 +27,9 @@ function App() {
     const ogTitle = document.querySelector('meta[property="og:title"]');
     const ogDescription = document.querySelector('meta[property="og:description"]');
     const ogImage = document.querySelector('meta[property="og:image"]');
-    const twitterImage = document.querySelector('meta[property="twitter:image"]');
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
     
     const viewMetadata = {
       lobby: {
@@ -69,6 +71,8 @@ function App() {
     if (ogTitle) ogTitle.setAttribute('content', metadata.title);
     if (ogDescription) ogDescription.setAttribute('content', metadata.description);
     if (ogImage) ogImage.setAttribute('content', metadata.image);
+    if (twitterTitle) twitterTitle.setAttribute('content', metadata.title);
+    if (twitterDescription) twitterDescription.setAttribute('content', metadata.description);
     if (twitterImage) twitterImage.setAttribute('content', metadata.image);
   }, [currentView]);
 
