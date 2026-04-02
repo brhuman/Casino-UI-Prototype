@@ -5,9 +5,12 @@ import { useSettingsStore } from '../store/useSettingsStore';
 import { Card } from '../components/ui/Card';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { NotificationModal } from '../components/ui/NotificationModal';
+import { useState } from 'react';
 
 export const SettingsView = () => {
   const { t, i18n } = useTranslation();
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const globalVolume = useUserStore(state => state.globalVolume);
   const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
   const { isMuted, setMuted, setShowAboutModal } = useUiStore();
@@ -122,14 +125,17 @@ export const SettingsView = () => {
           </div>
         </div>
 
-        {/* Security & Notifications (Dummy) */}
+        {/* Security & Notifications */}
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <Shield size={20} className="text-yellow-400" />
             <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">{t('settings.security.title')}</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-             <button className="flex items-center gap-4 p-4 bg-white/[0.08] border border-white/10 rounded-2xl hover:bg-white/[0.15] transition-all text-left">
+             <button 
+               onClick={() => setShowNotificationModal(true)}
+               className="flex items-center gap-4 p-4 bg-white/[0.08] border border-white/10 rounded-2xl hover:bg-white/[0.15] transition-all text-left"
+             >
                 <Bell size={16} className="text-white/20" />
                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.security.notifications')}</span>
              </button>
@@ -143,6 +149,11 @@ export const SettingsView = () => {
           </div>
         </div>
       </Card>
+
+      <NotificationModal 
+        isOpen={showNotificationModal} 
+        onClose={() => setShowNotificationModal(false)} 
+      />
 
       <div className="flex justify-center mt-4">
         <span className="text-[8px] font-black text-white/10 uppercase tracking-[0.5em]">Neon Spin v1.2.4 Build 8823</span>
