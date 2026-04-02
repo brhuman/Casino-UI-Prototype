@@ -134,7 +134,7 @@ class SlotGame {
     const cont = new Container();
     const bg = new Graphics();
     const panelInsetX = 12;
-    const panelInsetY = 14;
+    const panelInsetY = 12;
     const panelWidth = this.symbolSize - (panelInsetX * 2);
     const panelHeight = this.symbolSize - (panelInsetY * 2);
     

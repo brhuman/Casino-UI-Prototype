@@ -23,7 +23,7 @@ export const LeaderboardView = () => {
   }, [username, totalWinAmount]);
 
   return (
-    <div className="w-full bg-white/5 border border-white/10 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl">
+    <div className="w-full bg-white/10 border border-white/20 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl">
       <div className="p-10 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
         <h3 className="text-3xl sm:text-4xl font-black text-white italic uppercase tracking-tighter flex items-center gap-4">
           <div className="w-2 h-8 bg-yellow-400 rounded-full shadow-[0_0_15px_#facc15]" /> {t('lobby.champions_league')}
@@ -46,8 +46,8 @@ export const LeaderboardView = () => {
                 transition={{ delay: index * 0.05 }}
                 className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
                   player.isCurrentUser 
-                    ? 'bg-neon-cyan/20 border border-neon-cyan/30 shadow-[0_0_15px_rgba(0,255,255,0.1)]' 
-                    : 'bg-white/[0.02] border border-transparent hover:bg-white/[0.05]'
+                    ? 'bg-neon-cyan/30 border border-neon-cyan/40 shadow-[0_0_20px_rgba(0,255,255,0.2)]' 
+                    : 'bg-white/[0.08] border border-white/5 hover:bg-white/[0.15]'
                 }`}
               >
                 <div className="flex items-center gap-4">

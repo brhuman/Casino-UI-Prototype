@@ -82,10 +82,11 @@ export const LatestWins = () => {
               <motion.div 
                 key={win.id} 
                 layout
-                initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+                initial={{ opacity: 0, x: -30, filter: 'blur(15px)' }}
                 animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, x: 20, filter: 'blur(10px)', transition: { duration: 0.2 } }}
-                className={`flex items-center justify-between p-6 rounded-[2rem] border backdrop-blur-xl transition-all group/win ${win.isPremium ? 'bg-yellow-400/5 border-yellow-500/20 shadow-[0_0_30px_rgba(250,204,21,0.05)]' : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.06] hover:border-white/10'}`}
+                exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] } }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                className={`flex items-center justify-between p-6 rounded-[2rem] border backdrop-blur-xl transition-all group/win ${win.isPremium ? 'bg-yellow-400/10 border-yellow-500/30' : 'bg-white/[0.08] border-white/10 hover:bg-white/[0.12] hover:border-white/20'}`}
               >
                  <div className="flex items-center gap-5">
                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-all overflow-hidden relative shadow-2xl ${win.isPremium ? 'border-yellow-400/40 bg-yellow-400/10' : 'bg-black/40 border-white/5 group-hover/win:border-neon-cyan/40'}`}>
@@ -134,10 +135,11 @@ export const LatestWins = () => {
               <motion.div 
                 key={reg.id} 
                 layout
-                initial={{ opacity: 0, x: 20, filter: 'blur(10px)' }}
+                initial={{ opacity: 0, x: 30, filter: 'blur(15px)' }}
                 animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, x: -20, filter: 'blur(10px)', transition: { duration: 0.2 } }}
-                className="flex items-center justify-between p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group/reg shadow-xl"
+                exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] } }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-center justify-between p-6 rounded-[2rem] bg-white/[0.07] border border-white/10 hover:bg-white/[0.12] hover:border-white/20 transition-all group/reg shadow-xl"
               >
                  <div className="flex items-center gap-5">
                    <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-neon-purple/20 via-black to-neon-purple/5 flex items-center justify-center border border-white/10 group-hover/reg:border-neon-purple/40 transition-all shadow-2xl relative">

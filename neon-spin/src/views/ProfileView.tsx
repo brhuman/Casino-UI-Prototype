@@ -57,7 +57,7 @@ export const ProfileView = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
       {/* Dynamic Background */}
       <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_profile_background.png')] bg-cover bg-center bg-no-repeat" />
       
@@ -176,7 +176,7 @@ export const ProfileView = () => {
           </div>
 
           {/* Balance Block */}
-          <div className="bg-white/[0.02] border border-white/5 rounded-[1.5rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.04] transition-colors group">
+          <div className="bg-white/10 border border-white/10 rounded-[2.5rem] p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-white/[0.15] transition-all group shadow-xl">
               <div className="text-center sm:text-left">
                 <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] mb-2 px-1">{t('profile.available_credits')}</p>
                 <h3 className="text-5xl font-black text-white font-mono tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">

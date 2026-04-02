@@ -98,11 +98,24 @@ export const PixiBridge = () => {
   return (
     <>
       {/* Game Canvas Container */}
-      <div className="relative z-10 flex h-[428px] w-full shrink-0 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-cyan-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(34,211,238,0.15)]">
+      <div 
+        className="relative z-10 flex w-full shrink-0 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-cyan-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(34,211,238,0.15)]"
+        style={{ 
+          aspectRatio: `${SLOT_STAGE_WIDTH} / ${SLOT_STAGE_HEIGHT}`,
+          width: '100%',
+          maxHeight: 'min(50vh, 428px)'
+        }}
+      >
         <canvas
           ref={canvasRef}
-          className={`relative z-10 block h-full w-auto max-w-full rounded-[1.5rem] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          style={{ aspectRatio: `${SLOT_STAGE_WIDTH} / ${SLOT_STAGE_HEIGHT}` }}
+          className={`relative z-10 block transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          style={{ 
+            width: '100%', 
+            height: 'auto', 
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain'
+          }}
         />
 
         <AnimatePresence>
@@ -150,7 +163,7 @@ export const PixiBridge = () => {
       </div>
 
       {/* Controls Container */}
-      <div className="relative z-20 flex flex-col shrink-0 w-full rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] gap-4">
+      <div className="relative z-20 flex flex-col shrink-0 w-full rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,30,0.95),rgba(10,10,15,1))] p-3 sm:p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] gap-2 sm:gap-4">
         
         {/* Top Row: Spin Action */}
         <div className="flex justify-center">

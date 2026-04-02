@@ -18,10 +18,10 @@ export const AchievementGallery = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`relative p-6 rounded-[2rem] border transition-all group ${
+            className={`relative p-6 rounded-[2.5rem] border transition-all group ${
               isUnlocked 
-                ? 'bg-white/5 border-white/10 hover:bg-white/[0.08] hover:border-white/20 shadow-lg' 
-                : 'bg-black/20 border-white/5 grayscale opacity-60'
+                ? 'bg-white/10 border-white/20 hover:bg-white/[0.18] hover:border-white/30 shadow-2xl' 
+                : 'bg-black/40 border-white/10 grayscale opacity-60'
             }`}
           >
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ${

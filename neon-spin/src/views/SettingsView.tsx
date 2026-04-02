@@ -40,7 +40,7 @@ export const SettingsView = () => {
                 className={`px-4 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all border ${
                   language === lang 
                     ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
-                    : 'bg-white/5 text-white/40 border-white/10 hover:bg-white/10 hover:text-white'
+                    : 'bg-white/10 text-white/40 border-white/20 hover:bg-white/20 hover:text-white'
                 }`}
               >
                 {t(`settings.language.${lang}`)}
@@ -65,7 +65,7 @@ export const SettingsView = () => {
               <div className="flex items-center gap-6">
                 <button 
                   onClick={() => setMuted(!isMuted)}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isMuted ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10'}`}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isMuted ? 'bg-red-500/20 text-red-500 border border-red-500/40' : 'bg-white/10 text-white/40 border border-white/20 hover:bg-white/20'}`}
                 >
                   {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
                 </button>
@@ -93,13 +93,13 @@ export const SettingsView = () => {
             <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">{t('settings.visual.title')}</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl">
               <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.visual.quality_fx')}</span>
               <div className="w-10 h-5 bg-neon-purple/20 border border-neon-purple/40 rounded-full relative p-1 cursor-pointer">
                 <div className="w-3 h-3 bg-neon-purple rounded-full absolute right-1" />
               </div>
             </div>
-            <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl">
               <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.visual.neon_glow')}</span>
               <div className="w-10 h-5 bg-neon-purple/20 border border-neon-purple/40 rounded-full relative p-1 cursor-pointer">
                 <div className="w-3 h-3 bg-neon-purple rounded-full absolute right-1" />
@@ -115,13 +115,13 @@ export const SettingsView = () => {
             <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">{t('settings.security.title')}</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-             <button className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-all text-left">
+             <button className="flex items-center gap-4 p-4 bg-white/[0.08] border border-white/10 rounded-2xl hover:bg-white/[0.15] transition-all text-left">
                 <Bell size={16} className="text-white/20" />
                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.security.notifications')}</span>
              </button>
              <button 
                onClick={() => setShowAboutModal(true)}
-               className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-all text-left"
+               className="flex items-center gap-4 p-4 bg-white/[0.08] border border-white/10 rounded-2xl hover:bg-white/[0.15] transition-all text-left"
              >
                 <Info size={16} className="text-white/20" />
                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.security.system_info')}</span>

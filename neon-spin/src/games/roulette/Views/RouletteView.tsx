@@ -39,18 +39,16 @@ export const RouletteView: React.FC = () => {
           <AnimatePresence>
             {lastResult !== null && !isSpinning && (
               <motion.div
-                initial={{ scale: 0.8, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.8, opacity: 0, y: -20 }}
-                className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+                initial={{ scale: 0.8, opacity: 0, x: 20 }}
+                animate={{ scale: 1, opacity: 1, x: 0 }}
+                exit={{ scale: 0.8, opacity: 0, x: 20 }}
+                className="absolute top-4 right-4 z-20 pointer-events-none"
               >
-                <div className="bg-gray-900/90 backdrop-blur-2xl border-2 border-neon-cyan/50 p-12 rounded-[2.5rem] shadow-[0_0_80px_rgba(0,255,255,0.3)] flex flex-col items-center gap-6">
-                  <div className="w-24 h-24 bg-neon-cyan/10 rounded-full flex items-center justify-center border border-neon-cyan/20">
-                      <Trophy className="text-neon-cyan w-12 h-12 drop-shadow-[0_0_15px_rgba(0,255,255,0.6)]" />
-                  </div>
+                <div className="bg-gray-900/40 backdrop-blur-3xl border border-neon-cyan/50 p-4 sm:p-6 rounded-2xl shadow-[0_0_40px_rgba(0,255,255,0.2)] flex flex-col items-center gap-2 sm:gap-3 min-w-[80px] sm:min-w-[120px]">
+                  <Trophy className="text-neon-cyan w-6 h-6 sm:w-8 sm:h-8 drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]" />
                   <div className="text-center">
-                      <h3 className="text-7xl font-black italic text-white uppercase tracking-tighter mb-1">{lastResult}</h3>
-                      <p className="text-neon-cyan font-black tracking-[0.4em] uppercase text-[10px]">Winning Number</p>
+                    <h3 className="text-3xl sm:text-5xl font-black italic text-white uppercase tracking-tighter leading-none mb-1">{lastResult}</h3>
+                    <p className="text-neon-cyan/70 font-black tracking-widest uppercase text-[7px] sm:text-[9px]">Winning No.</p>
                   </div>
                 </div>
               </motion.div>

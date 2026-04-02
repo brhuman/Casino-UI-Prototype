@@ -6,6 +6,8 @@ export class RouletteWheel {
   private container: Container;
   private wheel: Container;
   private wheelSprite: Sprite | null = null;
+  private ball: Sprite | null = null;
+  private highlightGraphics: Graphics | null = null;
   private segments = 37; // European Roulette
   private radius = 220;
   private isDestroyed = false;
@@ -21,35 +23,51 @@ export class RouletteWheel {
 
   public async init() {
     await this.drawWheel();
-    this.addPointer();
+    this.addBall();
+    
+    // Add a re-usable highlight graphic for the winning slot
+    this.highlightGraphics = new Graphics();
+    this.highlightGraphics.visible = false;
+    this.container.addChild(this.highlightGraphics);
   }
 
   private async drawWheel() {
     const angleStep = (Math.PI * 2) / this.segments;
     const startTime = performance.now();
-    console.log('[RouletteWheel] Starting high-performance pre-render...');
+    console.log('[RouletteWheel] Starting 3D Neon Overhaul...');
     
-    // Create a temporary container for drawing the source
     const tempContainer = new Container();
     
-    // Outer Border
-    const border = new Graphics();
-    border.circle(0, 0, this.radius + 15);
-    border.stroke({ width: 4, color: 0x00ffff, alpha: 0.5 });
-    border.circle(0, 0, this.radius + 20);
-    border.stroke({ width: 1, color: 0x00ffff, alpha: 0.2 });
-    tempContainer.addChild(border);
+    // 1. OUTER RIM (The Beveled Base)
+    const rim = new Graphics();
+    rim.circle(0, 0, this.radius + 35);
+    rim.fill({ color: 0x0c0c0e, alpha: 1 });
+    rim.circle(0, 0, this.radius + 35);
+    rim.stroke({ width: 4, color: 0x1f2937, alpha: 0.8 });
+    
+    const neonColors = [0x00ffff, 0x00ffff, 0x00ffff];
+    const neonWidths = [40, 20, 8];
+    const neonAlphas = [0.05, 0.1, 0.3];
+    
+    neonColors.forEach((color, i) => {
+      rim.circle(0, 0, this.radius + 35);
+      rim.stroke({ width: neonWidths[i], color, alpha: neonAlphas[i] });
+    });
+    
+    rim.circle(0, 0, this.radius + 15);
+    rim.stroke({ width: 2, color: 0xffffff, alpha: 0.15 });
+    tempContainer.addChild(rim);
 
-    // Slices
+    // 2. SLICES
     const slices = new Graphics();
     tempContainer.addChild(slices);
 
     const style = new TextStyle({
       fontFamily: "'Inter', Arial, sans-serif",
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: '900',
       fill: '#ffffff',
-      dropShadow: { color: '#000000', blur: 4, distance: 1 }
+      dropShadow: { color: '#000000', alpha: 0.5, blur: 4, distance: 2 }
     });
 
     for (let i = 0; i < this.segments; i++) {
@@ -64,97 +82,141 @@ export class RouletteWheel {
       
       slices.moveTo(0, 0);
       slices.arc(0, 0, this.radius, startAngle, endAngle);
-      slices.fill({ color, alpha: 0.95 });
-      slices.stroke({ width: 1, color: 0xffffff, alpha: 0.05 });
+      slices.fill({ color, alpha: 1 });
+      
+      slices.moveTo(0, 0);
+      slices.arc(0, 0, this.radius, startAngle, endAngle);
+      slices.fill({ color: 0x000000, alpha: 0.05 });
+      
+      slices.moveTo(0, 0);
+      slices.arc(0, 0, this.radius, startAngle, endAngle);
+      slices.stroke({ width: 0.5, color: 0xffffff, alpha: 0.1 });
 
-      // Add Text
       const text = new Text({ text: i.toString(), style });
       const textAngle = startAngle + (angleStep / 2);
       text.anchor.set(0.5);
-      text.x = Math.cos(textAngle) * (this.radius - 35);
-      text.y = Math.sin(textAngle) * (this.radius - 35);
+      const textDistance = this.radius * 0.82;
+      text.x = Math.cos(textAngle) * textDistance;
+      text.y = Math.sin(textAngle) * textDistance;
       text.rotation = textAngle + Math.PI / 2;
       tempContainer.addChild(text);
 
-      // Yield every 5 segments to keep UI responsive during drawing
-      if (i % 5 === 0) {
-        await new Promise(resolve => setTimeout(resolve, 0));
+      if (i % 8 === 0) {
         await new Promise(resolve => requestAnimationFrame(resolve));
       }
     }
     
-    // Inner Circle Neon Glow
-    const inner = new Graphics();
-    inner.circle(0, 0, this.radius * 0.5);
-    inner.fill({ color: 0x09090b, alpha: 1 });
-    inner.stroke({ width: 8, color: 0x00ffff, alpha: 0.4 });
-    inner.circle(0, 0, this.radius * 0.45);
-    inner.stroke({ width: 2, color: 0xffffff, alpha: 0.1 });
-    tempContainer.addChild(inner);
+    // 3. INNER HUB
+    const hub = new Graphics();
+    hub.circle(0, 0, this.radius * 0.55);
+    hub.fill({ color: 0x09090b, alpha: 1 });
+    hub.stroke({ width: 10, color: 0x00ffff, alpha: 0.3 });
+    hub.circle(0, 0, this.radius * 0.4);
+    hub.fill({ color: 0x111827 });
+    hub.stroke({ width: 2, color: 0x1f2937 });
+    hub.circle(0, 0, 65);
+    hub.stroke({ width: 6, color: 0x374151 });
+    hub.circle(0, 0, 45);
+    hub.fill({ color: 0x1f2937 });
+    hub.stroke({ width: 4, color: 0x00ffff, alpha: 0.7 });
+    tempContainer.addChild(hub);
 
-    // Decorative Center Cap
-    const cap = new Graphics();
-    cap.circle(0, 0, 40);
-    cap.fill({ color: 0x18181b });
-    cap.stroke({ width: 4, color: 0x00ffff, alpha: 0.8 });
-    tempContainer.addChild(cap);
-
-    // Convert the complex drawing into a single optimized texture
-    console.log('[RouletteWheel] Generating RenderTexture...');
     const texture = this.app.renderer.generateTexture(tempContainer);
-    
-    // Create a sprite from the texture and add it to the wheel container
     this.wheelSprite = new Sprite(texture);
     this.wheelSprite.anchor.set(0.5);
     this.wheel.addChild(this.wheelSprite);
 
-    // Cleanup the temporary container and its individual children
     tempContainer.destroy({ children: true });
-    
-    console.log(`[RouletteWheel] Pre-render completed in ${performance.now() - startTime}ms`);
+    console.log(`[RouletteWheel] 3D Overhaul completed in ${performance.now() - startTime}ms`);
   }
 
-  private addPointer() {
-    const pointer = new Graphics();
-    pointer.moveTo(0, -this.radius - 20);
-    pointer.lineTo(15, -this.radius - 45);
-    pointer.lineTo(-15, -this.radius - 45);
-    pointer.closePath();
-    pointer.fill({ color: 0x00ffff });
-    pointer.stroke({ width: 2, color: 0xffffff });
-    this.container.addChild(pointer);
+  private addBall() {
+    const ballGraphics = new Graphics();
+    ballGraphics.circle(0, 0, 8);
+    ballGraphics.fill({ color: 0xffffff });
+    ballGraphics.circle(0, 0, 8);
+    ballGraphics.fill({ color: 0x000000, alpha: 0.2 });
+    ballGraphics.circle(-2, -2, 3);
+    ballGraphics.fill({ color: 0x00ffff, alpha: 0.6 });
+    
+    const texture = this.app.renderer.generateTexture(ballGraphics);
+    this.ball = new Sprite(texture);
+    this.ball.anchor.set(0.5);
+    this.ball.visible = false;
+    this.container.addChild(this.ball);
+    ballGraphics.destroy();
+  }
+
+  private showResultHighlight(angle: number) {
+    if (!this.highlightGraphics) return;
+    this.highlightGraphics.clear();
+    this.highlightGraphics.circle(0, 0, this.radius + 35);
+    this.highlightGraphics.stroke({ width: 6, color: 0x00ffff, alpha: 0.4 });
+    this.highlightGraphics.circle(0, 0, this.radius + 40);
+    this.highlightGraphics.stroke({ width: 12, color: 0x00ffff, alpha: 0.1 });
+    
+    // Position ball slightly better in the pocket
+    if (this.ball) {
+      this.ball.x = Math.cos(angle) * (this.radius - 10);
+      this.ball.y = Math.sin(angle) * (this.radius - 10);
+    }
+    
+    this.highlightGraphics.visible = true;
+    gsap.fromTo(this.highlightGraphics, { alpha: 0 }, { alpha: 1, duration: 0.3, yoyo: true, repeat: 3 });
   }
 
   public async spin(targetIndex: number) {
-    if (this.isDestroyed || !this.wheelSprite) return;
+    if (this.isDestroyed || !this.wheelSprite || !this.ball) return;
+    
     const angleStep = (Math.PI * 2) / this.segments;
-    const targetRotation = -(targetIndex * angleStep + angleStep / 2) - (Math.PI / 2);
-    const extraSpins = Math.PI * 2 * 5; // 5 full rotations
+    
+    // Choose a random landing angle in the container's space
+    const landAngle = (Math.random() * Math.PI * 2) - Math.PI; 
+    
+    // Calculate the target rotation of the wheel
+    // We want local angle (targetIndex * angleStep + angleStep/2) to end up at landAngle
+    const targetSegmentAngle = targetIndex * angleStep + angleStep / 2;
+    const finalWheelRotation = landAngle - targetSegmentAngle;
+    
+    const wheelExtraSpins = Math.PI * 2 * 6;
+    const ballExtraSpins = Math.PI * 2 * 9;
+    
+    this.ball.visible = true;
+    this.ball.alpha = 1;
+    if (this.highlightGraphics) this.highlightGraphics.visible = false;
     
     return new Promise<void>((resolve) => {
-      const safetyTimeout = setTimeout(() => {
-        if (this.isDestroyed || !this.wheelSprite) {
-          resolve();
-          return;
-        }
-        console.warn('RouletteWheel: Animation took too long, forcing resolve');
-        this.wheelSprite.rotation = targetRotation;
-        resolve();
-      }, 10000);
-
+      // 1. Wheel Animation
       gsap.to(this.wheelSprite, {
-        rotation: targetRotation + extraSpins,
-        duration: 4,
+        rotation: finalWheelRotation + wheelExtraSpins,
+        duration: 5,
         ease: 'power4.out',
         onComplete: () => {
-          clearTimeout(safetyTimeout);
-          if (this.isDestroyed || !this.wheelSprite) {
-            resolve();
-            return;
-          }
-          // Normalize rotation
-          this.wheelSprite.rotation = targetRotation % (Math.PI * 2);
+          if (this.isDestroyed || !this.wheelSprite) return resolve();
+          this.wheelSprite.rotation = finalWheelRotation % (Math.PI * 2);
+          this.showResultHighlight(landAngle);
           resolve();
+        }
+      });
+
+      // 2. Ball Animation
+      const ballAnim = { angle: Math.random() * Math.PI * 2 };
+      gsap.to(ballAnim, {
+        angle: landAngle - ballExtraSpins,
+        duration: 4.5,
+        ease: 'power3.out',
+        onUpdate: () => {
+          if (this.isDestroyed || !this.ball) return;
+          const r = this.radius - 12;
+          this.ball.x = Math.cos(ballAnim.angle) * r;
+          this.ball.y = Math.sin(ballAnim.angle) * r;
+        },
+        onComplete: () => {
+          if (this.isDestroyed || !this.ball) return;
+          // Snap to exact landing spot
+          this.ball.x = Math.cos(landAngle) * (this.radius - 10);
+          this.ball.y = Math.sin(landAngle) * (this.radius - 10);
+          gsap.to(this.ball.scale, { x: 0.8, y: 0.8, duration: 0.2, yoyo: true, repeat: 1 });
         }
       });
     });
@@ -164,9 +226,11 @@ export class RouletteWheel {
     this.isDestroyed = true;
     if (this.wheelSprite) {
       gsap.killTweensOf(this.wheelSprite);
-      if (this.wheelSprite.texture) {
-        this.wheelSprite.texture.destroy(true);
-      }
+      if (this.wheelSprite.texture) this.wheelSprite.texture.destroy(true);
+    }
+    if (this.ball) {
+      gsap.killTweensOf(this.ball);
+      if (this.ball.texture) this.ball.texture.destroy(true);
     }
     this.container.destroy({ children: true });
   }

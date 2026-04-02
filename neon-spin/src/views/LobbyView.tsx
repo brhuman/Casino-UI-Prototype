@@ -201,7 +201,7 @@ export const LobbyView = () => {
                { label: t('lobby.stats.luck_factor'), value: t('lobby.stats.high'), color: 'text-yellow-400' },
                { label: t('lobby.stats.system_check'), value: t('lobby.stats.verified'), color: 'text-green-400' }
              ].map((stat, i) => (
-               <div key={i} className="bg-white/5 border border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-md group hover:bg-white/[0.08] transition-all">
+               <div key={i} className="bg-white/10 border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-md group hover:bg-white/[0.15] transition-all shadow-lg">
                  <span className="text-[11px] font-black text-white/20 uppercase tracking-[0.4em] mb-3 group-hover:text-white/40 transition-colors">{stat.label}</span>
                  <span className={`text-xl font-black italic uppercase ${stat.color} tracking-tighter`}>{stat.value}</span>
                </div>
@@ -233,7 +233,7 @@ export const LobbyView = () => {
                        <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">4.8k {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-purple transition-all group-hover:scale-110 shadow-lg">
-                       <SlotsIcon size={24} />
+                       <SlotsIcon size={32} />
                     </button>
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export const LobbyView = () => {
                        <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">1.2k {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-cyan transition-all group-hover:scale-110 shadow-lg">
-                       <RouletteIcon size={24} />
+                       <RouletteIcon size={32} />
                     </button>
                   </div>
                 </div>
@@ -277,7 +277,7 @@ export const LobbyView = () => {
                        <span className="text-[10px] font-black text-white/40 flex items-center ml-4 uppercase">842 {t('lobby.games.playing')}</span>
                     </div>
                     <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center group-hover:bg-neon-fuchsia transition-all group-hover:scale-110 shadow-lg">
-                       <MinesIcon size={24} />
+                       <MinesIcon size={32} />
                     </button>
                   </div>
                 </div>
@@ -288,7 +288,7 @@ export const LobbyView = () => {
           {/* 6. PERFORMANCE DASHBOARDS (CTAs) */}
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-8">
              <div 
-               className={`relative p-10 rounded-[3rem] overflow-hidden border transition-all cursor-pointer group ${isVip ? 'bg-yellow-400/5 border-yellow-500/20 shadow-[0_0_50px_rgba(250,204,21,0.1)]' : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'}`}
+               className={`relative p-10 rounded-[3rem] overflow-hidden border transition-all cursor-pointer group ${isVip ? 'bg-yellow-400/10 border-yellow-500/30' : 'bg-white/10 border-white/20 hover:bg-white/[0.15]'}`}
                onClick={() => setVip(!isVip)}
              >
                 <div className="relative z-10 flex flex-col gap-6">
@@ -311,7 +311,7 @@ export const LobbyView = () => {
              </div>
 
              <div 
-               className="relative p-10 rounded-[3rem] overflow-hidden border border-white/10 bg-white/5 hover:bg-white/[0.08] transition-all cursor-pointer group"
+               className="relative p-10 rounded-[3rem] overflow-hidden border border-white/20 bg-white/10 hover:bg-white/[0.15] transition-all cursor-pointer group"
                onClick={() => updateBalance(5000)}
              >
                 <div className="relative z-10 flex flex-col gap-6">

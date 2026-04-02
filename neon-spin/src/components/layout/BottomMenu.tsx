@@ -19,7 +19,7 @@ export const BottomMenu = () => {
   const isVip = useUserStore(state => state.isVip);
 
   return (
-    <nav className={`fixed bottom-0 left-0 w-full h-20 backdrop-blur-3xl z-50 flex justify-center items-center gap-2 sm:gap-10 px-4 pb-safe transition-all duration-500 ${
+    <nav className={`fixed bottom-0 left-0 w-full h-[64px] sm:h-20 backdrop-blur-3xl z-50 flex justify-around items-center px-2 sm:px-12 pb-safe transition-all duration-500 ${
       isVip 
         ? 'bg-yellow-950/20 border-t border-yellow-500/50 shadow-[0_-15px_30px_rgba(250,204,21,0.2)]' 
         : 'bg-gray-950/80 border-t border-white/5 shadow-[0_-20px_60px_rgba(0,0,0,0.9)]'
@@ -31,28 +31,28 @@ export const BottomMenu = () => {
           <button
             key={item.id}
             onClick={() => setView(item.id)}
-            className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 group relative min-w-[64px]"
+            className="flex-1 flex flex-col items-center justify-center gap-1 transition-all duration-300 group relative min-w-0"
           >
             {isActive && (
               <motion.div
                 layoutId="active-glow"
-                className="absolute -top-1 w-8 h-1 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]"
+                className="absolute -top-1 w-4 sm:w-10 h-1 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]"
               />
             )}
-            <div className={`p-2 rounded-xl transition-all duration-300 ${
+            <div className={`transition-all duration-300 ${
               isActive 
                 ? 'text-white' 
-                : 'text-white/40 group-hover:text-white/80'
+                : 'text-white/30 group-hover:text-white/70'
             }`}>
               <Icon 
-                size={24} 
-                className={isActive ? 'drop-shadow-[0_0_8px_white]' : ''} 
+                size={20} 
+                className={`sm:w-[28px] sm:h-[28px] ${isActive ? 'drop-shadow-[0_0_8px_white]' : ''}`} 
               />
             </div>
-            <span className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.1em] transition-all duration-300 ${
+            <span className={`text-[7px] sm:text-[11px] font-black uppercase tracking-tighter sm:tracking-[0.1em] transition-all duration-300 ${
               isActive 
                 ? 'text-white' 
-                : 'text-white/30 group-hover:text-white/60'
+                : 'text-white/20 group-hover:text-white/50'
             }`}>
               {item.label}
             </span>
