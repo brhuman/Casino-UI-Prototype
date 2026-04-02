@@ -22,4 +22,4 @@ Hello! This is my test project, where I am experimenting with modern technologie
 > **This is a technical demonstration.** No real money gambling is involved. All credits are virtual and provided for testing the interface and game logic only.
 
 ---
-*Created as a showcase of modern web graphics capabilities.*
+Created as a showcase of modern web graphics capabilities.
