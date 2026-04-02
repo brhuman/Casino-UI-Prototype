@@ -33,32 +33,32 @@ function App() {
       lobby: {
         title: 'Neon Spin | The Ultimate Cyberpunk Gaming Experience',
         description: 'Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights.',
-        image: '/og-image.png'
+        image: 'https://neonspin.vercel.app/og-image.png'
       },
       slots: {
         title: 'Neon Slots | Spin to Win in the Cybercity',
         description: 'Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits.',
-        image: '/assets/slots_thumb.png'
+        image: 'https://neonspin.vercel.app/assets/slots_thumb.png'
       },
       mines: {
         title: 'Cyber Mines | High-Stakes Logic Game',
         description: 'Can you navigate the grid without hitting a mine? Multiply your balance in this high-tension logic game for the bold.',
-        image: '/assets/mines_thumb.png'
+        image: 'https://neonspin.vercel.app/assets/mines_thumb.png'
       },
       roulette: {
         title: 'Neon Roulette | The Wheel of Fortune',
         description: 'Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win.',
-        image: '/assets/roulette_thumb.png'
+        image: 'https://neonspin.vercel.app/assets/roulette_thumb.png'
       },
       profile: {
         title: 'User Profile | Neon Spin Identity',
         description: 'Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League.',
-        image: '/og-image.png'
+        image: 'https://neonspin.vercel.app/og-image.png'
       },
       settings: {
         title: 'Settings | Optimize Your Experience',
         description: 'Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session.',
-        image: '/og-image.png'
+        image: 'https://neonspin.vercel.app/og-image.png'
       }
     };
 
