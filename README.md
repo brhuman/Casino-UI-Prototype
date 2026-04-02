@@ -23,3 +23,4 @@ Hello! This is my test project, where I am experimenting with modern technologie
 
 ---
 Created as a showcase of modern web graphics capabilities.
+2
