@@ -208,7 +208,7 @@ export const LobbyView = () => {
                { label: t('lobby.stats.system_check'), value: t('lobby.stats.verified'), color: 'text-green-400' }
              ].map((stat, i) => (
                <div key={i} className="bg-white/5 border border-white/10 rounded-[2rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-2xl group hover:bg-white/[0.08] transition-all shadow-lg">
-                 <span className="text-[11px] font-black text-white/10 uppercase tracking-[0.4em] mb-3 group-hover:text-white/30 transition-colors tracking-widest">{stat.label}</span>
+                 <span className="text-[13px] font-black text-white/70 uppercase tracking-[0.4em] mb-3 group-hover:text-white/90 transition-colors tracking-widest">{stat.label}</span>
                  <span className={`text-2xl font-black italic uppercase ${stat.color} tracking-tighter`}>{stat.value}</span>
                </div>
              ))}
@@ -295,22 +295,22 @@ export const LobbyView = () => {
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-8 px-2">
              {/* VIP Card */}
              <div 
-               className={`relative p-10 sm:p-12 rounded-[3.5rem] overflow-hidden border transition-all cursor-pointer group flex flex-col gap-8 ${isVip ? 'border-yellow-500/30 bg-yellow-400/5' : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'}`}
+               className={`relative p-6 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden border transition-all cursor-pointer group flex flex-col gap-6 sm:gap-8 ${isVip ? 'border-yellow-500/30 bg-yellow-400/5' : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'}`}
                onClick={() => setVip(!isVip)}
              >
-                <div className="relative z-10 flex flex-col gap-8">
-                   <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl transform group-hover:rotate-12 transition-all">
-                      <Crown size={40} className="text-black" strokeWidth={2.5} />
+                <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
+                   <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl transform group-hover:rotate-12 transition-all">
+                      <Crown size={32} className="text-black sm:scale-125" strokeWidth={2.5} />
                    </div>
-                   <div className="flex flex-col gap-4">
-                      <h4 className="text-4xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
+                   <div className="flex flex-col gap-3 sm:gap-4">
+                      <h4 className="text-2xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
                         {isVip ? t('lobby.cta.vip_title_active') : t('lobby.cta.vip_title_inactive')}
                       </h4>
-                      <p className="text-xs sm:text-sm font-black text-white/40 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
+                      <p className="text-[10px] sm:text-sm font-black text-white/60 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
                         {isVip ? t('lobby.cta.vip_desc_active') : t('lobby.cta.vip_desc_inactive')}
                       </p>
                    </div>
-                   <button className={`w-fit px-12 py-5 rounded-2xl text-[10px] font-black uppercase transition-all shadow-xl tracking-widest ${isVip ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white hover:bg-white hover:text-black hover:scale-105 active:scale-95'}`}>
+                   <button className={`w-fit px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase transition-all shadow-xl tracking-widest ${isVip ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white hover:bg-white hover:text-black hover:scale-105 active:scale-95'}`}>
                      {isVip ? t('lobby.cta.vip_button_active') : t('lobby.cta.vip_button_inactive')}
                    </button>
                 </div>
@@ -322,22 +322,22 @@ export const LobbyView = () => {
 
              {/* Recharge Card */}
              <div 
-               className="relative p-10 sm:p-12 rounded-[3.5rem] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl hover:bg-white/[0.08] transition-all cursor-pointer group flex flex-col gap-8"
+               className="relative p-6 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl hover:bg-white/[0.08] transition-all cursor-pointer group flex flex-col gap-6 sm:gap-8"
                onClick={() => updateBalance(5000)}
              >
-                <div className="relative z-10 flex flex-col gap-8">
-                   <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-neon-cyan via-[#00ccff] to-neon-cyan flex items-center justify-center shadow-2xl transform group-hover:-rotate-12 transition-all">
-                      <Plus size={40} className="text-black" strokeWidth={3} />
+                <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
+                   <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-neon-cyan via-[#00ccff] to-neon-cyan flex items-center justify-center shadow-2xl transform group-hover:-rotate-12 transition-all">
+                      <Plus size={32} className="text-black sm:scale-125" strokeWidth={3} />
                    </div>
-                   <div className="flex flex-col gap-4">
-                      <h4 className="text-4xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
+                   <div className="flex flex-col gap-3 sm:gap-4">
+                      <h4 className="text-2xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
                         {t('lobby.cta.recharge_title')}
                       </h4>
-                      <p className="text-xs sm:text-sm font-black text-white/40 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
+                      <p className="text-[10px] sm:text-sm font-black text-white/60 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
                         {t('lobby.cta.recharge_desc')}
                       </p>
                    </div>
-                   <button className="w-fit px-12 py-5 rounded-2xl bg-neon-cyan text-black text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-[0_15px_40px_rgba(0,255,255,0.25)] hover:scale-105 active:scale-95">
+                   <button className="w-fit px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl bg-neon-cyan text-black text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-[0_15px_40px_rgba(0,255,255,0.25)] hover:scale-105 active:scale-95">
                      {t('lobby.cta.recharge_button')}
                    </button>
                 </div>
@@ -353,13 +353,9 @@ export const LobbyView = () => {
              <LatestWins />
           </section>
 
-          {/* 8. GLOBAL LEADERBOARD */}
-          <section>
+          {/* 8. SOCIAL & COMPETITION GRID (50/50 Desktop) */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pb-24">
              <LeaderboardView />
-          </section>
-
-          {/* 9. GLOBAL CHAT */}
-          <section className="pb-24">
              <GlobalChat />
           </section>
         </div>

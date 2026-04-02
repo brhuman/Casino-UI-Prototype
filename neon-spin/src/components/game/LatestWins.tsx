@@ -86,7 +86,7 @@ export const LatestWins = () => {
                 animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                 exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] } }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className={`flex items-center justify-between p-6 rounded-[2rem] border backdrop-blur-xl transition-all group/win ${win.isPremium ? 'bg-yellow-400/10 border-yellow-500/30' : 'bg-white/[0.08] border-white/10 hover:bg-white/[0.12] hover:border-white/20'}`}
+                className={`flex items-center justify-between p-6 rounded-[2rem] border backdrop-blur-xl transition-all group/win ${win.isPremium ? 'bg-yellow-400/20 border-yellow-500/40' : 'bg-white/[0.2] border-white/20 hover:bg-white/[0.25] hover:border-white/30 shadow-xl'}`}
               >
                  <div className="flex items-center gap-5">
                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-all overflow-hidden relative shadow-2xl ${win.isPremium ? 'border-yellow-400/40 bg-yellow-400/10' : 'bg-black/40 border-white/5 group-hover/win:border-neon-cyan/40'}`}>
@@ -105,11 +105,11 @@ export const LatestWins = () => {
                  <div className="flex items-center gap-10">
                    <div className="hidden sm:flex flex-col items-end gap-1">
                      <span className={`${win.isPremium ? 'text-yellow-500' : 'text-neon-purple'} font-black text-sm italic tracking-tighter`}>{win.multiplier}</span>
-                     <span className="text-white/10 text-[8px] font-black uppercase tracking-widest whitespace-nowrap">{t('lobby.multiplier')}</span>
+                     <span className="text-white/30 text-[8px] font-black uppercase tracking-widest whitespace-nowrap">{t('lobby.multiplier')}</span>
                    </div>
                    <div className="text-right min-w-[100px]">
                      <span className={`${win.isPremium ? 'text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.4)]' : 'text-neon-cyan drop-shadow-[0_0_15px_rgba(0,255,255,0.4)]'} font-mono font-black block text-2xl tracking-tighter`}>+${win.amount}</span>
-                     <span className="text-white/10 text-[9px] font-black uppercase block tracking-[0.2em] mt-1">{t('lobby.just_now')}</span>
+                     <span className="text-white/30 text-[9px] font-black uppercase block tracking-[0.2em] mt-1">{t('lobby.just_now')}</span>
                    </div>
                  </div>
               </motion.div>
@@ -139,7 +139,7 @@ export const LatestWins = () => {
                 animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                 exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] } }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="flex items-center justify-between p-6 rounded-[2rem] bg-white/[0.07] border border-white/10 hover:bg-white/[0.12] hover:border-white/20 transition-all group/reg shadow-xl"
+                className="flex items-center justify-between p-6 rounded-[2rem] bg-white/[0.2] border border-white/20 hover:bg-white/[0.25] hover:border-white/30 transition-all group/reg shadow-xl"
               >
                  <div className="flex items-center gap-5">
                    <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-neon-purple/20 via-black to-neon-purple/5 flex items-center justify-center border border-white/10 group-hover/reg:border-neon-purple/40 transition-all shadow-2xl relative">
@@ -158,7 +158,7 @@ export const LatestWins = () => {
                  </div>
                  
                  <div className="text-right flex flex-col items-end gap-2">
-                   <span className="text-white/20 text-[9px] font-black uppercase tracking-[0.4em]">{t(`lobby.${reg.time.toLowerCase().replace(' ', '_')}`)}</span>
+                   <span className="text-white/40 text-[9px] font-black uppercase tracking-[0.4em]">{t(`lobby.${reg.time.toLowerCase().replace(' ', '_')}`)}</span>
                    <div className="h-1 w-16 bg-white/5 rounded-full overflow-hidden">
                       <div className="h-full w-full bg-neon-purple animate-pulse" />
                    </div>

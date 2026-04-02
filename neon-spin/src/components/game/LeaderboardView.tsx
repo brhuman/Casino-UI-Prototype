@@ -23,7 +23,7 @@ export const LeaderboardView = () => {
   }, [username, totalWinAmount]);
 
   return (
-    <div className="w-full bg-white/10 border border-white/20 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl">
+    <div className="w-full bg-white/5 border border-white/10 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl">
       <div className="p-10 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
         <h3 className="text-3xl sm:text-4xl font-black text-white italic uppercase tracking-tighter flex items-center gap-4">
           <div className="w-2 h-8 bg-yellow-400 rounded-full shadow-[0_0_15px_#facc15]" /> {t('lobby.champions_league')}

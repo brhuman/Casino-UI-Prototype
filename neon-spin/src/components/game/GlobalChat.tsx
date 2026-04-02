@@ -85,7 +85,7 @@ export const GlobalChat = () => {
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 h-full">
       <div className="flex items-center justify-between px-4">
         <h2 className="text-3xl sm:text-4xl font-black text-white uppercase italic tracking-tighter flex items-center gap-4">
           <div className="w-2 h-8 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]" /> 
@@ -93,7 +93,7 @@ export const GlobalChat = () => {
         </h2>
       </div>
 
-      <div className="relative w-full h-[500px] border border-white/5 bg-gray-900/40 backdrop-blur-3xl rounded-[3rem] overflow-hidden flex flex-col shadow-2xl">
+      <div className="relative w-full h-[500px] border border-white/10 bg-white/5 backdrop-blur-3xl rounded-[3rem] overflow-hidden flex flex-col shadow-2xl">
         {/* Messages area */}
         <div 
           ref={scrollRef}
@@ -131,7 +131,7 @@ export const GlobalChat = () => {
         {/* Input area */}
         <form 
           onSubmit={handleSend}
-          className="p-6 bg-black/40 border-t border-white/5 flex items-center gap-4"
+          className="p-6 bg-white/[0.02] border-t border-white/5 flex items-center gap-4"
         >
           <div className="flex-1 relative">
             <input 
@@ -150,7 +150,7 @@ export const GlobalChat = () => {
           </button>
         </form>
 
-        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-gray-900/60 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
       </div>
     </div>
   );
