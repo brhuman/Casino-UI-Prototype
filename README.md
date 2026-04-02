@@ -3,7 +3,7 @@
 **Live Demo:** [https://neonspin.vercel.app/](https://neonspin.vercel.app/)
 
 ## 🚀 Overview
-**Neon Spin** is a high-performance web application built to demonstrate the seamless integration of **PIXI.js** (WebGL engine) within a modern **React** ecosystem. This project serves as a technical case study for a developer portfolio, focusing on advanced graphics, complex state management, and ultra-smooth UI animations.
+Hello! This is my test project, where I am experimenting with modern technologies like **React 19**, **PIXI.js 8**, **Framer Motion**, and **Tailwind CSS**. **This is not real gambling.** All credits are virtual and provided for testing the interface and engine logic only.
 
 ## 🛠 Tech Stack
 - **Frontend**: React 19 + TypeScript + Vite
