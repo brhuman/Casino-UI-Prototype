@@ -23,7 +23,7 @@ export const PixiBridge = () => {
   const placeBet = useGameStore((state) => state.actions.placeBet);
   const increaseBet = useGameStore((state) => state.actions.increaseBet);
   const decreaseBet = useGameStore((state) => state.actions.decreaseBet);
-  const { highQualityFx, neonGlow } = useSettingsStore();
+  const { neonGlow } = useSettingsStore();
   const canSpin = isLoaded && !isSpinning && balance >= currentBet;
 
   useEffect(() => {
