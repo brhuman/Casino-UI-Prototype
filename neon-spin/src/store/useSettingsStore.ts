@@ -1,6 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+const getInitialLanguage = (): 'en' | 'uk' | 'ru' | 'pl' => {
+  if (typeof window === 'undefined') return 'en';
+  const browserLang = navigator.language.split('-')[0].toLowerCase();
+  
+  // Custom requirement: Russian browsers MUST default to English
+  if (browserLang === 'ru') return 'en';
+  
+  const supported: Array<SettingsState['language']> = ['en', 'uk', 'ru', 'pl'];
+  return supported.includes(browserLang as any) ? (browserLang as any) : 'en';
+};
+
 interface SettingsState {
   isMuted: boolean;
   volume: number;
@@ -26,7 +37,7 @@ export const useSettingsStore = create<SettingsState>()(
       isMuted: false,
       volume: 0.5,
       theme: 'neon',
-      language: 'en',
+      language: getInitialLanguage(),
       highQualityFx: true,
       neonGlow: true,
       hasSeenWelcome: false,

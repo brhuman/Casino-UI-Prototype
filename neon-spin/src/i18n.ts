@@ -9,7 +9,6 @@ import pl from './locales/pl.json';
 i18n
   .use(initReactI18next)
   .init({
-    lng: 'en',
     resources: {
       en: { translation: en },
       uk: { translation: uk },
@@ -19,10 +18,6 @@ i18n
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false
-    },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage']
     }
   });
 

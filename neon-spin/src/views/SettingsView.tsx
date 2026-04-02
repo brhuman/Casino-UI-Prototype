@@ -9,7 +9,7 @@ import { NotificationModal } from '../components/ui/NotificationModal';
 import { useState } from 'react';
 
 export const SettingsView = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const globalVolume = useUserStore(state => state.globalVolume);
   const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
@@ -18,7 +18,6 @@ export const SettingsView = () => {
 
   const handleLanguageChange = (lang: 'en' | 'uk' | 'ru' | 'pl') => {
     settingsActions.setLanguage(lang);
-    i18n.changeLanguage(lang);
   };
 
   return (

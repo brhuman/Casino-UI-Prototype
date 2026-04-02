@@ -12,10 +12,19 @@ import { soundManager } from './game/audio/SoundManager';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSettingsStore } from './store/useSettingsStore';
+import { useTranslation } from 'react-i18next';
 
 function App() {
+  const { i18n } = useTranslation();
   const { currentView, setShowAboutModal } = useUiStore();
-  const { highQualityFx, neonGlow, hasSeenWelcome } = useSettingsStore();
+  const { language, highQualityFx, neonGlow, hasSeenWelcome } = useSettingsStore();
+
+  // Sync i18next with store language
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language, i18n]);
 
   useEffect(() => {
     soundManager.stopAll();
