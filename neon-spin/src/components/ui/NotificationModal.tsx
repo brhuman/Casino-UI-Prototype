@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Mail, Shield, Zap, X, Check } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -42,7 +41,6 @@ const SETTINGS_GROUPS = [
 ];
 
 export const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose }) => {
-  const { t } = useTranslation();
   const [activeSettings, setActiveSettings] = React.useState<string[]>(['marketing', 'login_alerts', 'new_games']);
 
   const toggleSetting = (id: string) => {
