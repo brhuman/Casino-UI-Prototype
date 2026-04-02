@@ -8,6 +8,7 @@ interface SettingsState {
   language: 'en' | 'uk' | 'ru' | 'pl';
   highQualityFx: boolean;
   neonGlow: boolean;
+  hasSeenWelcome: boolean;
   actions: {
     toggleMute: () => void;
     setVolume: (val: number) => void;
@@ -15,6 +16,7 @@ interface SettingsState {
     setLanguage: (lang: SettingsState['language']) => void;
     setHighQualityFx: (enabled: boolean) => void;
     setNeonGlow: (enabled: boolean) => void;
+    setHasSeenWelcome: (seen: boolean) => void;
   };
 }
 
@@ -27,6 +29,7 @@ export const useSettingsStore = create<SettingsState>()(
       language: 'en',
       highQualityFx: true,
       neonGlow: true,
+      hasSeenWelcome: false,
       actions: {
         toggleMute: () => set({ isMuted: !get().isMuted }),
         setVolume: (volume) => set({ volume }),
@@ -34,6 +37,7 @@ export const useSettingsStore = create<SettingsState>()(
         setLanguage: (language) => set({ language }),
         setHighQualityFx: (highQualityFx) => set({ highQualityFx }),
         setNeonGlow: (neonGlow) => set({ neonGlow }),
+        setHasSeenWelcome: (hasSeenWelcome) => set({ hasSeenWelcome }),
       },
     }),
     {
@@ -44,7 +48,8 @@ export const useSettingsStore = create<SettingsState>()(
         theme: state.theme,
         language: state.language,
         highQualityFx: state.highQualityFx,
-        neonGlow: state.neonGlow
+        neonGlow: state.neonGlow,
+        hasSeenWelcome: state.hasSeenWelcome
       }),
     }
   )

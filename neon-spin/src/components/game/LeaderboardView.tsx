@@ -32,8 +32,7 @@ export const LeaderboardView = () => {
         <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em]">{t('lobby.updated_moments_ago')}</span>
       </div>
 
-      <div className="relative w-full h-[600px] bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden backdrop-blur-3xl shadow-2xl flex flex-col">
-        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-3 custom-scrollbar">
+      <div className="h-[600px] overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4">
           {leaderboardData.map((player, index) => {
             const isTop3 = index < 3;
             const RankIcon = index === 0 ? Trophy : index === 1 ? Medal : index === 2 ? Medal : null;
@@ -45,10 +44,10 @@ export const LeaderboardView = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className={`flex items-center justify-between p-5 rounded-full transition-all group/item ${
+                className={`flex items-center justify-between p-3 rounded-[2.5rem] transition-all group/item shadow-xl backdrop-blur-2xl border ${
                   player.isCurrentUser 
-                    ? 'bg-neon-cyan/20 border border-neon-cyan/30 shadow-[0_0_25px_rgba(0,255,255,0.1)]' 
-                    : 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20'
+                    ? 'bg-neon-cyan/20 border-neon-cyan/40 shadow-[0_0_25px_rgba(0,255,255,0.1)]' 
+                    : 'bg-white/10 border-white/20 hover:bg-white/15 hover:border-white/30'
                 }`}
               >
                 <div className="flex items-center gap-5">
@@ -82,7 +81,6 @@ export const LeaderboardView = () => {
               </motion.div>
             );
           })}
-        </div>
       </div>
     </div>
   );

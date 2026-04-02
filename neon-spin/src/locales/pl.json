@@ -13,12 +13,13 @@
     "about": {
       "title": "Przegląd Projektu",
       "subtitle": "Neon Spin Tech Demo",
-      "desc": "Cześć! To jest mój projekt testowy. Trenuję technologie takie jak PIXI.js, React, Framer Motion i Tailwind CSS. To nie jest prawdziwy hazard.",
+      "upper_disclaimer": "To jest tylko demo, nie ma prawdziwych pieniędzy, nie można się angażować.",
+      "desc": "Cześć! To jest mój projekt hobbystyczny (pet project). Trenuję technologie takie jak PIXI.js, React, Framer Motion i Tailwind CSS. To nie jest prawdziwy hazard.",
       "tech_stack": "Główne Technologie",
       "github": "Zobacz na GitHub",
       "disclaimer": "Tylko demonstracja techniczna. Nie obejmuje hazardu na prawdziwe pieniądze.",
-      "continue": "Wejdź do Systemu",
-      "dont_show": "Nie pokazuj więcej tego briefingu"
+      "continue": "Wejdź do Projektu",
+      "dont_show": "Nie pokazuj więcej tej wiadomości"
     }
   },
   "lobby": {
@@ -78,6 +79,7 @@
     "just_now": "Przed chwilą",
     "verified_member": "Zweryfikowany",
     "champions_league": "Liga Mistrzów",
+    "moments_ago": "Przed chwilą",
     "updated_moments_ago": "Zaktualizowano przed chwilą",
     "you_are_here": "Tutaj jesteś",
     "total_win": "Suma Wygranych"

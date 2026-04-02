@@ -14,12 +14,19 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useSettingsStore } from './store/useSettingsStore';
 
 function App() {
-  const currentView = useUiStore((state) => state.currentView);
-  const { highQualityFx, neonGlow } = useSettingsStore();
+  const { currentView, setShowAboutModal } = useUiStore();
+  const { highQualityFx, neonGlow, hasSeenWelcome } = useSettingsStore();
 
   useEffect(() => {
     soundManager.stopAll();
   }, [currentView]);
+
+  // Show Welcome Modal on first visit
+  useEffect(() => {
+    if (!hasSeenWelcome) {
+      setShowAboutModal(true);
+    }
+  }, [hasSeenWelcome, setShowAboutModal]);
 
   // Dynamic SEO Metadata
   useEffect(() => {
