@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Crown, Plus, Play } from 'lucide-react';
+import { Plus, Crown, Play } from 'lucide-react';
 import { SlotsIcon, MinesIcon, RouletteIcon } from '../components/ui/GameIcons';
 import { useUiStore } from '../store/useUiStore';
 import { useUserStore } from '../store/useUserStore';
@@ -8,11 +8,13 @@ import { LeaderboardView } from '../components/game/LeaderboardView';
 import { GlobalChat } from '../components/game/GlobalChat';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useSettingsStore } from '../store/useSettingsStore';
 
 
 
 export const LobbyView = () => {
   const { t } = useTranslation();
+  const { neonGlow } = useSettingsStore();
   const setView = useUiStore((state) => state.setView);
   const isVip = useUserStore((state) => state.isVip);
   const setVip = useUserStore((state) => state.actions.setVip);
@@ -95,6 +97,9 @@ export const LobbyView = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
+            {neonGlow && (
+              <div className="absolute -inset-10 bg-neon-cyan/10 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-duration-1000 pointer-events-none" />
+            )}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSlide}
@@ -202,9 +207,9 @@ export const LobbyView = () => {
                { label: t('lobby.stats.luck_factor'), value: t('lobby.stats.high'), color: 'text-yellow-400' },
                { label: t('lobby.stats.system_check'), value: t('lobby.stats.verified'), color: 'text-green-400' }
              ].map((stat, i) => (
-               <div key={i} className="bg-white/10 border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-md group hover:bg-white/[0.15] transition-all shadow-lg">
-                 <span className="text-[11px] font-black text-white/20 uppercase tracking-[0.4em] mb-3 group-hover:text-white/40 transition-colors">{stat.label}</span>
-                 <span className={`text-xl font-black italic uppercase ${stat.color} tracking-tighter`}>{stat.value}</span>
+               <div key={i} className="bg-white/5 border border-white/10 rounded-[2rem] p-8 flex flex-col items-center justify-center text-center backdrop-blur-2xl group hover:bg-white/[0.08] transition-all shadow-lg">
+                 <span className="text-[11px] font-black text-white/10 uppercase tracking-[0.4em] mb-3 group-hover:text-white/30 transition-colors tracking-widest">{stat.label}</span>
+                 <span className={`text-2xl font-black italic uppercase ${stat.color} tracking-tighter`}>{stat.value}</span>
                </div>
              ))}
           </section>
@@ -287,47 +292,59 @@ export const LobbyView = () => {
           </section>
 
           {/* 6. PERFORMANCE DASHBOARDS (CTAs) */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-8 px-2">
+             {/* VIP Card */}
              <div 
-               className={`relative p-10 rounded-[3rem] overflow-hidden border transition-all cursor-pointer group ${isVip ? 'bg-yellow-400/10 border-yellow-500/30' : 'bg-white/10 border-white/20 hover:bg-white/[0.15]'}`}
+               className={`relative p-10 sm:p-12 rounded-[3.5rem] overflow-hidden border transition-all cursor-pointer group flex flex-col gap-8 ${isVip ? 'border-yellow-500/30 bg-yellow-400/5' : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'}`}
                onClick={() => setVip(!isVip)}
              >
-                <div className="relative z-10 flex flex-col gap-6">
-                   <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl transform group-hover:rotate-12 transition-transform">
-                      <Crown size={32} className="text-black" strokeWidth={3} />
+                <div className="relative z-10 flex flex-col gap-8">
+                   <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl transform group-hover:rotate-12 transition-all">
+                      <Crown size={40} className="text-black" strokeWidth={2.5} />
                    </div>
-                   <div>
-                      <h4 className="text-4xl font-black text-white uppercase italic tracking-tighter">
+                   <div className="flex flex-col gap-4">
+                      <h4 className="text-4xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
                         {isVip ? t('lobby.cta.vip_title_active') : t('lobby.cta.vip_title_inactive')}
                       </h4>
-                      <p className="text-xs font-black text-white/40 uppercase tracking-[0.2em] mt-3">
+                      <p className="text-xs sm:text-sm font-black text-white/40 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
                         {isVip ? t('lobby.cta.vip_desc_active') : t('lobby.cta.vip_desc_inactive')}
                       </p>
                    </div>
-                   <button className={`w-fit px-10 py-4 rounded-2xl text-xs font-black uppercase transition-all shadow-xl ${isVip ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white hover:bg-white hover:text-black'}`}>
+                   <button className={`w-fit px-12 py-5 rounded-2xl text-[10px] font-black uppercase transition-all shadow-xl tracking-widest ${isVip ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white hover:bg-white hover:text-black hover:scale-105 active:scale-95'}`}>
                      {isVip ? t('lobby.cta.vip_button_active') : t('lobby.cta.vip_button_inactive')}
                    </button>
                 </div>
-                <Crown size={300} className="absolute -bottom-20 -right-20 text-white/[0.02] -rotate-12 pointer-events-none" />
+                {neonGlow && (
+                   <div className="absolute -inset-20 bg-yellow-400/5 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
+                <Crown size={320} className="absolute -bottom-24 -right-24 text-white/[0.03] -rotate-12 pointer-events-none group-hover:text-white/[0.05] transition-colors" />
              </div>
 
+             {/* Recharge Card */}
              <div 
-               className="relative p-10 rounded-[3rem] overflow-hidden border border-white/20 bg-white/10 hover:bg-white/[0.15] transition-all cursor-pointer group"
+               className="relative p-10 sm:p-12 rounded-[3.5rem] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl hover:bg-white/[0.08] transition-all cursor-pointer group flex flex-col gap-8"
                onClick={() => updateBalance(5000)}
              >
-                <div className="relative z-10 flex flex-col gap-6">
-                   <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-neon-cyan to-blue-600 flex items-center justify-center shadow-2xl transform group-hover:rotate-12 transition-transform">
-                      <Plus size={32} className="text-white" strokeWidth={3} />
+                <div className="relative z-10 flex flex-col gap-8">
+                   <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-neon-cyan via-[#00ccff] to-neon-cyan flex items-center justify-center shadow-2xl transform group-hover:-rotate-12 transition-all">
+                      <Plus size={40} className="text-black" strokeWidth={3} />
                    </div>
-                   <div>
-                      <h4 className="text-4xl font-black text-white uppercase italic tracking-tighter">{t('lobby.cta.recharge_title')}</h4>
-                      <p className="text-xs font-black text-white/40 uppercase tracking-[0.2em] mt-3">{t('lobby.cta.recharge_desc')}</p>
+                   <div className="flex flex-col gap-4">
+                      <h4 className="text-4xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
+                        {t('lobby.cta.recharge_title')}
+                      </h4>
+                      <p className="text-xs sm:text-sm font-black text-white/40 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
+                        {t('lobby.cta.recharge_desc')}
+                      </p>
                    </div>
-                   <button className="w-fit px-10 py-4 rounded-2xl bg-neon-cyan text-black text-xs font-black uppercase hover:bg-white transition-all shadow-[0_0_30px_rgba(0,255,255,0.4)]">
+                   <button className="w-fit px-12 py-5 rounded-2xl bg-neon-cyan text-black text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-[0_15px_40px_rgba(0,255,255,0.25)] hover:scale-105 active:scale-95">
                      {t('lobby.cta.recharge_button')}
                    </button>
                 </div>
-                <Plus size={300} className="absolute -bottom-20 -right-20 text-white/[0.02] pointer-events-none" />
+                {neonGlow && (
+                   <div className="absolute -inset-20 bg-neon-cyan/5 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
+                <Plus size={320} className="absolute -bottom-24 -right-24 text-white/[0.03] rotate-12 pointer-events-none group-hover:text-white/[0.05] transition-colors" />
              </div>
           </section>
 
@@ -336,14 +353,14 @@ export const LobbyView = () => {
              <LatestWins />
           </section>
 
-          {/* 8. GLOBAL CHAT */}
+          {/* 8. GLOBAL LEADERBOARD */}
           <section>
-             <GlobalChat />
+             <LeaderboardView />
           </section>
 
-          {/* 9. GLOBAL LEADERBOARD */}
-          <section className="pb-10">
-             <LeaderboardView />
+          {/* 9. GLOBAL CHAT */}
+          <section className="pb-24">
+             <GlobalChat />
           </section>
         </div>
       </div>

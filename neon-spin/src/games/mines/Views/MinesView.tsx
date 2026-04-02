@@ -7,6 +7,8 @@ import { useWebSocket } from '../../../hooks/useWebSocket';
 import { useMinesAudio } from '../hooks/useMinesAudio';
 import { GameButton } from '../../../components/ui/GameButton';
 import { Play } from 'lucide-react';
+import { GlobalChat } from '../../../components/game/GlobalChat';
+import { useSettingsStore } from '../../../store/useSettingsStore';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
 const canvasInitPromiseMap = new WeakMap<HTMLCanvasElement, Promise<Application>>();
@@ -16,8 +18,8 @@ export const MinesView = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<MinesEngine | null>(null);
   const socket = useWebSocket();
+  const { highQualityFx, neonGlow } = useSettingsStore();
   const balance = useUserStore((state: any) => state.balance);
-  
 
   const isActive = useMinesStore(state => state.isActive);
   const currentBet = useMinesStore(state => state.currentBet);
@@ -221,10 +223,12 @@ export const MinesView = () => {
   return (
     <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
       {/* Background Graphic */}
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-45 mix-blend-screen bg-[url('/assets/neon_mines_background.png')] bg-cover bg-center bg-no-repeat"
-      />
+      {highQualityFx && (
+        <div className="pointer-events-none fixed inset-0 z-0 opacity-45 mix-blend-screen bg-[url('/assets/neon_mines_background.png')] bg-cover bg-center bg-no-repeat"
+        />
+      )}
 
-      <div className="relative z-10 w-full max-w-[1000px] flex flex-col flex-1 max-h-[1000px] min-h-[700px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] gap-6">
+      <div className={`relative z-10 w-full max-w-[1000px] flex flex-col flex-1 max-h-[1000px] min-h-[700px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-6 ${neonGlow ? 'shadow-[0_30px_100px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)]' : 'shadow-2xl'} gap-6`}>
         
         {/* Game Canvas Container - flex-1 fills all remaining space */}
         <div className="relative z-10 flex flex-1 min-h-0 w-full shrink flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-emerald-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(16,185,129,0.15)]">
@@ -360,6 +364,10 @@ export const MinesView = () => {
           </div>
         </div>
 
+        {/* Global Chat Integration */}
+        <section className="mt-8 pb-12 w-full max-w-[1000px]">
+           <GlobalChat />
+        </section>
       </div>
     </div>
   );

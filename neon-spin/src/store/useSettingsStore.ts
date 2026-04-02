@@ -6,11 +6,15 @@ interface SettingsState {
   volume: number;
   theme: 'neon' | 'cyberpunk' | 'vaporwave';
   language: 'en' | 'uk' | 'ru' | 'pl';
+  highQualityFx: boolean;
+  neonGlow: boolean;
   actions: {
     toggleMute: () => void;
     setVolume: (val: number) => void;
     setTheme: (theme: SettingsState['theme']) => void;
     setLanguage: (lang: SettingsState['language']) => void;
+    setHighQualityFx: (enabled: boolean) => void;
+    setNeonGlow: (enabled: boolean) => void;
   };
 }
 
@@ -21,11 +25,15 @@ export const useSettingsStore = create<SettingsState>()(
       volume: 0.5,
       theme: 'neon',
       language: 'en',
+      highQualityFx: true,
+      neonGlow: true,
       actions: {
         toggleMute: () => set({ isMuted: !get().isMuted }),
         setVolume: (volume) => set({ volume }),
         setTheme: (theme) => set({ theme }),
         setLanguage: (language) => set({ language }),
+        setHighQualityFx: (highQualityFx) => set({ highQualityFx }),
+        setNeonGlow: (neonGlow) => set({ neonGlow }),
       },
     }),
     {
@@ -34,7 +42,9 @@ export const useSettingsStore = create<SettingsState>()(
         isMuted: state.isMuted, 
         volume: state.volume, 
         theme: state.theme,
-        language: state.language
+        language: state.language,
+        highQualityFx: state.highQualityFx,
+        neonGlow: state.neonGlow
       }),
     }
   )

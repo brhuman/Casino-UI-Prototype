@@ -13,7 +13,7 @@
     "about": {
       "title": "Project Overview",
       "subtitle": "Neon Spin Tech Demo",
-      "desc": "Premium PIXI.js & React integration with advanced state management.",
+      "desc": "Hello! This is my test project. I am practicing with technologies like PIXI.js, React, Framer Motion, and Tailwind CSS. This is not real gambling.",
       "tech_stack": "Core Technologies",
       "github": "View GitHub Source",
       "disclaimer": "Technical demo only. No real money gambling involved.",

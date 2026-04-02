@@ -53,8 +53,28 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ffff; /* Official Neon Cyan */
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  background: rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+/* Performance Modes */
+.glow-off *, 
+.glow-off ::before, 
+.glow-off ::after {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.fx-off *,
+.fx-off ::before,
+.fx-off ::after {
+  transition-duration: 0ms !important;
+  animation-duration: 0ms !important;
+}
+
+.fx-off .animate-pulse {
+  animation: none !important;
 }
 
 /* Firefox */

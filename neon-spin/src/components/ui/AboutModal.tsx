@@ -50,19 +50,6 @@ export const AboutModal = () => {
           </button>
 
           <div className="p-12 sm:p-16 flex flex-col items-center">
-            {/* Header */}
-            <div className="flex flex-col items-center gap-3 mb-10">
-               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-fuchsia flex items-center justify-center shadow-[0_0_30px_rgba(147,51,234,0.3)] mb-2">
-                 <Zap size={32} className="text-white fill-white" />
-               </div>
-               <h2 className="text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
-                 {t('common.about.title')}
-               </h2>
-               <span className="text-[10px] font-black text-neon-cyan uppercase tracking-[0.4em] opacity-80">
-                 {t('common.about.subtitle')}
-               </span>
-            </div>
-
             {/* Description */}
             <p className="text-white/60 text-center text-sm leading-relaxed mb-12 font-medium max-w-sm">
               {t('common.about.desc')}
@@ -85,7 +72,7 @@ export const AboutModal = () => {
 
             {/* GitHub Button */}
             <a 
-              href="https://github.com/human/Code_roll_casino" 
+              href="https://github.com/brhuman/Casino-UI-Prototype" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-full group relative p-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[11px] flex items-center justify-center gap-4 hover:scale-[1.02] shadow-[0_15px_40px_rgba(255,255,255,0.1)] transition-all mb-12"
@@ -105,6 +92,13 @@ export const AboutModal = () => {
 
             {/* Footer Actions */}
             <div className="flex flex-col gap-6 w-full items-center">
+              <button
+                onClick={handleClose}
+                className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-neon-purple to-neon-fuchsia text-white font-black uppercase tracking-[0.4em] text-xs shadow-[0_20px_50px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/10"
+              >
+                {t('common.about.continue')}
+              </button>
+
               <label className="flex items-center gap-3 cursor-pointer group">
                 <input 
                   type="checkbox" 
@@ -116,13 +110,6 @@ export const AboutModal = () => {
                   {t('common.about.dont_show')}
                 </span>
               </label>
-
-              <button
-                onClick={handleClose}
-                className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-neon-purple to-neon-fuchsia text-white font-black uppercase tracking-[0.4em] text-xs shadow-[0_20px_50px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/10"
-              >
-                {t('common.about.continue')}
-              </button>
             </div>
           </div>
         </motion.div>

@@ -4,6 +4,7 @@ import { initGameConfig, SLOT_STAGE_HEIGHT, SLOT_STAGE_WIDTH } from '../../game/
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
 import { useUserStore } from '../../store/useUserStore';
+import { useSettingsStore } from '../../store/useSettingsStore';
 import { Button } from '../ui/Button';
 import { GameButton } from '../ui/GameButton';
 import { soundManager } from '../../game/audio/SoundManager';
@@ -22,6 +23,7 @@ export const PixiBridge = () => {
   const placeBet = useGameStore((state) => state.actions.placeBet);
   const increaseBet = useGameStore((state) => state.actions.increaseBet);
   const decreaseBet = useGameStore((state) => state.actions.decreaseBet);
+  const { highQualityFx, neonGlow } = useSettingsStore();
   const canSpin = isLoaded && !isSpinning && balance >= currentBet;
 
   useEffect(() => {
@@ -99,7 +101,7 @@ export const PixiBridge = () => {
     <>
       {/* Game Canvas Container */}
       <div 
-        className="relative z-10 flex w-full shrink-0 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-cyan-500/30 bg-[#02040a] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(34,211,238,0.15)]"
+        className={`relative z-10 flex w-full shrink-0 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-cyan-500/30 bg-[#02040a] ${neonGlow ? 'shadow-[inset_0_0_40px_rgba(0,0,0,0.9),0_0_20px_rgba(34,211,238,0.15)]' : 'shadow-none'}`}
         style={{ 
           aspectRatio: `${SLOT_STAGE_WIDTH} / ${SLOT_STAGE_HEIGHT}`,
           width: '100%',
@@ -127,7 +129,7 @@ export const PixiBridge = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
             >
-              <div className="text-4xl sm:text-6xl font-black italic tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 drop-shadow-[0_0_25px_rgba(245,158,11,0.8)] [text-shadow:0_4px_10px_rgba(0,0,0,0.5)]">
+              <div className={`text-4xl sm:text-6xl font-black italic tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 ${neonGlow ? 'drop-shadow-[0_0_25px_rgba(245,158,11,0.8)]' : ''} [text-shadow:0_4px_10px_rgba(0,0,0,0.5)]`}>
                 WINNER!
               </div>
             </motion.div>

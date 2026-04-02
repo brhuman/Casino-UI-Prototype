@@ -5,8 +5,11 @@ import { useUserStore } from '../../../store/useUserStore';
 import { Play, RotateCcw, Trophy } from 'lucide-react';
 import { GameButton } from '../../../components/ui/GameButton';
 import { AnimatePresence, motion } from 'framer-motion';
+import { GlobalChat } from '../../../components/game/GlobalChat';
+import { useSettingsStore } from '../../../store/useSettingsStore';
 
 export const RouletteView: React.FC = () => {
+  const { highQualityFx, neonGlow } = useSettingsStore();
   const isSpinning = useRouletteStore((state: any) => state.isSpinning);
   const lastResult = useRouletteStore((state: any) => state.lastResult);
   const currentBet = useRouletteStore((state: any) => state.currentBet);
@@ -23,11 +26,14 @@ export const RouletteView: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex-1 flex flex-col items-center justify-center p-4 sm:p-12">
-      {/* Background Graphic */}
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-40 bg-[url('/assets/neon_roulette_background.png')] bg-cover bg-center bg-no-repeat" />
-
-      <div className="relative z-10 w-full max-w-5xl flex flex-col flex-1 max-h-[1000px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] gap-6">
+    <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
+       {/* Background Graphic */}
+       {highQualityFx && (
+         <div className="pointer-events-none fixed inset-0 z-0 opacity-20 mix-blend-screen bg-[url('/assets/neon_roulette_background.png')] bg-cover bg-center bg-no-repeat"
+         />
+       )}
+       
+       <div className={`relative z-10 w-full max-w-5xl flex flex-col flex-1 max-h-[1000px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,16,24,0.95),rgba(5,6,10,0.98))] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] gap-6 ${neonGlow ? 'shadow-[0_0_50px_rgba(0,255,255,0.1)]' : ''}`}>
         
         {/* Game Area */}
         <div className="flex-1 flex items-center justify-center relative overflow-hidden p-4 sm:p-8">
@@ -108,6 +114,11 @@ export const RouletteView: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Global Chat Integration */}
+        <section className="mt-8 pb-12 w-full max-w-5xl">
+           <GlobalChat />
+        </section>
       </div>
     </div>
   );

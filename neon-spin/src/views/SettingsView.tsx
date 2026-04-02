@@ -4,13 +4,14 @@ import { useUiStore } from '../store/useUiStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { Card } from '../components/ui/Card';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 export const SettingsView = () => {
   const { t, i18n } = useTranslation();
   const globalVolume = useUserStore(state => state.globalVolume);
   const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
   const { isMuted, setMuted, setShowAboutModal } = useUiStore();
-  const { language, actions: settingsActions } = useSettingsStore();
+  const { language, highQualityFx, neonGlow, actions: settingsActions } = useSettingsStore();
 
   const handleLanguageChange = (lang: 'en' | 'uk' | 'ru' | 'pl') => {
     settingsActions.setLanguage(lang);
@@ -86,23 +87,36 @@ export const SettingsView = () => {
           </div>
         </div>
 
-        {/* Display Section (Dummy) */}
+        {/* Display Section */}
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <Monitor size={20} className="text-neon-purple" />
             <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">{t('settings.visual.title')}</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl">
-              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.visual.quality_fx')}</span>
-              <div className="w-10 h-5 bg-neon-purple/20 border border-neon-purple/40 rounded-full relative p-1 cursor-pointer">
-                <div className="w-3 h-3 bg-neon-purple rounded-full absolute right-1" />
+            <div 
+              onClick={() => settingsActions.setHighQualityFx(!highQualityFx)}
+              className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl cursor-pointer hover:bg-white/[0.12] transition-all group"
+            >
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">{t('settings.visual.quality_fx')}</span>
+              <div className={`w-10 h-5 rounded-full relative p-1 transition-all duration-300 ${highQualityFx ? 'bg-neon-purple/40 border-neon-purple/60' : 'bg-white/10 border-white/20'}`}>
+                <motion.div 
+                  animate={{ x: highQualityFx ? 20 : 0 }}
+                  className={`w-3 h-3 rounded-full ${highQualityFx ? 'bg-neon-purple shadow-[0_0_10px_#9333ea]' : 'bg-white/40'}`} 
+                />
               </div>
             </div>
-              <div className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl">
-              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.visual.neon_glow')}</span>
-              <div className="w-10 h-5 bg-neon-purple/20 border border-neon-purple/40 rounded-full relative p-1 cursor-pointer">
-                <div className="w-3 h-3 bg-neon-purple rounded-full absolute right-1" />
+
+            <div 
+              onClick={() => settingsActions.setNeonGlow(!neonGlow)}
+              className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl cursor-pointer hover:bg-white/[0.12] transition-all group"
+            >
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">{t('settings.visual.neon_glow')}</span>
+              <div className={`w-10 h-5 rounded-full relative p-1 transition-all duration-300 ${neonGlow ? 'bg-neon-purple/40 border-neon-purple/60' : 'bg-white/10 border-white/20'}`}>
+                <motion.div 
+                  animate={{ x: neonGlow ? 20 : 0 }}
+                  className={`w-3 h-3 rounded-full ${neonGlow ? 'bg-neon-purple shadow-[0_0_10px_#9333ea]' : 'bg-white/40'}`} 
+                />
               </div>
             </div>
           </div>

@@ -11,16 +11,18 @@ import { useEffect } from 'react';
 import { soundManager } from './game/audio/SoundManager';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { useSettingsStore } from './store/useSettingsStore';
 
 function App() {
   const currentView = useUiStore((state) => state.currentView);
+  const { highQualityFx, neonGlow } = useSettingsStore();
 
   useEffect(() => {
     soundManager.stopAll();
   }, [currentView]);
 
   return (
-    <>
+    <div className={`${!highQualityFx ? 'fx-off' : ''} ${!neonGlow ? 'glow-off' : ''} min-h-screen flex flex-col`}>
       <MainLayout>
         <AnimatePresence>
           {currentView === 'lobby' && (
@@ -98,7 +100,7 @@ function App() {
         </AnimatePresence>
       </MainLayout>
       <AboutModal />
-    </>
+    </div>
   );
 }
 
