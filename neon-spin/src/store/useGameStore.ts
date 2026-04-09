@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { useUserStore } from './useUserStore';
+import { useQuestsStore } from './useQuestsStore';
 
 interface GameState {
   currentBet: number;
@@ -35,6 +36,7 @@ export const useGameStore = create<GameState>()(
         if (isSpinning || userBalance < currentBet) return;
         
         useUserStore.getState().actions.updateBalance(-currentBet);
+        useQuestsStore.getState().actions.progressQuest('play_slots', 1);
         set({ isSpinning: true, lastWinAmount: 0, winningLine: [] });
       },
       setResult: (matrix, winAmount, winningLine) => {

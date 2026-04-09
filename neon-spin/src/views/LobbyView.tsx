@@ -123,6 +123,14 @@ export const LobbyView = () => {
   
   return (
     <div className="w-full flex-1 flex flex-col items-center bg-black overflow-x-hidden relative">
+      <title>Neon Spin | The Ultimate Cyberpunk Gaming Experience</title>
+      <meta name="description" content="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights." />
+      <meta property="og:title" content="Neon Spin | The Ultimate Cyberpunk Gaming Experience" />
+      <meta property="og:description" content="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights." />
+      <meta property="og:image" content="https://neonspin.vercel.app/og-image.png" />
+      <meta name="twitter:title" content="Neon Spin | The Ultimate Cyberpunk Gaming Experience" />
+      <meta name="twitter:description" content="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights." />
+      <meta name="twitter:image" content="https://neonspin.vercel.app/og-image.png" />
       <div className="w-full max-w-[1920px] flex flex-col pb-24 relative">
         {/* Background Atmosphere */}
         <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_lobby_background.png')] bg-cover bg-center bg-no-repeat" />

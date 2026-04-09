@@ -1,5 +1,6 @@
 import { PixiBridge } from '../components/game/PixiBridge';
 import { useSettingsStore } from '../store/useSettingsStore';
+import { ErrorBoundary } from '../components/ui/ErrorBoundary';
 
 
 export const SlotView = () => {
@@ -7,6 +8,14 @@ export const SlotView = () => {
 
   return (
     <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
+      <title>Neon Slots | Spin to Win in the Cybercity</title>
+      <meta name="description" content="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits." />
+      <meta property="og:title" content="Neon Slots | Spin to Win in the Cybercity" />
+      <meta property="og:description" content="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits." />
+      <meta property="og:image" content="https://neonspin.vercel.app/assets/slots_thumb.png" />
+      <meta name="twitter:title" content="Neon Slots | Spin to Win in the Cybercity" />
+      <meta name="twitter:description" content="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits." />
+      <meta name="twitter:image" content="https://neonspin.vercel.app/assets/slots_thumb.png" />
       {/* Scalable Ambient Background Graphic */}
       {highQualityFx && (
         <div 
@@ -24,7 +33,9 @@ export const SlotView = () => {
           {highQualityFx && (
             <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,_rgba(64,224,208,0.15),_transparent_60%)] blur-3xl" />
           )}
-          <PixiBridge />
+          <ErrorBoundary fallbackMessage="The Slot Engine encountered a rendering fault.">
+            <PixiBridge />
+          </ErrorBoundary>
         </div>
 
       </div>

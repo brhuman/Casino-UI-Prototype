@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useQuestsStore } from '../../store/useQuestsStore';
 
 interface MinesState {
   isActive: boolean;
@@ -28,7 +29,10 @@ export const useMinesStore = create<MinesState>((set, get) => ({
   actions: {
     setBet: (val) => set({ currentBet: val }),
     setMinesCount: (val) => set({ minesCount: val }),
-    startGame: () => set({ isActive: true, multiplier: 1.0, winAmount: 0 }),
+    startGame: () => {
+      useQuestsStore.getState().actions.progressQuest('play_mines', 1);
+      set({ isActive: true, multiplier: 1.0, winAmount: 0 });
+    },
     updateProgress: (multiplier) => set({ multiplier }),
     endGame: (winAmount = 0) => set({ isActive: false, winAmount }),
     increaseBet: () => {

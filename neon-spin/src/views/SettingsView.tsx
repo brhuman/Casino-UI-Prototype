@@ -22,6 +22,14 @@ export const SettingsView = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
+      <title>Settings | Optimize Your Experience</title>
+      <meta name="description" content="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session." />
+      <meta property="og:title" content="Settings | Optimize Your Experience" />
+      <meta property="og:description" content="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session." />
+      <meta property="og:image" content="https://neonspin.vercel.app/og-image.png" />
+      <meta name="twitter:title" content="Settings | Optimize Your Experience" />
+      <meta name="twitter:description" content="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session." />
+      <meta name="twitter:image" content="https://neonspin.vercel.app/og-image.png" />
       <div className="flex items-center gap-4 mb-2">
         <div className="w-2 h-8 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]" />
         <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">{t('settings.title')}</h2>

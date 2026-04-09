@@ -1,5 +1,6 @@
 import React from 'react';
 import { RoulettePixiBridge } from '../components/RoulettePixiBridge';
+import { ErrorBoundary } from '../../../components/ui/ErrorBoundary';
 import { useRouletteStore } from '../store';
 import { useUserStore } from '../../../store/useUserStore';
 import { Play, RotateCcw, Trophy } from 'lucide-react';
@@ -26,6 +27,14 @@ export const RouletteView: React.FC = () => {
 
   return (
     <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
+      <title>Neon Roulette | The Wheel of Fortune</title>
+      <meta name="description" content="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win." />
+      <meta property="og:title" content="Neon Roulette | The Wheel of Fortune" />
+      <meta property="og:description" content="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win." />
+      <meta property="og:image" content="https://neonspin.vercel.app/assets/roulette_thumb.png" />
+      <meta name="twitter:title" content="Neon Roulette | The Wheel of Fortune" />
+      <meta name="twitter:description" content="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win." />
+      <meta name="twitter:image" content="https://neonspin.vercel.app/assets/roulette_thumb.png" />
        {/* Background Graphic */}
        {highQualityFx && (
          <div className="pointer-events-none fixed inset-0 z-0 opacity-20 mix-blend-screen bg-[url('/assets/neon_roulette_background.png')] bg-cover bg-center bg-no-repeat"
@@ -38,7 +47,9 @@ export const RouletteView: React.FC = () => {
         <div className="flex-1 flex items-center justify-center relative overflow-hidden p-4 sm:p-8">
         
         <div className="w-full h-full flex items-center justify-center relative">
-          <RoulettePixiBridge />
+          <ErrorBoundary fallbackMessage="Roulette wheel engine fault.">
+            <RoulettePixiBridge />
+          </ErrorBoundary>
         </div>
         
           <AnimatePresence>

@@ -5,6 +5,7 @@ import { useUiStore } from '../store/useUiStore';
 import { Card } from '../components/ui/Card';
 import { useState, useRef } from 'react';
 import { AchievementGallery } from '../components/ui/AchievementGallery';
+import { DailyMissions } from '../components/ui/DailyMissions';
 import { useTranslation } from 'react-i18next';
 
 import { PRESET_AVATARS } from '../constants/dummyData';
@@ -61,6 +62,14 @@ export const ProfileView = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-2 sm:px-4 relative">
+      <title>User Profile | Neon Spin Identity</title>
+      <meta name="description" content="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League." />
+      <meta property="og:title" content="User Profile | Neon Spin Identity" />
+      <meta property="og:description" content="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League." />
+      <meta property="og:image" content="https://neonspin.vercel.app/og-image.png" />
+      <meta name="twitter:title" content="User Profile | Neon Spin Identity" />
+      <meta name="twitter:description" content="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League." />
+      <meta name="twitter:image" content="https://neonspin.vercel.app/og-image.png" />
       {/* Dynamic Background */}
       <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_profile_background.png')] bg-cover bg-center bg-no-repeat" />
       
@@ -207,6 +216,15 @@ export const ProfileView = () => {
               <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em]">{t('profile.showcase')}</span>
             </div>
             <AchievementGallery />
+          </div>
+
+          {/* Daily Missions Section */}
+          <div className="mt-6 px-4 sm:px-0 border-t border-white/5 pt-8">
+            <div className="flex items-center justify-between px-1 mb-6">
+              <h4 className="text-[10px] font-black text-neon-cyan uppercase tracking-[0.3em]">Daily Missions</h4>
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Resets at Midnight</span>
+            </div>
+            <DailyMissions />
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import { useMinesAudio } from '../hooks/useMinesAudio';
 import { GameButton } from '../../../components/ui/GameButton';
 import { Play } from 'lucide-react';
 import { useSettingsStore } from '../../../store/useSettingsStore';
+import { ErrorBoundary } from '../../../components/ui/ErrorBoundary';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
 const canvasInitPromiseMap = new WeakMap<HTMLCanvasElement, Promise<Application>>();
@@ -221,6 +222,14 @@ export const MinesView = () => {
 
   return (
     <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
+      <title>Cyber Mines | High-Stakes Logic Game</title>
+      <meta name="description" content="Can you navigate the grid without hitting a mine? Multiply your balance in this high-tension logic game for the bold." />
+      <meta property="og:title" content="Cyber Mines | High-Stakes Logic Game" />
+      <meta property="og:description" content="Can you navigate the grid without hitting a mine? Multiply your balance in this high-tension logic game for the bold." />
+      <meta property="og:image" content="https://neonspin.vercel.app/assets/mines_thumb.png" />
+      <meta name="twitter:title" content="Cyber Mines | High-Stakes Logic Game" />
+      <meta name="twitter:description" content="Can you navigate the grid without hitting a mine? Multiply your balance in this high-tension logic game for the bold." />
+      <meta name="twitter:image" content="https://neonspin.vercel.app/assets/mines_thumb.png" />
       {/* Background Graphic */}
       {highQualityFx && (
         <div className="pointer-events-none fixed inset-0 z-0 opacity-45 mix-blend-screen bg-[url('/assets/neon_mines_background.png')] bg-cover bg-center bg-no-repeat"
@@ -292,7 +301,9 @@ export const MinesView = () => {
          )}
 
          <div ref={containerRef} className={`w-full h-full flex items-center justify-center transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-            <canvas ref={canvasRef} className="mx-auto block max-w-full max-h-full drop-shadow-[0_0_30px_rgba(0,255,255,0.1)]" style={{ objectFit: 'contain' }} />
+            <ErrorBoundary fallbackMessage="Mines grid rendering failure.">
+              <canvas ref={canvasRef} className="mx-auto block max-w-full max-h-full drop-shadow-[0_0_30px_rgba(0,255,255,0.1)]" style={{ objectFit: 'contain' }} />
+            </ErrorBoundary>
          </div>
         </div>
 

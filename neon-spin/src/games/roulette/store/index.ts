@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useQuestsStore } from '../../../store/useQuestsStore';
 
 interface RouletteState {
   isSpinning: boolean;
@@ -18,7 +19,10 @@ export const useRouletteStore = create<RouletteState>((set) => ({
   currentBet: 100,
   
   actions: {
-    setSpinning: (spinning) => set({ isSpinning: spinning }),
+    setSpinning: (spinning) => {
+      if (spinning) useQuestsStore.getState().actions.progressQuest('play_roulette', 1);
+      set({ isSpinning: spinning });
+    },
     setResult: (result) => set({ lastResult: result, isSpinning: false }),
     setBet: (amount) => set({ currentBet: amount }),
   },
