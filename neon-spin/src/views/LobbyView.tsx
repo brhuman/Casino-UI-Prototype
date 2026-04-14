@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Plus, Crown, Play, ChevronLeft, ChevronRight } from 'lucide-react';
-import { SlotsIcon, MinesIcon, RouletteIcon } from '../components/ui/GameIcons';
-import { useUiStore } from '../store/useUiStore';
-import { useUserStore } from '../store/useUserStore';
-import { LatestWins } from '../components/game/LatestWins';
-import { LeaderboardView } from '../components/game/LeaderboardView';
-import { GlobalChat } from '../components/game/GlobalChat';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/useSettingsStore';
+import { GlobalChat } from '@/components/game/GlobalChat';
+import { LatestWins } from '@/components/game/LatestWins';
+import { LeaderboardView } from '@/components/game/LeaderboardView';
+import { MinesIcon, RouletteIcon, SlotsIcon } from '@/components/ui/GameIcons';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { useUiStore } from '@/store/useUiStore';
+import { useUserStore } from '@/store/useUserStore';
 
 
 
@@ -97,9 +97,9 @@ export const LobbyView = () => {
     const preloadGames = async () => {
       try {
         await Promise.all([
-          import('./SlotView'),
-          import('../games/mines/Views/MinesView'),
-          import('../games/roulette/Views/RouletteView')
+          import('@/views/SlotView'),
+          import('@/games/mines/Views/MinesView'),
+          import('@/games/roulette/Views/RouletteView')
         ]);
         console.log('🎮 Games pre-loaded for instant access');
       } catch (err) {

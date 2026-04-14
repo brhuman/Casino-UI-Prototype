@@ -1,19 +1,18 @@
-import { MainLayout } from './components/layout/MainLayout';
-import { useUiStore } from './store/useUiStore';
-import { LobbyView } from './views/LobbyView';
-import { SlotView } from './views/SlotView';
-import { ProfileView } from './views/ProfileView';
-import { MinesView } from './games/mines/Views/MinesView';
-import { RouletteView } from './games/roulette/Views/RouletteView';
-import { SettingsView } from './views/SettingsView';
-import { AboutModal } from './components/ui/AboutModal';
 import { useEffect, useState } from 'react';
-import { soundManager } from './game/audio/SoundManager';
-
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSettingsStore } from './store/useSettingsStore';
 import { useTranslation } from 'react-i18next';
-import { LoadingView } from './components/ui/LoadingView';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { AboutModal } from '@/components/ui/AboutModal';
+import { LoadingView } from '@/components/ui/LoadingView';
+import { MinesView } from '@/games/mines/Views/MinesView';
+import { RouletteView } from '@/games/roulette/Views/RouletteView';
+import { soundManager } from '@/game/audio/SoundManager';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { useUiStore } from '@/store/useUiStore';
+import { LobbyView } from '@/views/LobbyView';
+import { ProfileView } from '@/views/ProfileView';
+import { SettingsView } from '@/views/SettingsView';
+import { SlotView } from '@/views/SlotView';
 
 function App() {
   const { i18n } = useTranslation();
