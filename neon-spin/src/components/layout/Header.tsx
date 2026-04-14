@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
-import { useUserStore } from '../../store/useUserStore';
-import { useUiStore } from '../../store/useUiStore';
+import { useUserStore } from '@/store/useUserStore';
+import { useUiStore } from '@/store/useUiStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { User, Volume2, VolumeX } from 'lucide-react';
-import { useAudio } from '../../hooks/useAudio';
+import { useAudio } from '@/hooks/useAudio';
 
 export const Header = () => {
   const balance = useUserStore((state) => state.balance);
   const setView = useUiStore((state) => state.setView);
-  const isMuted = useUiStore((state) => state.isMuted);
-  const setMuted = useUiStore((state) => state.setMuted);
+  const isMuted = useSettingsStore((state) => state.isMuted);
+  const setMuted = useSettingsStore((state) => state.actions.setMuted);
   
   const { level, isVip } = useUserStore();
   

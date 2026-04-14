@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGameStore } from '../../store/useGameStore';
-import { useUserStore } from '../../store/useUserStore';
+import { useGameStore } from '@/store/useGameStore';
+import { useUserStore } from '@/store/useUserStore';
 import { Layers } from 'lucide-react';
 
 type BetType = 'red' | 'black' | 'green' | 'even' | 'odd';

@@ -1,5 +1,5 @@
-import { Header } from './Header';
-import { BottomMenu } from './BottomMenu';
+import { Header } from '@/components/layout/Header';
+import { BottomMenu } from '@/components/layout/BottomMenu';
 
 interface MainLayoutProps {
   children: React.ReactNode;

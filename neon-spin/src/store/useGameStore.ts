@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { useUserStore } from './useUserStore';
-import { useQuestsStore } from './useQuestsStore';
+import { useUserStore } from '@/store/useUserStore';
+import { useQuestsStore } from '@/store/useQuestsStore';
 
 interface GameState {
   currentBet: number;

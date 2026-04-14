@@ -1,7 +1,7 @@
-import { useLiveWinsStore } from '../../store/useLiveWinsStore';
+import { useLiveWinsStore } from '@/store/useLiveWinsStore';
 import { useEffect } from 'react';
 import { TrendingUp } from 'lucide-react';
-import { DUMMY_NICKNAMES, PRESET_AVATARS } from '../../constants/dummyData';
+import { DUMMY_NICKNAMES, PRESET_AVATARS } from '@/constants/dummyData';
 import { useTranslation } from 'react-i18next';
 
 // Constants for layout

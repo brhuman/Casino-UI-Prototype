@@ -1,5 +1,5 @@
 import { Howl, Howler } from 'howler';
-import { useUserStore } from '../../store/useUserStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 export class SoundManager {
   private spinSound: Howl | null = null;
@@ -10,11 +10,11 @@ export class SoundManager {
     // Only load sounds when ready, prevents multiple initializations
     if (this.spinSound) return;
 
-    const globalVol = useUserStore.getState().globalVolume;
-    Howler.volume(globalVol * 0.5);
+    const initialVolume = useSettingsStore.getState().volume;
+    Howler.volume(initialVolume * 0.5);
 
-    useUserStore.subscribe((state) => {
-      Howler.volume(state.globalVolume * 0.5);
+    useSettingsStore.subscribe((state) => {
+      Howler.volume(state.volume * 0.5);
     });
 
     this.spinSound = new Howl({

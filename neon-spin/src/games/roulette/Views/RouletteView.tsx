@@ -1,12 +1,12 @@
 import React from 'react';
-import { RoulettePixiBridge } from '../components/RoulettePixiBridge';
-import { ErrorBoundary } from '../../../components/ui/ErrorBoundary';
-import { useRouletteStore } from '../store';
-import { useUserStore } from '../../../store/useUserStore';
+import { RoulettePixiBridge } from '@/games/roulette/components/RoulettePixiBridge';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { useRouletteStore } from '@/games/roulette/store';
+import { useUserStore } from '@/store/useUserStore';
 import { Play, RotateCcw, Trophy } from 'lucide-react';
-import { GameButton } from '../../../components/ui/GameButton';
+import { GameButton } from '@/components/ui/GameButton';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSettingsStore } from '../../../store/useSettingsStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 export const RouletteView: React.FC = () => {
   const { highQualityFx, neonGlow } = useSettingsStore();

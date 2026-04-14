@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateResultMatrix, calculateWin, REELS_COUNT, ROWS_COUNT } from './rng';
+import { generateResultMatrix, calculateWin, REELS_COUNT, ROWS_COUNT } from '@/game/math/rng';
 
 describe('RNG Math Engine', () => {
   it('should generate a 5x3 matrix', () => {

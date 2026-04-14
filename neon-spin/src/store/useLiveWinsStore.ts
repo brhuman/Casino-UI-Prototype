@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DUMMY_NICKNAMES, PRESET_AVATARS } from '../constants/dummyData';
+import { DUMMY_NICKNAMES, PRESET_AVATARS } from '@/constants/dummyData';
 
 export interface Win {
   id: number;

@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Application } from 'pixi.js';
-import { MinesEngine } from '../Engine/MinesEngine';
-import { useMinesStore } from '../store';
-import { useUserStore } from '../../../store/useUserStore';
-import { useWebSocket } from '../../../hooks/useWebSocket';
-import { useMinesAudio } from '../hooks/useMinesAudio';
-import { GameButton } from '../../../components/ui/GameButton';
+import { MinesEngine } from '@/games/mines/Engine/MinesEngine';
+import { useMinesStore } from '@/games/mines/store';
+import { useUserStore } from '@/store/useUserStore';
+import { useWebSocket } from '@/hooks/useWebSocket';
+import { useMinesAudio } from '@/games/mines/hooks/useMinesAudio';
+import { GameButton } from '@/components/ui/GameButton';
 import { Play } from 'lucide-react';
-import { useSettingsStore } from '../../../store/useSettingsStore';
-import { ErrorBoundary } from '../../../components/ui/ErrorBoundary';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
 const canvasInitPromiseMap = new WeakMap<HTMLCanvasElement, Promise<Application>>();

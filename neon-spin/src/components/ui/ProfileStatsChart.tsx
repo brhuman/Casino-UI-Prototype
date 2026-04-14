@@ -7,7 +7,7 @@ import {
   Area,
   AreaChart
 } from 'recharts';
-import { useUserStore } from '../../store/useUserStore';
+import { useUserStore } from '@/store/useUserStore';
 
 export const ProfileStatsChart = () => {
   const data = useUserStore((state) => state.balanceHistory);

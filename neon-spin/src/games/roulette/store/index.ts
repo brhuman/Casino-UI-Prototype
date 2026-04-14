@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { useQuestsStore } from '../../../store/useQuestsStore';
+import { useQuestsStore } from '@/store/useQuestsStore';
 
 interface RouletteState {
   isSpinning: boolean;

@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Howl } from 'howler';
-import { useMinesStore } from '../store';
-import { useUiStore } from '../../../store/useUiStore';
-import { useUserStore } from '../../../store/useUserStore';
+import { useMinesStore } from '@/games/mines/store';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 // Small neon-themed sound effects in base64
 const SOUND_ASSETS = {
@@ -14,15 +13,15 @@ const SOUND_ASSETS = {
 };
 
 export const useMinesAudio = () => {
-  const isMuted = useUiStore((state: any) => state.isMuted);
+  const isMuted = useSettingsStore((state) => state.isMuted);
+  const volume = useSettingsStore((state) => state.volume);
   const lastSound = useMinesStore((state: any) => state.lastSound);
-  const globalVolume = useUserStore((state: any) => state.globalVolume);
   
   const sounds = useRef<Record<string, Howl>>({});
 
   useEffect(() => {
     // Initialize sounds with global volume scale and 0.5 cap
-    const volumeFactor = globalVolume * 0.5;
+    const volumeFactor = volume * 0.5;
     
     Object.entries(SOUND_ASSETS).forEach(([key, src]) => {
       const baseVol = key === 'bust' ? 0.27 : (key === 'cashout' ? 1.0 : 0.5);
@@ -35,7 +34,7 @@ export const useMinesAudio = () => {
     return () => {
       Object.values(sounds.current).forEach(s => s.unload());
     };
-  }, [globalVolume]);
+  }, [volume]);
 
   useEffect(() => {
     // Only play if it's a fresh sound change and not on mount

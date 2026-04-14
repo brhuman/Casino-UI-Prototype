@@ -7,10 +7,12 @@ import { LatestWins } from '@/components/game/LatestWins';
 import { LeaderboardView } from '@/components/game/LeaderboardView';
 import { MinesIcon, RouletteIcon, SlotsIcon } from '@/components/ui/GameIcons';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import type { ViewType } from '@/store/useUiStore';
 import { useUiStore } from '@/store/useUiStore';
 import { useUserStore } from '@/store/useUserStore';
+import { preloadViews } from '@/views/viewRegistry';
 
-
+const GAME_VIEW_IDS: ViewType[] = ['slots', 'roulette', 'mines'];
 
 export const LobbyView = () => {
   const { t } = useTranslation();
@@ -91,23 +93,16 @@ export const LobbyView = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  // 1. DYNAMIC PRE-LOADING LOGIC
+  // Pre-load game view chunks once the lobby settles.
   useEffect(() => {
-    // Pre-load game modules in the background after lobby is ready
     const preloadGames = async () => {
       try {
-        await Promise.all([
-          import('@/views/SlotView'),
-          import('@/games/mines/Views/MinesView'),
-          import('@/games/roulette/Views/RouletteView')
-        ]);
-        console.log('🎮 Games pre-loaded for instant access');
+        await preloadViews(GAME_VIEW_IDS);
       } catch (err) {
         console.warn('Game pre-loading failed:', err);
       }
     };
-    
-    // Small delay to ensure Lobby is smooth first
+
     const timeout = setTimeout(preloadGames, 2000);
     return () => clearTimeout(timeout);
   }, []);

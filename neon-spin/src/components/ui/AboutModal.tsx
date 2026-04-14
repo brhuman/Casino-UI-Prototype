@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Zap } from 'lucide-react';
-import { useUiStore } from '../../store/useUiStore';
+import { useUiStore } from '@/store/useUiStore';
 import { useTranslation } from 'react-i18next';
 
 import { useState } from 'react';
-import { useSettingsStore } from '../../store/useSettingsStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 export const AboutModal = () => {
   const { t } = useTranslation();

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { useGameStore } from './store/useGameStore';
-import { useUserStore } from './store/useUserStore';
+import { useGameStore } from '@/store/useGameStore';
+import { useUserStore } from '@/store/useUserStore';
 
 // Mock PIXI and other dependencies
 vi.mock('pixi.js', () => ({

@@ -1,4 +1,4 @@
-import { useUserStore } from '../store/useUserStore';
+import { useUserStore } from '@/store/useUserStore';
 
 export type WsEvent = 'MINES_START' | 'MINES_PICK' | 'MINES_CASHOUT' | 'SLOT_SPIN';
 

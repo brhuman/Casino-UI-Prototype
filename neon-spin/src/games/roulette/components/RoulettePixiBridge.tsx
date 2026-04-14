@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Application, Container } from 'pixi.js';
-import { RouletteWheel } from '../game/RouletteWheel';
-import { useRouletteStore } from '../store';
+import { RouletteWheel } from '@/games/roulette/game/RouletteWheel';
+import { useRouletteStore } from '@/games/roulette/store';
 
 export const RoulettePixiBridge: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

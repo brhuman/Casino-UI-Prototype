@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Application } from 'pixi.js';
-import { initGameConfig, SLOT_STAGE_HEIGHT, SLOT_STAGE_WIDTH } from '../../game/core/init';
+import { initGameConfig, SLOT_STAGE_HEIGHT, SLOT_STAGE_WIDTH } from '@/game/core/init';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGameStore } from '../../store/useGameStore';
-import { useUserStore } from '../../store/useUserStore';
-import { useSettingsStore } from '../../store/useSettingsStore';
-import { Button } from '../ui/Button';
-import { GameButton } from '../ui/GameButton';
-import { soundManager } from '../../game/audio/SoundManager';
+import { useGameStore } from '@/store/useGameStore';
+import { useUserStore } from '@/store/useUserStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { Button } from '@/components/ui/Button';
+import { GameButton } from '@/components/ui/GameButton';
+import { soundManager } from '@/game/audio/SoundManager';
 import { Play, RotateCcw } from 'lucide-react';
 
 export const PixiBridge = () => {

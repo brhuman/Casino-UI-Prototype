@@ -1,14 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Plus, Camera, Edit3, Check, X } from 'lucide-react';
-import { useUserStore } from '../store/useUserStore';
-import { useUiStore } from '../store/useUiStore';
-import { Card } from '../components/ui/Card';
+import { useUserStore } from '@/store/useUserStore';
+import { useUiStore } from '@/store/useUiStore';
+import { Card } from '@/components/ui/Card';
 import { useState, useRef } from 'react';
-import { AchievementGallery } from '../components/ui/AchievementGallery';
-import { DailyMissions } from '../components/ui/DailyMissions';
+import { AchievementGallery } from '@/components/ui/AchievementGallery';
+import { DailyMissions } from '@/components/ui/DailyMissions';
 import { useTranslation } from 'react-i18next';
 
-import { PRESET_AVATARS } from '../constants/dummyData';
+import { PRESET_AVATARS } from '@/constants/dummyData';
 
 export const ProfileView = () => {
   const username = useUserStore(state => state.username);

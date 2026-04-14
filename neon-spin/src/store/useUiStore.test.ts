@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useUiStore } from './useUiStore';
+import { useUiStore } from '@/store/useUiStore';
 
 describe('useUiStore', () => {
   beforeEach(() => {
     useUiStore.setState({
       currentView: 'lobby',
+      showAboutModal: false,
     });
   });
 
@@ -19,5 +20,10 @@ describe('useUiStore', () => {
 
     useUiStore.getState().setView('profile');
     expect(useUiStore.getState().currentView).toBe('profile');
+  });
+
+  it('should toggle about modal visibility', () => {
+    useUiStore.getState().setShowAboutModal(true);
+    expect(useUiStore.getState().showAboutModal).toBe(true);
   });
 });

@@ -9,7 +9,6 @@ interface UserState {
   totalBets: number;
   totalWinAmount: number;
   biggestWin: number;
-  globalVolume: number;
   selectedAvatar: string | null;
   customAvatars: string[];
   isVip: boolean;
@@ -22,7 +21,6 @@ interface UserState {
     login: (token: string, userId: string, username: string, balance: number) => void;
     logout: () => void;
     updateBalance: (amount: number) => void;
-    setGlobalVolume: (volume: number) => void;
     setAvatar: (url: string) => void;
     addCustomAvatar: (url: string) => void;
     setVip: (status: boolean) => void;
@@ -40,7 +38,6 @@ export const useUserStore = create<UserState>()(
       totalBets: 0,
       totalWinAmount: 0,
       biggestWin: 0,
-      globalVolume: 0.3,
       selectedAvatar: null,
       customAvatars: [],
       isVip: false,
@@ -116,7 +113,6 @@ export const useUserStore = create<UserState>()(
           };
         }),
 
-        setGlobalVolume: (volume: number) => set({ globalVolume: volume }),
         setAvatar: (url: string) => set({ selectedAvatar: url }),
         addCustomAvatar: (url: string) => set((state) => ({ 
           customAvatars: [url, ...state.customAvatars].slice(0, 5), // Keep last 5 custom avatars
@@ -142,7 +138,6 @@ export const useUserStore = create<UserState>()(
         totalBets: state.totalBets,
         totalWinAmount: state.totalWinAmount,
         biggestWin: state.biggestWin,
-        globalVolume: state.globalVolume,
         selectedAvatar: state.selectedAvatar,
         customAvatars: state.customAvatars,
         isVip: state.isVip,

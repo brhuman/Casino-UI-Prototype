@@ -1,9 +1,9 @@
 import { Application, Container, Graphics, Sprite } from 'pixi.js';
-import { getSymbolTexture, loadAssets } from './loader';
-import { useGameStore } from '../../store/useGameStore';
-import { spinReel } from '../animations/spin';
-import { generateResultMatrix, calculateWin, REELS_COUNT, ROWS_COUNT } from '../math/rng';
-import { soundManager } from '../audio/SoundManager';
+import { getSymbolTexture, loadAssets } from '@/game/core/loader';
+import { useGameStore } from '@/store/useGameStore';
+import { spinReel } from '@/game/animations/spin';
+import { generateResultMatrix, calculateWin, REELS_COUNT, ROWS_COUNT } from '@/game/math/rng';
+import { soundManager } from '@/game/audio/SoundManager';
 import gsap from 'gsap';
 
 export const SLOT_SYMBOL_SIZE = 118;

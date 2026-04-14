@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useUserStore } from '../../store/useUserStore';
-import { DUMMY_NICKNAMES } from '../../constants/dummyData';
+import { useUserStore } from '@/store/useUserStore';
+import { DUMMY_NICKNAMES } from '@/constants/dummyData';
 import { Trophy, Medal } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

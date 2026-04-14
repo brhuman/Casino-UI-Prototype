@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { Howl, Howler } from 'howler';
-import { useGameStore } from '../store/useGameStore';
-import { useUiStore } from '../store/useUiStore';
-import { useUserStore } from '../store/useUserStore';
+import { useGameStore } from '@/store/useGameStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 export const useAudio = () => {
-  const isMuted = useUiStore(state => state.isMuted);
+  const isMuted = useSettingsStore((state) => state.isMuted);
+  const volume = useSettingsStore((state) => state.volume);
   const isSpinning = useGameStore(state => state.isSpinning);
-  const globalVolume = useUserStore(state => state.globalVolume);
   
 
   const bgMusic = useRef<Howl | null>(null);
@@ -16,8 +15,8 @@ export const useAudio = () => {
   const winSfx = useRef<Howl | null>(null);
 
   useEffect(() => {
-    Howler.volume(globalVolume * 0.5);
-  }, [globalVolume]);
+    Howler.volume(volume * 0.5);
+  }, [volume]);
 
   useEffect(() => {
 

@@ -1,20 +1,17 @@
 import { Volume2, VolumeX, Shield, Bell, Monitor, Info, Languages } from 'lucide-react';
-import { useUserStore } from '../store/useUserStore';
-import { useUiStore } from '../store/useUiStore';
-import { useSettingsStore } from '../store/useSettingsStore';
-import { Card } from '../components/ui/Card';
+import { useUiStore } from '@/store/useUiStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { Card } from '@/components/ui/Card';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { NotificationModal } from '../components/ui/NotificationModal';
+import { NotificationModal } from '@/components/ui/NotificationModal';
 import { useState } from 'react';
 
 export const SettingsView = () => {
   const { t } = useTranslation();
   const [showNotificationModal, setShowNotificationModal] = useState(false);
-  const globalVolume = useUserStore(state => state.globalVolume);
-  const setGlobalVolume = useUserStore(state => state.actions.setGlobalVolume);
-  const { isMuted, setMuted, setShowAboutModal } = useUiStore();
-  const { language, highQualityFx, neonGlow, actions: settingsActions } = useSettingsStore();
+  const setShowAboutModal = useUiStore((state) => state.setShowAboutModal);
+  const { isMuted, volume, language, highQualityFx, neonGlow, actions: settingsActions } = useSettingsStore();
 
   const handleLanguageChange = (lang: 'en' | 'uk' | 'ru' | 'pl') => {
     settingsActions.setLanguage(lang);
@@ -71,11 +68,11 @@ export const SettingsView = () => {
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center px-1">
                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{t('settings.audio.master_volume')}</span>
-                <span className="font-mono text-xs font-bold text-neon-cyan">{Math.round(globalVolume * 100)}%</span>
+                <span className="font-mono text-xs font-bold text-neon-cyan">{Math.round(volume * 100)}%</span>
               </div>
               <div className="flex items-center gap-6">
                 <button 
-                  onClick={() => setMuted(!isMuted)}
+                  onClick={() => settingsActions.setMuted(!isMuted)}
                   className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isMuted ? 'bg-red-500/20 text-red-500 border border-red-500/40' : 'bg-white/10 text-white/40 border border-white/20 hover:bg-white/20'}`}
                 >
                   {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -86,8 +83,8 @@ export const SettingsView = () => {
                     min="0" 
                     max="1" 
                     step="0.01" 
-                    value={isMuted ? 0 : globalVolume}
-                    onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => settingsActions.setVolume(parseFloat(e.target.value))}
                     disabled={isMuted}
                     className="w-full h-1.5 bg-white/5 rounded-lg appearance-none cursor-pointer accent-neon-cyan hover:accent-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   />
@@ -168,4 +165,3 @@ export const SettingsView = () => {
     </div>
   );
 };
-

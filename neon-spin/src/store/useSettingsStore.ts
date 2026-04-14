@@ -12,6 +12,27 @@ const getInitialLanguage = (): 'en' | 'uk' | 'ru' | 'pl' => {
   return supported.includes(browserLang as any) ? (browserLang as any) : 'en';
 };
 
+const getLegacyUserVolume = (): number | undefined => {
+  if (typeof window === 'undefined') return undefined;
+
+  try {
+    const rawUserSession = window.localStorage.getItem('casino-user-session');
+
+    if (!rawUserSession) {
+      return undefined;
+    }
+
+    const parsedUserSession = JSON.parse(rawUserSession);
+    const legacyVolume = parsedUserSession?.state?.globalVolume;
+
+    return typeof legacyVolume === 'number' ? legacyVolume : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const getInitialVolume = () => getLegacyUserVolume() ?? 0.3;
+
 interface SettingsState {
   isMuted: boolean;
   volume: number;
@@ -22,6 +43,7 @@ interface SettingsState {
   hasSeenWelcome: boolean;
   actions: {
     toggleMute: () => void;
+    setMuted: (muted: boolean) => void;
     setVolume: (val: number) => void;
     setTheme: (theme: SettingsState['theme']) => void;
     setLanguage: (lang: SettingsState['language']) => void;
@@ -31,18 +53,28 @@ interface SettingsState {
   };
 }
 
+type PersistedSettingsState = Pick<
+  SettingsState,
+  'isMuted' | 'volume' | 'theme' | 'language' | 'highQualityFx' | 'neonGlow' | 'hasSeenWelcome'
+>;
+
+const getDefaultSettingsState = (): PersistedSettingsState => ({
+  isMuted: false,
+  volume: getInitialVolume(),
+  theme: 'neon',
+  language: getInitialLanguage(),
+  highQualityFx: true,
+  neonGlow: true,
+  hasSeenWelcome: false,
+});
+
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
-      isMuted: false,
-      volume: 0.5,
-      theme: 'neon',
-      language: getInitialLanguage(),
-      highQualityFx: true,
-      neonGlow: true,
-      hasSeenWelcome: false,
+      ...getDefaultSettingsState(),
       actions: {
         toggleMute: () => set({ isMuted: !get().isMuted }),
+        setMuted: (isMuted) => set({ isMuted }),
         setVolume: (volume) => set({ volume }),
         setTheme: (theme) => set({ theme }),
         setLanguage: (language) => set({ language }),
@@ -53,6 +85,18 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'casino-settings',
+      version: 2,
+      migrate: (persistedState) => {
+        const defaults = getDefaultSettingsState();
+        const state = (persistedState ?? {}) as Partial<PersistedSettingsState>;
+        const legacyVolume = getLegacyUserVolume();
+
+        return {
+          ...defaults,
+          ...state,
+          volume: legacyVolume ?? state.volume ?? 0.3,
+        };
+      },
       partialize: (state) => ({ 
         isMuted: state.isMuted, 
         volume: state.volume, 
@@ -65,4 +109,3 @@ export const useSettingsStore = create<SettingsState>()(
     }
   )
 );
-

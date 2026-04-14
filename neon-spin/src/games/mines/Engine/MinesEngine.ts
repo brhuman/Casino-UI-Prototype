@@ -1,7 +1,7 @@
 import { Application, Container, Text, TextStyle, Assets } from 'pixi.js';
-import type { IGameEngine } from '../../../types/game';
-import { Cell } from './Cell';
-import { useMinesStore } from '../store';
+import type { IGameEngine } from '@/types/game';
+import { Cell } from '@/games/mines/Engine/Cell';
+import { useMinesStore } from '@/games/mines/store';
 import gsap from 'gsap';
 
 export class MinesEngine implements IGameEngine {

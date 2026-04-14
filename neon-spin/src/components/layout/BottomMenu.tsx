@@ -1,9 +1,9 @@
 import { Home, User, Settings } from 'lucide-react';
-import { SlotsIcon, MinesIcon, RouletteIcon } from '../ui/GameIcons';
+import { SlotsIcon, MinesIcon, RouletteIcon } from '@/components/ui/GameIcons';
 import { motion } from 'framer-motion';
-import { useUiStore } from '../../store/useUiStore';
-import { useUserStore } from '../../store/useUserStore';
-import type { ViewType } from '../../store/useUiStore';
+import { useUiStore } from '@/store/useUiStore';
+import { useUserStore } from '@/store/useUserStore';
+import type { ViewType } from '@/store/useUiStore';
 
 const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
   { id: 'lobby', label: 'Lobby', icon: Home },

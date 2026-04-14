@@ -1,6 +1,6 @@
-import { PixiBridge } from '../components/game/PixiBridge';
-import { useSettingsStore } from '../store/useSettingsStore';
-import { ErrorBoundary } from '../components/ui/ErrorBoundary';
+import { PixiBridge } from '@/components/game/PixiBridge';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 
 export const SlotView = () => {

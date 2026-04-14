@@ -1,6 +1,6 @@
 import { Check, Gift, Target } from 'lucide-react';
-import { useQuestsStore } from '../../store/useQuestsStore';
-import { useUserStore } from '../../store/useUserStore';
+import { useQuestsStore } from '@/store/useQuestsStore';
+import { useUserStore } from '@/store/useUserStore';
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 

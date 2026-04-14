@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { ACHIEVEMENTS } from '../../constants/achievements';
-import { useUserStore } from '../../store/useUserStore';
+import { ACHIEVEMENTS } from '@/constants/achievements';
+import { useUserStore } from '@/store/useUserStore';
 import { Lock } from 'lucide-react';
 
 export const AchievementGallery = () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useMinesStore } from './store';
+import { useMinesStore } from '@/games/mines/store';
 
 describe('Mines Terminal Logic Test', () => {
   beforeEach(() => {
