@@ -2,7 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@/index.css';
 import '@/i18n';
+import { setupDocumentVisibilityForAnimationsAndAudio } from '@/game/audio/documentVisibility';
 import App from '@/App';
+
+setupDocumentVisibilityForAnimationsAndAudio();
 import { generateResultMatrix, calculateWin } from '@/game/math/rng';
 
 
