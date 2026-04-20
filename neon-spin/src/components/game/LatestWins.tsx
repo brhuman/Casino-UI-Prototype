@@ -53,7 +53,7 @@ export const LatestWins = () => {
 
   // Spawners keep the store fresh
   useEffect(() => {
-    let timeoutId: any;
+    let timeoutId: ReturnType<typeof setTimeout>;
     const spawnWin = () => {
       const games = ['Neon Spin', 'Mines', 'Roulette'];
       const multiplier = (Math.random() * 50 + 1.1).toFixed(1);
@@ -79,7 +79,7 @@ export const LatestWins = () => {
   }, [addWin]);
 
   useEffect(() => {
-    let timeoutId: any;
+    let timeoutId: ReturnType<typeof setTimeout>;
     const spawnReg = () => {
       const randomNick = DUMMY_NICKNAMES[Math.floor(Math.random() * DUMMY_NICKNAMES.length)];
       const newReg = {

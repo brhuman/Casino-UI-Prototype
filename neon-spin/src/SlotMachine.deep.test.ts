@@ -30,9 +30,14 @@ vi.mock('pixi.js', () => ({
 }));
 
 // Mock GSAP to execute onComplete immediately
+type GsapTarget = Record<string, unknown>;
+type GsapParams = {
+  onComplete?: () => void;
+};
+
 vi.mock('gsap', () => ({
   default: {
-    to: (_obj: any, params: any) => {
+    to: (_obj: GsapTarget, params: GsapParams) => {
       if (params.onComplete) params.onComplete();
       return { kill: vi.fn() };
     }

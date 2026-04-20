@@ -1,5 +1,4 @@
 import { spawn } from 'child_process';
-import { join } from 'path';
 
 // Watchdog Configuration
 const HARD_TIMEOUT_MS = 120000; // 2 minutes hard limit
@@ -38,7 +37,7 @@ async function runTests() {
       if (child.pid) {
         try {
           process.kill(-child.pid, 'SIGKILL');
-        } catch (e) {
+        } catch {
           child.kill('SIGKILL');
         }
       }
@@ -91,7 +90,7 @@ async function runTests() {
     if (child.pid) {
       try {
         process.kill(-child.pid, 'SIGKILL');
-      } catch (e) {
+      } catch {
         child.kill('SIGKILL');
       }
     }
