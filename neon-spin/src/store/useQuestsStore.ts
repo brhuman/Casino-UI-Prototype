@@ -112,7 +112,16 @@ export const useQuestsStore = create<QuestsState>()(
       }
     }),
     {
-      name: 'neon-spin-quests'
+      name: 'neon-spin-quests',
+      partialize: (state) => ({
+        quests: state.quests,
+        lastResetDate: state.lastResetDate,
+      }),
+      merge: (persisted, current) => ({
+        ...current,
+        ...(persisted as Partial<Omit<QuestsState, 'actions'>>),
+        actions: current.actions,
+      }),
     }
   )
 );

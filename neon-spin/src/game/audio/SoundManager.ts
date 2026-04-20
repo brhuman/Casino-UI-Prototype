@@ -18,18 +18,18 @@ export class SoundManager {
     });
 
     this.spinSound = new Howl({
-      src: ['/assets/spin.mp3'],
+      src: ['/sounds/slot_spin.mp3'],
       volume: 0.3 * 1.0,
     });
 
     this.rollingSound = new Howl({
-      src: ['/assets/rolling.mp3'],
+      src: ['/sounds/rolling.wav'],
       volume: 0.3 * 1.0,
       loop: true,
     });
 
     this.winSound = new Howl({
-      src: ['/assets/win.mp3'],
+      src: ['/sounds/slot_win.mp3'],
       volume: 1.0,
     });
   }
