@@ -1,10 +1,11 @@
-import { Gift, Target, Zap, Crown, Flame, Star, Coins, Gem, Shield, Heart, Infinity, Rocket } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Gift, Target, Zap, Crown, Flame, Star, Coins, Gem, Shield, Heart, Infinity as InfinityIcon, Rocket } from 'lucide-react';
 
 export interface Achievement {
   id: string;
   title: string;
   description: string;
-  icon: any;
+  icon: LucideIcon;
   color: string;
 }
 
@@ -76,7 +77,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: 'WHEEL_MASTER',
     title: 'Wheel Master',
     description: 'Won 10 consecutive bets on the Roulette.',
-    icon: Infinity,
+    icon: InfinityIcon,
     color: 'text-red-500'
   },
   {

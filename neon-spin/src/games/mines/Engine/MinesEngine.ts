@@ -2,6 +2,7 @@ import { Application, Container, Text, TextStyle, Assets } from 'pixi.js';
 import type { IGameEngine } from '@/types/game';
 import { Cell } from '@/games/mines/Engine/Cell';
 import { useMinesStore } from '@/games/mines/store';
+import type { MinesClientSocket } from '@/games/mines/Engine/minesSocket';
 import gsap from 'gsap';
 
 export class MinesEngine implements IGameEngine {
@@ -10,12 +11,11 @@ export class MinesEngine implements IGameEngine {
   private gridContainer: Container;
   private cells: Cell[] = [];
   private isDestroyed = false;
-  private pendingTimeouts: Set<any> = new Set();
-  
+  private pendingTimeouts: Set<ReturnType<typeof setTimeout>> = new Set();
 
-  private socket: any;
+  private socket: MinesClientSocket;
 
-  constructor(socket: any) {
+  constructor(socket: MinesClientSocket) {
     this.container = new Container();
     this.gridContainer = new Container();
     this.socket = socket;
@@ -106,12 +106,13 @@ export class MinesEngine implements IGameEngine {
     }
   }
 
-  public onServerResult(data: { status: 'SAFE' | 'BUST', grid?: number[], newMultiplier?: number }) {
-    if (data.status === 'SAFE' && data.newMultiplier) {
-      useMinesStore.getState().actions.updateProgress(data.newMultiplier);
+  public onServerResult(data: unknown) {
+    const payload = data as { status: 'SAFE' | 'BUST'; grid?: number[]; newMultiplier?: number };
+    if (payload.status === 'SAFE' && payload.newMultiplier) {
+      useMinesStore.getState().actions.updateProgress(payload.newMultiplier);
       useMinesStore.getState().actions.playSound('reveal');
-    } else if (data.status === 'BUST' && data.grid) {
-      this.revealAll(data.grid, true);
+    } else if (payload.status === 'BUST' && payload.grid) {
+      this.revealAll(payload.grid, true);
       useMinesStore.getState().actions.playSound('bust');
       useMinesStore.getState().actions.endGame();
     }
@@ -123,10 +124,11 @@ export class MinesEngine implements IGameEngine {
     this.cells[index].reveal(isSafe ? 'SAFE' : 'BOMB');
   }
 
-  private onCashoutResult(data: { winAmount: number, grid: number[] }) {
-    useMinesStore.getState().actions.endGame(data.winAmount);
-    this.revealAll(data.grid, false);
-    this.showWinText(data.winAmount);
+  private onCashoutResult(data: unknown) {
+    const payload = data as { winAmount: number; grid: number[] };
+    useMinesStore.getState().actions.endGame(payload.winAmount);
+    this.revealAll(payload.grid, false);
+    this.showWinText(payload.winAmount);
   }
 
   private revealAll(grid: number[], isBust: boolean) {
@@ -179,7 +181,7 @@ export class MinesEngine implements IGameEngine {
     this.isDestroyed = true;
     
 
-    this.pendingTimeouts.forEach(tid => clearTimeout(tid as any));
+    this.pendingTimeouts.forEach((tid) => clearTimeout(tid));
     this.pendingTimeouts.clear();
 
 
@@ -194,7 +196,7 @@ export class MinesEngine implements IGameEngine {
       try {
         this.app.ticker?.stop();
 
-        this.app.destroy(true, { children: true, texture: true, baseTexture: true } as any);
+        this.app.destroy(true, { children: true, texture: true });
       } catch (e) {
         console.warn("[MinesEngine] PIXI destroy ignored:", e);
       }

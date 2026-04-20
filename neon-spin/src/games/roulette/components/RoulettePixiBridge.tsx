@@ -104,7 +104,11 @@ export const RoulettePixiBridge: React.FC = () => {
       }
       console.groupEnd();
       if (localApp) {
-        try { (localApp as Application).destroy(true, { children: true, texture: true }); } catch { }
+        try {
+          (localApp as Application).destroy(true, { children: true, texture: true });
+        } catch {
+          /* destroy during failed init */
+        }
         appRef.current = null;
       }
     }
@@ -129,10 +133,18 @@ export const RoulettePixiBridge: React.FC = () => {
       if (appRef.current) {
         const app = appRef.current;
         appRef.current = null;
-        try { app.destroy(true, { children: true, texture: true }); } catch { }
+        try {
+          app.destroy(true, { children: true, texture: true });
+        } catch {
+          /* teardown */
+        }
       }
       if (wheelRef.current) {
-        try { wheelRef.current.destroy(); } catch { }
+        try {
+          wheelRef.current.destroy();
+        } catch {
+          /* wheel teardown */
+        }
         wheelRef.current = null;
       }
       mainContainerRef.current = null;

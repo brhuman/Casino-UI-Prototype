@@ -14,7 +14,7 @@ export const LeaderboardView = () => {
   const leaderboardData = useMemo(() => {
     const dummyPlayers = DUMMY_NICKNAMES.slice(0, 10).map((name, i) => ({
       name,
-      amount: Math.floor(50000 / (i + 1)) + Math.random() * 500,
+      amount: Math.floor(50000 / (i + 1)) + ((i * 137 + 911) % 500),
       isCurrentUser: false
     }));
 

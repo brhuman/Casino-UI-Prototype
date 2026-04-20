@@ -31,21 +31,19 @@ interface Message {
   timestamp: Date;
 }
 
+function buildInitialMessages(): Message[] {
+  return Array.from({ length: 5 }, (_, i) => ({
+    id: `init-${i}`,
+    user: DUMMY_USERS[Math.floor(Math.random() * DUMMY_USERS.length)],
+    text: PRESET_MESSAGES[Math.floor(Math.random() * PRESET_MESSAGES.length)],
+    timestamp: new Date(Date.now() - (5 - i) * 60000)
+  }));
+}
+
 export const GlobalChat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => buildInitialMessages());
   const [inputValue, setInputValue] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Initial messages
-  useEffect(() => {
-    const initial = Array.from({ length: 5 }, (_, i) => ({
-      id: `init-${i}`,
-      user: DUMMY_USERS[Math.floor(Math.random() * DUMMY_USERS.length)],
-      text: PRESET_MESSAGES[Math.floor(Math.random() * PRESET_MESSAGES.length)],
-      timestamp: new Date(Date.now() - (5 - i) * 60000)
-    }));
-    setMessages(initial);
-  }, []);
 
   // Simulate incoming messages
   useEffect(() => {

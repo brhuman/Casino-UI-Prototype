@@ -114,7 +114,7 @@ export const LobbyView = () => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 12000);
     return () => clearInterval(timer);
-  }, [isHovered]);
+  }, [isHovered, HERO_SLIDES.length]);
   
   return (
     <div className="w-full flex-1 flex flex-col items-center bg-black overflow-x-hidden relative">
@@ -215,7 +215,7 @@ export const LobbyView = () => {
                      <button 
                        onClick={(e) => {
                          e.stopPropagation(); // Prevent drag from triggering
-                         setView(HERO_SLIDES[currentSlide].id as any);
+                         setView(HERO_SLIDES[currentSlide].id as ViewType);
                        }}
                        className="group/btn relative px-10 py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:scale-105 active:scale-95 transition-all shadow-[0_15px_60px_rgba(255,255,255,0.2)] pointer-events-auto"
                      >
@@ -268,7 +268,7 @@ export const LobbyView = () => {
                 <div 
                   key={game.id}
                   className={`group relative aspect-[4/5] rounded-[3rem] overflow-hidden cursor-pointer border border-white/5 ${game.border} transition-all duration-500 shadow-2xl`}
-                  onClick={() => setView(game.id as any)}
+                  onClick={() => setView(game.id as ViewType)}
                 >
                   <img src={game.image} alt={game.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
@@ -307,7 +307,7 @@ export const LobbyView = () => {
                        else if (info.offset.x < -swipeThreshold) nextUniverseSlide();
                     }}
                     className="absolute inset-0 px-4 cursor-grab active:cursor-grabbing"
-                    onClick={() => setView(GAMES_DATA[currentUniverseSlide].id as any)}
+                    onClick={() => setView(GAMES_DATA[currentUniverseSlide].id as ViewType)}
                   >
                     <div className={`relative h-full w-full aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/5 transition-all shadow-2xl`}>
                        <img src={GAMES_DATA[currentUniverseSlide].image} alt={GAMES_DATA[currentUniverseSlide].title} className="absolute inset-0 w-full h-full object-cover" />

@@ -3,7 +3,8 @@ import { Application } from 'pixi.js';
 import { MinesEngine } from '@/games/mines/Engine/MinesEngine';
 import { useMinesStore } from '@/games/mines/store';
 import { useUserStore } from '@/store/useUserStore';
-import { useWebSocket } from '@/hooks/useWebSocket';
+import { useWebSocket, type WsEvent } from '@/hooks/useWebSocket';
+import type { MinesClientSocket } from '@/games/mines/Engine/minesSocket';
 import { useMinesAudio } from '@/games/mines/hooks/useMinesAudio';
 import { GameButton } from '@/components/ui/GameButton';
 import { Play } from 'lucide-react';
@@ -12,6 +13,24 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 const canvasAppMap = new WeakMap<HTMLCanvasElement, Application>();
 const canvasInitPromiseMap = new WeakMap<HTMLCanvasElement, Promise<Application>>();
+
+type WebSocketHandle = ReturnType<typeof useWebSocket>;
+
+function wrapMinesSocket(
+  socket: WebSocketHandle,
+  setPendingPick: React.Dispatch<React.SetStateAction<number | null>>
+): MinesClientSocket {
+  return {
+    on: socket.on.bind(socket),
+    off: socket.off.bind(socket),
+    emit(event: string, payload?: unknown) {
+      if (event === 'MINES_PICK' && payload && typeof payload === 'object' && 'index' in payload) {
+        setPendingPick((payload as { index: number }).index);
+      }
+      socket.emit(event as WsEvent, payload);
+    },
+  };
+}
 
 export const MinesView = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,15 +77,7 @@ export const MinesView = () => {
         
         if (!engineRef.current) {
           addLog("Creating MinesEngine for existing app...");
-          const wrappedSocket = {
-            on: socket.on.bind(socket),
-            off: socket.off.bind(socket),
-            emit: (event: any, payload?: any) => {
-              if (event === 'MINES_PICK') setPendingPick(payload.index);
-              socket.emit(event as any, payload);
-            }
-          };
-          engineRef.current = new MinesEngine(wrappedSocket);
+          engineRef.current = new MinesEngine(wrapMinesSocket(socket, setPendingPick));
         }
         engineRef.current.init(existingApp);
         setIsLoaded(true);
@@ -82,15 +93,7 @@ export const MinesView = () => {
           addLog("ASYNC-SUCCESS: Previous init finished, taking over.");
           
           if (!engineRef.current) {
-            const wrappedSocket = {
-              on: socket.on.bind(socket),
-              off: socket.off.bind(socket),
-              emit: (event: string, payload?: unknown) => {
-                if (event === 'MINES_PICK') setPendingPick((payload as { index: number }).index);
-                socket.emit(event as any, payload);
-              }
-            };
-            engineRef.current = new MinesEngine(wrappedSocket);
+            engineRef.current = new MinesEngine(wrapMinesSocket(socket, setPendingPick));
           }
           engineRef.current.init(app);
           setIsLoaded(true);
@@ -158,15 +161,7 @@ export const MinesView = () => {
         
         addLog("Initializing MinesEngine...");
         if (!engineRef.current) {
-          const wrappedSocket = {
-            on: socket.on.bind(socket),
-            off: socket.off.bind(socket),
-            emit: (event: any, payload?: any) => {
-              if (event === 'MINES_PICK') setPendingPick(payload.index);
-              socket.emit(event as any, payload);
-            }
-          };
-          engineRef.current = new MinesEngine(wrappedSocket);
+          engineRef.current = new MinesEngine(wrapMinesSocket(socket, setPendingPick));
         }
 
         await engineRef.current.init(localApp);
@@ -180,7 +175,11 @@ export const MinesView = () => {
         setErrorStack(errorStack ?? null);
         rejectInit!(err instanceof Error ? err : new Error(String(err)));
         if (localApp) {
-          try { localApp.destroy(true, { children: true }); } catch { }
+          try {
+            localApp.destroy(true, { children: true });
+          } catch {
+            /* PIXI destroy can throw if init was partial */
+          }
         }
         if (!isInterruptedRef.current) setError(errorMessage || "Failed to initialize game engine.");
       }
