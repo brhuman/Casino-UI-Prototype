@@ -53,7 +53,7 @@ export const useUserStore = create<UserState>()(
         updateBalance: (amount) => set((state) => {
           let newTotalWinAmount = state.totalWinAmount;
           let newTotalBets = state.totalBets;
-          let newBalance = state.balance + amount;
+          const newBalance = state.balance + amount;
           let newBiggestWin = state.biggestWin;
 
           if (amount < 0) {

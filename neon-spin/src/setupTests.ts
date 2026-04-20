@@ -4,13 +4,13 @@ import { vi } from 'vitest';
 
 vi.mock('gsap', () => ({
   default: {
-    to: vi.fn((_target: any, vars: any) => {
+    to: vi.fn((_target: unknown, vars: { onComplete?: () => void }) => {
 
-      if (vars.onComplete) vars.onComplete();
+      if (vars?.onComplete) vars.onComplete();
       return { kill: vi.fn() };
     }),
-    from: vi.fn((_target: any, vars: any) => {
-      if (vars.onComplete) vars.onComplete();
+    from: vi.fn((_target: unknown, vars: { onComplete?: () => void }) => {
+      if (vars?.onComplete) vars.onComplete();
       return { kill: vi.fn() };
     }),
     set: vi.fn(),

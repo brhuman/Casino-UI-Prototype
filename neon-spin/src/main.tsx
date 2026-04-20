@@ -7,7 +7,7 @@ import { generateResultMatrix, calculateWin } from '@/game/math/rng';
 
 
 
-(window as any).__FastSpinSimulator = (spins: number = 10000, bet: number = 100) => {
+(window as { __FastSpinSimulator?: unknown }).__FastSpinSimulator = (spins: number = 10000, bet: number = 100) => {
   let totalBet = 0;
   let totalWin = 0;
 

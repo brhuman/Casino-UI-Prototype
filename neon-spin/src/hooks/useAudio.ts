@@ -41,13 +41,14 @@ export const useAudio = () => {
     }
 
     return () => {
-      bgMusic.current?.unload();
+      const currentBgMusic = bgMusic.current;
+      currentBgMusic?.unload();
       spinStartSfx.current?.unload();
       spinSfx.current?.unload();
       winSfx.current?.unload();
     };
 
-  }, []);
+  }, [volume, isMuted]);
 
   useEffect(() => {
     Howler.mute(isMuted);

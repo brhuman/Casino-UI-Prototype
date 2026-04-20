@@ -19,7 +19,7 @@ export const MinesView = () => {
   const engineRef = useRef<MinesEngine | null>(null);
   const socket = useWebSocket();
   const { highQualityFx, neonGlow } = useSettingsStore();
-  const balance = useUserStore((state: any) => state.balance);
+  const balance = useUserStore((state) => state.balance);
 
   const isActive = useMinesStore(state => state.isActive);
   const currentBet = useMinesStore(state => state.currentBet);
@@ -63,7 +63,7 @@ export const MinesView = () => {
             off: socket.off.bind(socket),
             emit: (event: any, payload?: any) => {
               if (event === 'MINES_PICK') setPendingPick(payload.index);
-              socket.emit(event, payload);
+              socket.emit(event as any, payload);
             }
           };
           engineRef.current = new MinesEngine(wrappedSocket);
@@ -85,17 +85,18 @@ export const MinesView = () => {
             const wrappedSocket = {
               on: socket.on.bind(socket),
               off: socket.off.bind(socket),
-              emit: (event: any, payload?: any) => {
-                if (event === 'MINES_PICK') setPendingPick(payload.index);
-                socket.emit(event, payload);
+              emit: (event: string, payload?: unknown) => {
+                if (event === 'MINES_PICK') setPendingPick((payload as { index: number }).index);
+                socket.emit(event as any, payload);
               }
             };
             engineRef.current = new MinesEngine(wrappedSocket);
           }
           engineRef.current.init(app);
           setIsLoaded(true);
-        } catch (e: any) {
-          addLog(`ASYNC-ERROR: Inherited init failed: ${e.message}`);
+        } catch (e: unknown) {
+          const errorMessage = e instanceof Error ? (e.message || "Unknown error") : String(e);
+          addLog(`ASYNC-ERROR: Inherited init failed: ${errorMessage}`);
         }
         return;
       }
@@ -103,7 +104,7 @@ export const MinesView = () => {
 
       let localApp: Application | null = null;
       let resolveInit: (app: Application) => void;
-      let rejectInit: (err: any) => void;
+      let rejectInit: (err: Error) => void;
       
       const initPromise = new Promise<Application>((res, rej) => {
         resolveInit = res;
@@ -162,7 +163,7 @@ export const MinesView = () => {
             off: socket.off.bind(socket),
             emit: (event: any, payload?: any) => {
               if (event === 'MINES_PICK') setPendingPick(payload.index);
-              socket.emit(event, payload);
+              socket.emit(event as any, payload);
             }
           };
           engineRef.current = new MinesEngine(wrappedSocket);
@@ -171,27 +172,34 @@ export const MinesView = () => {
         await engineRef.current.init(localApp);
         addLog("Engine ready.");
         setIsLoaded(true);
-      } catch (err: any) {
-        addLog(`ERROR: ${err.message}`);
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? (err.message || "Unknown error") : String(err);
+        const errorStack = err instanceof Error ? err.stack : "No stack trace available";
+        addLog(`ERROR: ${errorMessage}`);
         console.error("[MinesView] Engine Init Error:", err);
-        setErrorStack(err.stack || "No stack trace available");
-        rejectInit!(err);
+        setErrorStack(errorStack);
+        rejectInit!(err instanceof Error ? err : new Error(String(err)));
         if (localApp) {
-          try { localApp.destroy(true, { children: true }); } catch (e) {  }
+          try { localApp.destroy(true, { children: true }); } catch { }
         }
-        if (!isInterruptedRef.current) setError(err.message || "Failed to initialize game engine.");
+        if (!isInterruptedRef.current) setError(errorMessage || "Failed to initialize game engine.");
       }
   }, [addLog, socket]);
 
 
   useEffect(() => {
     const isInterruptedRef = { current: false };
-    setup(isInterruptedRef);
+    
+    // Run setup asynchronously to avoid setState in effect
+    const runSetup = async () => {
+      await setup(isInterruptedRef);
+    };
+    
+    runSetup();
 
     return () => {
       isInterruptedRef.current = true;
       if (engineRef.current) {
-
         engineRef.current.destroy();
         engineRef.current = null;
       }

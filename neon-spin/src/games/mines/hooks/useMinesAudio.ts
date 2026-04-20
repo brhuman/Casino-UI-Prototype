@@ -15,7 +15,7 @@ const SOUND_ASSETS = {
 export const useMinesAudio = () => {
   const isMuted = useSettingsStore((state) => state.isMuted);
   const volume = useSettingsStore((state) => state.volume);
-  const lastSound = useMinesStore((state: any) => state.lastSound);
+  const lastSound = useMinesStore((state) => state.lastSound);
   
   const sounds = useRef<Record<string, Howl>>({});
 
@@ -32,7 +32,8 @@ export const useMinesAudio = () => {
     });
 
     return () => {
-      Object.values(sounds.current).forEach(s => s.unload());
+      const currentSounds = sounds.current;
+      Object.values(currentSounds).forEach(s => s.unload());
     };
   }, [volume]);
 

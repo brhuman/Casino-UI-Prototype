@@ -97,14 +97,14 @@ export const RoulettePixiBridge: React.FC = () => {
       ]);
 
       console.groupEnd();
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (isCurrentRef.current) {
         console.error(`[${Math.round(performance.now() - startTime)}ms] FATAL ERROR:`, err);
         setError(err instanceof Error ? err.message : 'Unknown initialization error');
       }
       console.groupEnd();
       if (localApp) {
-        try { (localApp as Application).destroy(true, { children: true, texture: true }); } catch (e) {}
+        try { (localApp as Application).destroy(true, { children: true, texture: true }); } catch { }
         appRef.current = null;
       }
     }
@@ -129,10 +129,10 @@ export const RoulettePixiBridge: React.FC = () => {
       if (appRef.current) {
         const app = appRef.current;
         appRef.current = null;
-        try { app.destroy(true, { children: true, texture: true }); } catch (e) {}
+        try { app.destroy(true, { children: true, texture: true }); } catch { }
       }
       if (wheelRef.current) {
-        try { wheelRef.current.destroy(); } catch (e) {}
+        try { wheelRef.current.destroy(); } catch { }
         wheelRef.current = null;
       }
       mainContainerRef.current = null;

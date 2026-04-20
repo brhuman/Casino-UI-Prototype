@@ -9,7 +9,7 @@ const getInitialLanguage = (): 'en' | 'uk' | 'ru' | 'pl' => {
   if (browserLang === 'ru') return 'en';
   
   const supported: Array<SettingsState['language']> = ['en', 'uk', 'ru', 'pl'];
-  return supported.includes(browserLang as any) ? (browserLang as any) : 'en';
+  return supported.includes(browserLang as SettingsState['language']) ? (browserLang as SettingsState['language']) : 'en';
 };
 
 const getLegacyUserVolume = (): number | undefined => {

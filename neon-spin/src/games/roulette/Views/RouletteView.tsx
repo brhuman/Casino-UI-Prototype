@@ -10,14 +10,14 @@ import { useSettingsStore } from '@/store/useSettingsStore';
 
 export const RouletteView: React.FC = () => {
   const { highQualityFx, neonGlow } = useSettingsStore();
-  const isSpinning = useRouletteStore((state: any) => state.isSpinning);
-  const lastResult = useRouletteStore((state: any) => state.lastResult);
-  const currentBet = useRouletteStore((state: any) => state.currentBet);
-  const setSpinning = useRouletteStore((state: any) => state.actions.setSpinning);
-  const setBet = useRouletteStore((state: any) => state.actions.setBet);
+  const isSpinning = useRouletteStore((state) => state.isSpinning);
+  const lastResult = useRouletteStore((state) => state.lastResult);
+  const currentBet = useRouletteStore((state) => state.currentBet);
+  const setSpinning = useRouletteStore((state) => state.actions.setSpinning);
+  const setBet = useRouletteStore((state) => state.actions.setBet);
   
-  const balance = useUserStore((state: any) => state.balance);
-  const updateBalance = useUserStore((state: any) => state.actions.updateBalance);
+  const balance = useUserStore((state) => state.balance);
+  const updateBalance = useUserStore((state) => state.actions.updateBalance);
 
   const handleSpin = () => {
     if (balance < currentBet) return;
