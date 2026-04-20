@@ -2,6 +2,32 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from '@/App';
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      language: 'en',
+      changeLanguage: vi.fn(),
+    },
+  }),
+}));
+
+vi.mock('@/components/ui/LoadingView', async () => {
+  const { useEffect } = await import('react');
+  return {
+    LoadingView: ({ onComplete }: { onComplete: () => void }) => {
+      useEffect(() => {
+        onComplete();
+      }, [onComplete]);
+      return null;
+    },
+  };
+});
+
+vi.mock('@/components/ui/AboutModal', () => ({
+  AboutModal: () => null,
+}));
+
 type MockPixiApp = {
   init: ReturnType<typeof vi.fn>;
   stage: { addChild: ReturnType<typeof vi.fn> };
@@ -78,10 +104,8 @@ describe('Integration: Mines View interaction', () => {
   it('should navigate to Mines and click minus button', async () => {
     render(<App />);
 
-    // Navigate via sidebar: find the nav button by role that contains 'Mines'
-    const navButtons = screen.getAllByRole('button');
-    const minesNavBtn = navButtons.find(btn => btn.textContent?.match(/^Mines$/i));
-    fireEvent.click(minesNavBtn!);
+    const minesNavBtn = await screen.findByRole('button', { name: /mines/i });
+    fireEvent.click(minesNavBtn);
 
     const minusButton = await screen.findByRole('button', { name: '-' });
     expect(minusButton).toBeInTheDocument();
