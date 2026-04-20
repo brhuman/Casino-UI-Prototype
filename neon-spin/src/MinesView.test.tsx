@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from '@/App';
 
 vi.mock('react-i18next', () => ({
@@ -31,7 +31,7 @@ vi.mock('@/components/ui/AboutModal', () => ({
 type MockPixiApp = {
   init: ReturnType<typeof vi.fn>;
   stage: { addChild: ReturnType<typeof vi.fn> };
-  renderer: { resize: ReturnType<typeof vi.fn> };
+  renderer: { resize: ReturnType<typeof vi.fn>; on: ReturnType<typeof vi.fn> };
   screen: { width: number; height: number };
   destroy: ReturnType<typeof vi.fn>;
 };
@@ -63,7 +63,7 @@ vi.mock('pixi.js', () => {
   const MockApp = vi.fn().mockImplementation(function(this: MockPixiApp) {
     this.init = vi.fn().mockResolvedValue(undefined);
     this.stage = { addChild: vi.fn() };
-    this.renderer = { resize: vi.fn() };
+    this.renderer = { resize: vi.fn(), on: vi.fn() };
     this.screen = { width: 800, height: 600 };
     this.destroy = vi.fn();
   });
@@ -97,23 +97,32 @@ vi.mock('pixi.js', () => {
     Graphics: MockGraphics,
     Text: vi.fn(),
     TextStyle: vi.fn(),
+    Assets: {
+      load: vi.fn(() => Promise.resolve()),
+    },
   };
 });
+
+const CI_WAIT = 30_000;
 
 describe('Integration: Mines View interaction', () => {
   it('should navigate to Mines and click minus button', async () => {
     render(<App />);
 
-    const minesNavBtn = await screen.findByRole('button', { name: /mines/i });
+    const minesNavBtn = await screen.findByRole('button', { name: /mines/i }, { timeout: CI_WAIT });
     fireEvent.click(minesNavBtn);
 
-    const minusButton = await screen.findByRole('button', { name: '-' });
+    await waitFor(() => expect(screen.queryByText('Loading view')).not.toBeInTheDocument(), {
+      timeout: CI_WAIT,
+    });
+
+    const minusButton = await screen.findByRole('button', { name: '-' }, { timeout: CI_WAIT });
     expect(minusButton).toBeInTheDocument();
 
     fireEvent.click(minusButton);
 
-    const plusButton = screen.getByRole('button', { name: '+' });
+    const plusButton = await screen.findByRole('button', { name: '+' }, { timeout: CI_WAIT });
     fireEvent.click(plusButton);
     expect(plusButton).toBeInTheDocument();
-  }, 10000);
+  }, 45_000);
 });
