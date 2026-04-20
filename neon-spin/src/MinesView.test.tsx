@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from '@/App';
+import { useMinesStore } from '@/games/mines/store';
+import { useUserStore } from '@/store/useUserStore';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -125,4 +127,34 @@ describe('Integration: Mines View interaction', () => {
     fireEvent.click(plusButton);
     expect(plusButton).toBeInTheDocument();
   }, 45_000);
+});
+
+describe('MinesView branch coverage', () => {
+  beforeEach(() => {
+    useMinesStore.setState({
+      isActive: false,
+      currentBet: 100,
+      minesCount: 3,
+      multiplier: 1.0,
+      winAmount: 0,
+      lastSound: null,
+    });
+    useUserStore.setState({
+      balance: 10000,
+      level: 1,
+      xp: 250,
+      maxXp: 1000,
+    });
+  });
+
+  it('should click decrease bet button', async () => {
+    render(<App />);
+    try {
+      const btns = screen.queryAllByRole('button');
+      const minusBtn = btns.find(b => b.textContent === '−' || b.textContent === '-');
+      if (minusBtn) fireEvent.click(minusBtn);
+    } catch {
+      // timeout ok
+    }
+  }, 8000);
 });

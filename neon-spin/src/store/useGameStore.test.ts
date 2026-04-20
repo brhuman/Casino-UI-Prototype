@@ -52,4 +52,46 @@ describe('useGameStore', () => {
     expect(state.lastWinAmount).toBe(500);
     expect(state.matrix).toEqual(mockMatrix);
   });
+
+  it('should not allow bet increase when spinning', () => {
+    useGameStore.getState().actions.placeBet();
+    useGameStore.getState().actions.increaseBet();
+    expect(useGameStore.getState().currentBet).toBe(100);
+  });
+
+  it('should not allow bet decrease when spinning', () => {
+    useGameStore.getState().actions.placeBet();
+    useGameStore.getState().actions.decreaseBet();
+    expect(useGameStore.getState().currentBet).toBe(100);
+  });
+
+  it('should increase bet when not spinning', () => {
+    useGameStore.getState().actions.increaseBet();
+    expect(useGameStore.getState().currentBet).toBe(200);
+  });
+
+  it('should decrease bet when not spinning', () => {
+    useGameStore.getState().actions.decreaseBet();
+    expect(useGameStore.getState().currentBet).toBe(100);
+  });
+
+  it('should cap max bet at 5000', () => {
+    useGameStore.setState({ currentBet: 4950 });
+    useGameStore.getState().actions.increaseBet();
+    expect(useGameStore.getState().currentBet).toBe(5000);
+    useGameStore.getState().actions.increaseBet();
+    expect(useGameStore.getState().currentBet).toBe(5000);
+  });
+
+  it('should set result with no win (loss)', () => {
+    useGameStore.getState().actions.placeBet();
+    const mockMatrix = [[1],[1],[1],[1],[1]];
+    useGameStore.getState().actions.setResult(mockMatrix, 0, []);
+
+    const state = useGameStore.getState();
+    const userBalance = useUserStore.getState().balance;
+    expect(state.isSpinning).toBe(false);
+    expect(userBalance).toBe(9900);
+    expect(state.lastWinAmount).toBe(0);
+  });
 });

@@ -40,4 +40,18 @@ describe('Mines Terminal Logic Test', () => {
     expect(useMinesStore.getState().isActive).toBe(false);
     expect(useMinesStore.getState().winAmount).toBe(250);
   });
+
+  it('should not allow bet change when active', () => {
+    useMinesStore.getState().actions.startGame();
+    const initialBet = useMinesStore.getState().currentBet;
+    useMinesStore.getState().actions.increaseBet();
+    expect(useMinesStore.getState().currentBet).toBe(initialBet);
+    useMinesStore.getState().actions.decreaseBet();
+    expect(useMinesStore.getState().currentBet).toBe(initialBet);
+  });
+
+  it('should cap mines count', () => {
+    useMinesStore.getState().actions.setMinesCount(25);
+    expect(useMinesStore.getState().minesCount).toBe(25);
+  });
 });

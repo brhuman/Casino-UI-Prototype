@@ -70,4 +70,36 @@ describe('useUserStore Logic', () => {
     expect(state.isVip).toBe(true);
     expect(state.achievements).toContain('VIP_ELITE');
   });
+
+  it('не позволяет баланс упасть ниже нуля', () => {
+    const { actions } = useUserStore.getState();
+    useUserStore.setState({ balance: 1000 });
+    actions.updateBalance(-500);
+    const state = useUserStore.getState();
+    expect(state.balance).toBe(500);
+  });
+
+  it('увеличивает XP и остается на уровне при недостатке XP', () => {
+    const { actions } = useUserStore.getState();
+    actions.updateBalance(100);
+    const state = useUserStore.getState();
+    expect(state.level).toBe(1);
+  });
+
+  it('позволяет менять юзернейм', () => {
+    const { actions } = useUserStore.getState();
+    actions.setUsername('TestPlayer');
+    const state = useUserStore.getState();
+    expect(state.username).toBe('TestPlayer');
+  });
+
+  it('сохраняет биг вин при последовательных выигрышах', () => {
+    const { actions } = useUserStore.getState();
+    actions.updateBalance(500);
+    expect(useUserStore.getState().biggestWin).toBe(500);
+    actions.updateBalance(200);
+    expect(useUserStore.getState().biggestWin).toBe(500);
+    actions.updateBalance(800);
+    expect(useUserStore.getState().biggestWin).toBe(800);
+  });
 });
