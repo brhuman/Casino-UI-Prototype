@@ -13,13 +13,33 @@ Hello! This is my test project, where I am experimenting with modern technologie
 - **Styling**: Tailwind CSS (Glassmorphism & Neon Design)
 - **Testing**: Vitest + React Testing Library
 
-## 🧪 Testing & Quality Assurance
-This project includes a suite of automated unit tests for the core game logic:
-- **Core Logic Tests**: Verified `useUserStore` balance calculations, level-up mechanics, and achievement triggers.
-- **Reliability**: All tests pass in the current build environment, ensuring the stable foundation of the gaming platform.
-- **How to run**: Simply execute `npm run test:raw -- src/store/useUserStore.test.ts` to see the core logic tests.
+## 🧪 Testing & quality assurance
 
-For a deep dive into our testing strategy, check out [test.md](./neon-spin/test.md).
+Automated checks run on **GitHub Actions** for every push and pull request: ESLint, **Vitest** (unit + integration-style tests), TypeScript check + production build (`npm run build` in `neon-spin/`). CI also generates a **V8 coverage** report (scoped to `src/game/math`, `src/games/mines`, and `src/store` so thresholds track core logic, not untested PIXI/roulette bundles) and uploads the HTML output as a workflow artifact (`coverage-html`).
+
+### What is covered
+
+- **Slot RNG math** (`src/game/math/rng.ts`) — matrix generation and win calculation.
+- **Zustand stores** — game, user, UI, settings, mines store, etc.
+- **Mines** — terminal logic and store behaviour.
+- **React** — light component tests with **Testing Library**; heavy PIXI/GSAP paths are mocked in `src/setupTests.ts` where needed.
+- **Integration-style** — e.g. `SlotSpinFlow.integration.test.tsx` exercises a spin control wired to real stores (no PIXI canvas).
+
+### How to run tests locally
+
+From the `neon-spin/` directory:
+
+| Command | Purpose |
+|--------|---------|
+| `npm run test:raw` | Run the full suite once (verbose reporter). |
+| `npm run test:ci` | Same as CI: full suite + **coverage** (text + `coverage/index.html`). |
+| `npm test` | Wrapper around `scripts/test-monitor.ts` (optional local workflow). |
+
+Run a single file, for example:
+
+`npm run test:raw -- src/store/useUserStore.test.ts`
+
+Coverage HTML is written to `neon-spin/coverage/` (ignored by git; download the artifact from a workflow run on GitHub if you want the report without generating it locally).
 
 ## 💎 Key Features
 - **Custom Game Engines**: Slot machines and Roulette implemented with raw PIXI.js graphics and optimized sprite handling.

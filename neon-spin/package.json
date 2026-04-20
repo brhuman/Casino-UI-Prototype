@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "npx tsx scripts/test-monitor.ts",
     "test:raw": "vitest run --reporter=verbose",
+    "test:ci": "vitest run --reporter=verbose --coverage",
     "test:safe": "bash test-with-timeout.sh 90",
     "test:monitor": "npx tsx scripts/test-monitor.ts",
     "prepare": "husky"
@@ -49,6 +50,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "4.1.4",
     "autoprefixer": "^10.4.27",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -64,6 +66,6 @@
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.1",
     "vite-plugin-pwa": "^0.19.8",
-    "vitest": "^4.1.1"
+    "vitest": "4.1.4"
   }
 }

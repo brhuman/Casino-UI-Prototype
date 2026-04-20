@@ -15,5 +15,24 @@ export default defineConfig({
     setupFiles: ['./src/setupTests.ts'],
     testTimeout: 10000,
     hookTimeout: 10000,
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: './coverage',
+      reporter: ['text', 'json-summary', 'html'],
+      all: false,
+      // Scope gates to logic-heavy layers; untested PIXI/roulette UI does not drag down the metric.
+      include: [
+        'src/game/math/**/*.ts',
+        'src/games/mines/**/*.ts',
+        'src/store/**/*.ts',
+      ],
+      exclude: ['src/**/*.test.{ts,tsx}', '**/*.d.ts'],
+      thresholds: {
+        lines: 60,
+        branches: 38,
+        functions: 55,
+        statements: 58,
+      },
+    },
   },
 });
