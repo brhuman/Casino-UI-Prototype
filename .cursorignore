@@ -1,0 +1,49 @@
+# --- ЗАЛЕЖНОСТІ (Must Ignore) ---
+# Ці папки гігантські. AI ніколи не має в них лізути.
+node_modules/
+bower_components/
+.npm/
+.yarn/
+
+# --- ЗБІРКА ТА КЕШ (Protect Source of Truth) ---
+# AI не має бачити скомпільований код, щоб не галюцинувати.
+dist/
+build/
+.next/
+.nuxt/
+out/
+target/
+*.pyc
+.cache/
+
+# --- МЕДІА ТА БІНАРНИКИ (Save Traffic & Context) ---
+# AI не читає картинки як код. Шляхи він побачить через дерево файлів.
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.pdf
+*.zip
+*.gz
+
+# --- СЕКРЕТИ ТА ЛОГИ (Security First) ---
+# Щоб твої ключі випадково не пішли на сервери Anthropic.
+.env
+.env.*
+*.log
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+
+# --- ВАЖКІ КОНФІГИ (Context Optimization) ---
+# Ці файли занадто довгі і забивають "пам'ять" (Context Window).
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

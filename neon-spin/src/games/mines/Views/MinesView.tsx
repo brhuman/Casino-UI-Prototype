@@ -177,7 +177,7 @@ export const MinesView = () => {
         const errorStack = err instanceof Error ? err.stack : "No stack trace available";
         addLog(`ERROR: ${errorMessage}`);
         console.error("[MinesView] Engine Init Error:", err);
-        setErrorStack(errorStack);
+        setErrorStack(errorStack ?? null);
         rejectInit!(err instanceof Error ? err : new Error(String(err)));
         if (localApp) {
           try { localApp.destroy(true, { children: true }); } catch { }
