@@ -11,7 +11,7 @@ const { TestCell } = vi.hoisted(() => {
     y = 0;
     gridIndex: number;
     isRevealed = false;
-    reveal = vi.fn((_type: 'SAFE' | 'BOMB') => {
+    reveal = vi.fn(() => {
       this.isRevealed = true;
     });
     private onPick: (idx: number) => void;

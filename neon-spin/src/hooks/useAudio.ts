@@ -40,12 +40,16 @@ export const useAudio = () => {
       bgMusic.current.play();
     }
 
+    const currentBgMusic = bgMusic.current;
+    const currentSpinStartSfx = spinStartSfx.current;
+    const currentSpinSfx = spinSfx.current;
+    const currentWinSfx = winSfx.current;
+
     return () => {
-      const currentBgMusic = bgMusic.current;
       currentBgMusic?.unload();
-      spinStartSfx.current?.unload();
-      spinSfx.current?.unload();
-      winSfx.current?.unload();
+      currentSpinStartSfx?.unload();
+      currentSpinSfx?.unload();
+      currentWinSfx?.unload();
     };
 
   }, [volume, isMuted]);

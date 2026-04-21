@@ -23,17 +23,20 @@ export const useMinesAudio = () => {
     // Initialize sounds with global volume scale and 0.5 cap
     const volumeFactor = volume * 0.5;
     
+    const nextSounds: Record<string, Howl> = {};
     Object.entries(SOUND_ASSETS).forEach(([key, src]) => {
       const baseVol = key === 'bust' ? 0.27 : (key === 'cashout' ? 1.0 : 0.5);
-      sounds.current[key] = new Howl({ 
+      nextSounds[key] = new Howl({ 
         src: [src],
         volume: baseVol * volumeFactor
       });
     });
+    sounds.current = nextSounds;
+
+    const initializedSounds = nextSounds;
 
     return () => {
-      const currentSounds = sounds.current;
-      Object.values(currentSounds).forEach(s => s.unload());
+      Object.values(initializedSounds).forEach(s => s.unload());
     };
   }, [volume]);
 
