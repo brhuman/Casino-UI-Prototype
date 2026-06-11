@@ -12,6 +12,7 @@ export class MinesEngine implements IGameEngine {
   private cells: Cell[] = [];
   private isDestroyed = false;
   private pendingTimeouts: Set<ReturnType<typeof setTimeout>> = new Set();
+  private pendingPick: number | null = null;
 
   private socket: MinesClientSocket;
 
@@ -24,10 +25,12 @@ export class MinesEngine implements IGameEngine {
     this.onServerResult = this.onServerResult.bind(this);
     this.onGameStarted = this.onGameStarted.bind(this);
     this.onCashoutResult = this.onCashoutResult.bind(this);
+    this.onServerError = this.onServerError.bind(this);
     
     this.socket.on('MINES_STARTED', this.onGameStarted);
     this.socket.on('MINES_RESULT', this.onServerResult);
     this.socket.on('MINES_CASHOUT_RESULT', this.onCashoutResult);
+    this.socket.on('MINES_ERROR', this.onServerError);
   }
 
   public async init(app: Application) {
@@ -82,20 +85,21 @@ export class MinesEngine implements IGameEngine {
   }
 
   public startRound(bet: number, payload: { minesCount: number }) {
-
+    if (!useMinesStore.getState().actions.requestStart()) return;
     this.drawGrid();
     useMinesStore.getState().actions.playSound('start');
     this.socket.emit('MINES_START', { bet, minesCount: payload.minesCount });
   }
 
   private handlePick(index: number) {
-    if (this.isDestroyed || !useMinesStore.getState().isActive) return;
+    if (this.isDestroyed || !useMinesStore.getState().isActive || this.pendingPick !== null) return;
+    this.pendingPick = index;
     useMinesStore.getState().actions.playSound('click');
     this.socket.emit('MINES_PICK', { index });
   }
 
   public cashout() {
-    if (!useMinesStore.getState().isActive) return;
+    if (!useMinesStore.getState().actions.requestCashout()) return;
     useMinesStore.getState().actions.playSound('cashout');
     this.socket.emit('MINES_CASHOUT');
   }
@@ -107,7 +111,16 @@ export class MinesEngine implements IGameEngine {
   }
 
   public onServerResult(data: unknown) {
-    const payload = data as { status: 'SAFE' | 'BUST'; grid?: number[]; newMultiplier?: number };
+    const payload = data as {
+      status: 'SAFE' | 'BUST';
+      index?: number;
+      grid?: number[];
+      newMultiplier?: number;
+    };
+    if (payload.index !== undefined) {
+      this.revealCellClient(payload.index, payload.status === 'SAFE');
+    }
+    this.pendingPick = null;
     if (payload.status === 'SAFE' && payload.newMultiplier) {
       useMinesStore.getState().actions.updateProgress(payload.newMultiplier);
       useMinesStore.getState().actions.playSound('reveal');
@@ -129,6 +142,13 @@ export class MinesEngine implements IGameEngine {
     useMinesStore.getState().actions.endGame(payload.winAmount);
     this.revealAll(payload.grid, false);
     this.showWinText(payload.winAmount);
+  }
+
+  private onServerError() {
+    this.pendingPick = null;
+    if (useMinesStore.getState().phase === 'starting' || useMinesStore.getState().phase === 'settling') {
+      useMinesStore.getState().actions.abortGame();
+    }
   }
 
   private revealAll(grid: number[], isBust: boolean) {
@@ -178,6 +198,7 @@ export class MinesEngine implements IGameEngine {
   }
 
   public destroy() {
+    if (this.isDestroyed) return;
     this.isDestroyed = true;
     
 
@@ -191,15 +212,8 @@ export class MinesEngine implements IGameEngine {
     this.socket.off('MINES_STARTED', this.onGameStarted);
     this.socket.off('MINES_RESULT', this.onServerResult);
     this.socket.off('MINES_CASHOUT_RESULT', this.onCashoutResult);
+    this.socket.off('MINES_ERROR', this.onServerError);
 
-    if (this.app) {
-      try {
-        this.app.ticker?.stop();
-
-        this.app.destroy(true, { children: true, texture: true });
-      } catch (e) {
-        console.warn("[MinesEngine] PIXI destroy ignored:", e);
-      }
-    }
+    this.container.destroy({ children: true });
   }
 }

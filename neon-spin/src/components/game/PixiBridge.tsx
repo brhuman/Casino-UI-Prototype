@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import { Application } from 'pixi.js';
+import { useCallback, useRef, useState } from 'react';
 import { initGameConfig, SLOT_STAGE_HEIGHT, SLOT_STAGE_WIDTH } from '@/game/core/init';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '@/store/useGameStore';
@@ -9,13 +8,11 @@ import { Button } from '@/components/ui/Button';
 import { GameButton } from '@/components/ui/GameButton';
 import { soundManager } from '@/game/audio/SoundManager';
 import { Play, RotateCcw } from 'lucide-react';
+import { usePixiApplication } from '@/hooks/usePixiApplication';
 
 export const PixiBridge = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const appRef = useRef<Application | null>(null);
   const [progress, setProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const balance = useUserStore((state) => state.balance);
   const currentBet = useGameStore((state) => state.currentBet);
   const isSpinning = useGameStore((state) => state.isSpinning);
@@ -23,79 +20,30 @@ export const PixiBridge = () => {
   const placeBet = useGameStore((state) => state.actions.placeBet);
   const increaseBet = useGameStore((state) => state.actions.increaseBet);
   const decreaseBet = useGameStore((state) => state.actions.decreaseBet);
-  const { neonGlow } = useSettingsStore();
+  const neonGlow = useSettingsStore((state) => state.neonGlow);
+
+  const getOptions = useCallback((canvas: HTMLCanvasElement) => ({
+    canvas,
+    width: SLOT_STAGE_WIDTH,
+    height: SLOT_STAGE_HEIGHT,
+    preference: 'webgl' as const,
+    backgroundColor: 0x02040a,
+    backgroundAlpha: 1,
+    autoDensity: true,
+    resolution: 1,
+  }), []);
+
+  const initialize = useCallback(async (app: import('pixi.js').Application) => {
+    soundManager.init();
+    return initGameConfig(app, setProgress);
+  }, []);
+
+  const { isLoaded, error, retry } = usePixiApplication({
+    canvasRef,
+    getOptions,
+    initialize,
+  });
   const canSpin = isLoaded && !isSpinning && balance >= currentBet;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    let isCurrent = true;
-    let localApp: Application | null = null;
-    let unsubscribe: (() => void) | null = null;
-
-    const setup = async () => {
-      try {
-        if (!canvas.isConnected) return;
-
-        localApp = new Application();
-        if (!isCurrent) {
-          localApp.destroy(true);
-          return;
-        }
-        appRef.current = localApp;
-
-        await localApp.init({
-          canvas,
-          width: SLOT_STAGE_WIDTH,
-          height: SLOT_STAGE_HEIGHT,
-          preference: 'webgl',
-          backgroundColor: 0x02040a,
-          backgroundAlpha: 1,
-          autoDensity: true,
-          resolution: 1,
-        });
-
-        if (!isCurrent) return;
-
-        soundManager.init();
-        unsubscribe = await initGameConfig(localApp, (p: number) => {
-          if (isCurrent) setProgress(p);
-        });
-
-        if (!isCurrent) return;
-        
-        // Small delay to ensure PIXI has rendered at least once before showing
-        setTimeout(() => {
-          if (isCurrent) setIsLoaded(true);
-        }, 150);
-      } catch (err: unknown) {
-        if (isCurrent) {
-          setError((err as Error).message || 'Failed to load game assets.');
-          console.error('[PixiBridge] init error:', err);
-        }
-      }
-    };
-
-    setup();
-
-    return () => {
-      isCurrent = false;
-      setIsLoaded(false);
-      setProgress(0);
-      if (unsubscribe) unsubscribe();
-      
-      if (appRef.current) {
-        const app = appRef.current;
-        appRef.current = null;
-        try {
-          app.destroy(true, { children: true, texture: true });
-        } catch (e) {
-          console.warn('[PixiBridge] Destroy error:', e);
-        }
-      }
-    };
-  }, [canvasRef]);
 
   return (
     <>
@@ -156,7 +104,7 @@ export const PixiBridge = () => {
               ) : (
                 <div className="flex flex-col items-center justify-center p-8 text-center">
                   <p className="mb-6 text-red-500 font-bold uppercase tracking-widest">{error}</p>
-                  <Button onClick={() => window.location.reload()} variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white">Retry Connection</Button>
+                  <Button onClick={retry} variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white">Retry Connection</Button>
                 </div>
               )}
             </motion.div>

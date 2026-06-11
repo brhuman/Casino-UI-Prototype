@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export const DailyMissions = () => {
   const quests = useQuestsStore(state => state.quests);
   const { claimReward, checkDailyReset } = useQuestsStore(state => state.actions);
-  const { updateBalance } = useUserStore(state => state.actions);
+  const claimQuestReward = useUserStore(state => state.actions.claimQuestReward);
 
   // Check for daily reset on mount
   useEffect(() => {
@@ -17,8 +17,7 @@ export const DailyMissions = () => {
   const handleClaim = (questId: string) => {
     const reward = claimReward(questId);
     if (reward) {
-      updateBalance(reward.cash);
-      // XP is not tracked in updateBalance if it's positive without wins, but for now just adding cash is fine.
+      claimQuestReward(reward.cash, reward.xp);
     }
   };
 

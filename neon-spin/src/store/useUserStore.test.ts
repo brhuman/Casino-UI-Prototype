@@ -26,7 +26,7 @@ describe('useUserStore Logic', () => {
 
   it('корректно уменьшает баланс и увеличивает общую сумму ставок', () => {
     const { actions } = useUserStore.getState();
-    actions.updateBalance(-500);
+    expect(actions.placeBet(500)).toBe(true);
     
     const state = useUserStore.getState();
     expect(state.balance).toBe(9500);
@@ -35,7 +35,7 @@ describe('useUserStore Logic', () => {
 
   it('корректно увеличивает баланс и фиксирует самый крупный выигрыш', () => {
     const { actions } = useUserStore.getState();
-    actions.updateBalance(2500);
+    actions.creditWin(2500);
     
     const state = useUserStore.getState();
     expect(state.balance).toBe(12500);
@@ -47,7 +47,7 @@ describe('useUserStore Logic', () => {
     const { actions } = useUserStore.getState();
     
     // Стартовый порог 1000. Выигрыш 1500 должен повысить уровень.
-    actions.updateBalance(1500);
+    actions.creditWin(1500);
     
     const state = useUserStore.getState();
     expect(state.level).toBe(2);
@@ -56,7 +56,7 @@ describe('useUserStore Logic', () => {
 
   it('открывает достижение "HIGH_ROLLER" при крупной ставке', () => {
     const { actions } = useUserStore.getState();
-    actions.updateBalance(-2000);
+    actions.placeBet(2000);
     
     const state = useUserStore.getState();
     expect(state.achievements).toContain('HIGH_ROLLER');
@@ -74,14 +74,14 @@ describe('useUserStore Logic', () => {
   it('не позволяет баланс упасть ниже нуля', () => {
     const { actions } = useUserStore.getState();
     useUserStore.setState({ balance: 1000 });
-    actions.updateBalance(-500);
+    expect(actions.placeBet(1500)).toBe(false);
     const state = useUserStore.getState();
-    expect(state.balance).toBe(500);
+    expect(state.balance).toBe(1000);
   });
 
   it('увеличивает XP и остается на уровне при недостатке XP', () => {
     const { actions } = useUserStore.getState();
-    actions.updateBalance(100);
+    actions.creditWin(100);
     const state = useUserStore.getState();
     expect(state.level).toBe(1);
   });
@@ -95,11 +95,27 @@ describe('useUserStore Logic', () => {
 
   it('сохраняет биг вин при последовательных выигрышах', () => {
     const { actions } = useUserStore.getState();
-    actions.updateBalance(500);
+    actions.creditWin(500);
     expect(useUserStore.getState().biggestWin).toBe(500);
-    actions.updateBalance(200);
+    actions.creditWin(200);
     expect(useUserStore.getState().biggestWin).toBe(500);
-    actions.updateBalance(800);
+    actions.creditWin(800);
     expect(useUserStore.getState().biggestWin).toBe(800);
+  });
+
+  it('не считает бонус выигрышем', () => {
+    useUserStore.getState().actions.creditBonus(5000);
+    const state = useUserStore.getState();
+    expect(state.balance).toBe(15000);
+    expect(state.totalWinAmount).toBe(0);
+    expect(state.biggestWin).toBe(0);
+  });
+
+  it('начисляет награду миссии отдельно от статистики выигрышей', () => {
+    useUserStore.getState().actions.claimQuestReward(500, 100);
+    const state = useUserStore.getState();
+    expect(state.balance).toBe(10500);
+    expect(state.xp).toBe(350);
+    expect(state.totalWinAmount).toBe(0);
   });
 });

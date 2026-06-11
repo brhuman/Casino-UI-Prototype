@@ -10,12 +10,12 @@ export const AboutModal = () => {
   const { t } = useTranslation();
   const showAboutModal = useUiStore((state) => state.showAboutModal);
   const setShowAboutModal = useUiStore((state) => state.setShowAboutModal);
-  const { actions: settingsActions } = useSettingsStore();
+  const setHasSeenWelcome = useSettingsStore((state) => state.actions.setHasSeenWelcome);
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
   const handleClose = () => {
     if (dontShowAgain) {
-      settingsActions.setHasSeenWelcome(true);
+      setHasSeenWelcome(true);
     }
     setShowAboutModal(false);
   };
@@ -145,10 +145,10 @@ export const AboutModal = () => {
                     <path d="M6.91893 0.00012207C-2.27936 13.1664 -2.33322 33.575 6.91893 46.7886H13.1337C3.8837 33.575 3.93756 13.1664 13.1337 0.00012207H6.91893Z" fill="white"/>
                     <path d="M69.3403 0.000183105H63.1255C72.3238 13.1665 72.3776 33.575 63.1255 46.7887H69.3403C78.5902 33.575 78.5364 13.1665 69.3403 0.000183105Z" fill="white"/>
                     <defs>
-                      <filter id="vitestFilter0" x="22.7913" y="-10.0666" width="37.3432" height="40.1616" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <filter id="vitestFilter0" x="22.7913" y="-10.0666" width="37.3432" height="40.1616" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
                         <feGaussianBlur stdDeviation="4.59556" />
                       </filter>
-                      <filter id="vitestFilter1" x="-0.370801" y="9.41466" width="37.6054" height="42.1854" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <filter id="vitestFilter1" x="-0.370801" y="9.41466" width="37.6054" height="42.1854" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
                         <feGaussianBlur stdDeviation="4.59556" />
                       </filter>
                     </defs>

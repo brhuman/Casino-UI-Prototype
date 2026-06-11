@@ -10,19 +10,20 @@ import { generateResultMatrix, calculateWin } from '@/game/math/rng';
 
 
 
-(window as { __FastSpinSimulator?: unknown }).__FastSpinSimulator = (spins: number = 10000, bet: number = 100) => {
-  let totalBet = 0;
-  let totalWin = 0;
-
-  for (let i = 0; i < spins; i++) {
-    totalBet += bet;
-    const matrix = generateResultMatrix();
-    totalWin += calculateWin(matrix, bet).winAmount;
-  }
-
-  const rtp = (totalWin / totalBet) * 100;
-  return rtp;
-};
+if (import.meta.env.DEV) {
+  (window as { __FastSpinSimulator?: unknown }).__FastSpinSimulator = (
+    spins: number = 10000,
+    bet: number = 100
+  ) => {
+    let totalBet = 0;
+    let totalWin = 0;
+    for (let i = 0; i < spins; i += 1) {
+      totalBet += bet;
+      totalWin += calculateWin(generateResultMatrix(), bet).winAmount;
+    }
+    return (totalWin / totalBet) * 100;
+  };
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

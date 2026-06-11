@@ -35,13 +35,13 @@ export const useGameStore = create<GameState>()(
         
         if (isSpinning || userBalance < currentBet) return;
         
-        useUserStore.getState().actions.updateBalance(-currentBet);
+        if (!useUserStore.getState().actions.placeBet(currentBet)) return;
         useQuestsStore.getState().actions.progressQuest('play_slots', 1);
         set({ isSpinning: true, lastWinAmount: 0, winningLine: [] });
       },
       setResult: (matrix, winAmount, winningLine) => {
         if (winAmount > 0) {
-          useUserStore.getState().actions.updateBalance(winAmount);
+          useUserStore.getState().actions.creditWin(winAmount);
         }
         set({ isSpinning: false, matrix, lastWinAmount: winAmount, winningLine });
       },

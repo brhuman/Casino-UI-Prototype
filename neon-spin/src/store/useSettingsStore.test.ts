@@ -7,7 +7,6 @@ describe('useSettingsStore', () => {
     useSettingsStore.setState({
       isMuted: false,
       volume: 0.3,
-      theme: 'neon',
     });
   });
 
@@ -15,7 +14,6 @@ describe('useSettingsStore', () => {
     const state = useSettingsStore.getState();
     expect(state.isMuted).toBe(false);
     expect(state.volume).toBe(0.3);
-    expect(state.theme).toBe('neon');
   });
 
   it('should toggle mute', () => {
@@ -36,8 +34,4 @@ describe('useSettingsStore', () => {
     expect(useSettingsStore.getState().isMuted).toBe(true);
   });
 
-  it('should set theme', () => {
-    useSettingsStore.getState().actions.setTheme('cyberpunk');
-    expect(useSettingsStore.getState().theme).toBe('cyberpunk');
-  });
 });

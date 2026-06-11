@@ -9,6 +9,8 @@ import { DailyMissions } from '@/components/ui/DailyMissions';
 import { useTranslation } from 'react-i18next';
 
 import { PRESET_AVATARS } from '@/constants/dummyData';
+import { PageMeta } from '@/components/ui/PageMeta';
+import { AvatarPickerModal } from '@/components/profile/AvatarPickerModal';
 
 export const ProfileView = () => {
   const username = useUserStore(state => state.username);
@@ -27,7 +29,7 @@ export const ProfileView = () => {
   
   const setAvatar = useUserStore(state => state.actions.setAvatar);
   const addCustomAvatar = useUserStore(state => state.actions.addCustomAvatar);
-  const updateBalance = useUserStore(state => state.actions.updateBalance);
+  const creditBonus = useUserStore(state => state.actions.creditBonus);
   const setVip = useUserStore(state => state.actions.setVip);
   const setUsername = useUserStore(state => state.actions.setUsername);
 
@@ -62,14 +64,10 @@ export const ProfileView = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-2 sm:px-4 relative">
-      <title>User Profile | Neon Spin Identity</title>
-      <meta name="description" content="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League." />
-      <meta property="og:title" content="User Profile | Neon Spin Identity" />
-      <meta property="og:description" content="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League." />
-      <meta property="og:image" content="https://neonspin.vercel.app/og-image.png" />
-      <meta name="twitter:title" content="User Profile | Neon Spin Identity" />
-      <meta name="twitter:description" content="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League." />
-      <meta name="twitter:image" content="https://neonspin.vercel.app/og-image.png" />
+      <PageMeta
+        title="User Profile | Neon Spin Identity"
+        description="Track your wins, level up your rank, and customize your cyberpunk identity. See your progress in the Champions League."
+      />
       {/* Dynamic Background */}
       <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_profile_background.png')] bg-cover bg-center bg-no-repeat" />
       
@@ -202,7 +200,7 @@ export const ProfileView = () => {
                 </h3>
               </div>
               <button 
-                onClick={() => updateBalance(1000)}
+                onClick={() => creditBonus(1000)}
                 className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(255,255,255,0.3)] flex items-center justify-center gap-3 active:bg-cyan-400"
               >
                 <Plus size={16} strokeWidth={4} /> {t('profile.add_credits')}
@@ -248,63 +246,18 @@ export const ProfileView = () => {
       </Card>
 
 
-      {/* Avatar Selection Modal Overlay */}
-      <AnimatePresence>
-        {isSelectingAvatar && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/80 backdrop-blur-md"
-            onClick={() => setIsSelectingAvatar(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-xl bg-black border border-white/10 rounded-[3rem] p-8 shadow-2xl backdrop-blur-3xl"
-              onClick={e => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-base font-black text-white uppercase tracking-[0.2em] flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-neon-pink" /> {t('profile.choose_persona')}
-                </h3>
-                <button 
-                  onClick={() => setIsSelectingAvatar(false)}
-                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <Plus size={20} className="rotate-45 text-white/40" />
-                </button>
-              </div>
-              
-              <div className="grid grid-cols-4 sm:grid-cols-4 gap-4">
-                {allAvatars.map((url: string, i: number) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setAvatar(url);
-                      setIsSelectingAvatar(false);
-                    }}
-                    className={`relative aspect-square rounded-2xl overflow-hidden border-4 transition-all hover:scale-105 active:scale-95 group ${
-                      selectedAvatar === url ? 'border-neon-cyan shadow-[0_0_20px_rgba(0,255,255,0.3)] Scale-105' : 'border-white/5 hover:border-white/20'
-                    }`}
-                  >
-                    <img src={url} alt={`Avatar ${i + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="relative aspect-square rounded-2xl border-4 border-dashed border-white/10 hover:border-white/40 hover:bg-white/5 flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 group"
-                >
-                  <Camera size={24} className="text-white/20 group-hover:text-white/60" />
-                  <span className="text-[8px] font-black text-white/20 uppercase tracking-widest group-hover:text-white/60">Upload</span>
-                </button>
-                <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <AvatarPickerModal
+        isOpen={isSelectingAvatar}
+        avatars={allAvatars}
+        selectedAvatar={selectedAvatar}
+        fileInputRef={fileInputRef}
+        onClose={() => setIsSelectingAvatar(false)}
+        onSelect={(url) => {
+          setAvatar(url);
+          setIsSelectingAvatar(false);
+        }}
+        onUpload={handleFileUpload}
+      />
     </div>
   );
 };

@@ -52,11 +52,13 @@ vi.mock('pixi.js', () => ({
     y: number;
     removeChildren: ReturnType<typeof vi.fn>;
     addChild: ReturnType<typeof vi.fn>;
+    destroy: ReturnType<typeof vi.fn>;
   }) {
     this.x = 0;
     this.y = 0;
     this.removeChildren = vi.fn();
     this.addChild = vi.fn();
+    this.destroy = vi.fn();
     return this;
   }),
   Text: vi.fn(function MockText(this: {
@@ -128,6 +130,7 @@ describe('MinesEngine', () => {
     vi.useFakeTimers();
     vi.spyOn(Math, 'random').mockReturnValue(0);
     useMinesStore.setState({
+      phase: 'idle',
       isActive: false,
       currentBet: 100,
       minesCount: 3,
@@ -148,6 +151,7 @@ describe('MinesEngine', () => {
     expect(socket.on).toHaveBeenCalledWith('MINES_STARTED', expect.any(Function));
     expect(socket.on).toHaveBeenCalledWith('MINES_RESULT', expect.any(Function));
     expect(socket.on).toHaveBeenCalledWith('MINES_CASHOUT_RESULT', expect.any(Function));
+    expect(socket.on).toHaveBeenCalledWith('MINES_ERROR', expect.any(Function));
   });
 
   it('destroy without init skips PIXI teardown but still unsubscribes socket', () => {
@@ -314,7 +318,7 @@ describe('MinesEngine', () => {
     await vi.runAllTimersAsync();
   });
 
-  it('destroy clears timeouts, unsubscribes socket, kills tweens, and destroys app', async () => {
+  it('destroy clears timeouts, unsubscribes socket, kills tweens, and destroys its container', async () => {
     const { engine, socket, app } = await createEngine();
     useMinesStore.getState().actions.startGame();
     engine.onServerResult({
@@ -324,20 +328,18 @@ describe('MinesEngine', () => {
     engine.destroy();
     expect(socket.off).toHaveBeenCalled();
     expect(gsap.killTweensOf).toHaveBeenCalled();
-    expect(app.ticker.stop).toHaveBeenCalled();
-    expect(app.destroy).toHaveBeenCalledWith(true, { children: true, texture: true });
+    expect(app.destroy).not.toHaveBeenCalled();
+    const container = (engine as unknown as { container: { destroy: ReturnType<typeof vi.fn> } }).container;
+    expect(container.destroy).toHaveBeenCalledWith({ children: true });
     await vi.runAllTimersAsync();
   });
 
-  it('destroy swallows errors from app.destroy', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const { engine, app } = await createEngine();
-    (app.destroy as ReturnType<typeof vi.fn>).mockImplementation(() => {
-      throw new Error('pixi teardown');
-    });
+  it('destroy is idempotent', async () => {
+    const { engine } = await createEngine();
     engine.destroy();
-    expect(warn).toHaveBeenCalled();
-    warn.mockRestore();
+    engine.destroy();
+    const container = (engine as unknown as { container: { destroy: ReturnType<typeof vi.fn> } }).container;
+    expect(container.destroy).toHaveBeenCalledTimes(1);
   });
 
   it('showWinText early-returns second gsap when destroyed before timeout', async () => {

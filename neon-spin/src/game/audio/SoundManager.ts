@@ -12,9 +12,11 @@ export class SoundManager {
 
     const initialVolume = useSettingsStore.getState().volume;
     Howler.volume(initialVolume * 0.5);
+    Howler.mute(useSettingsStore.getState().isMuted);
 
     useSettingsStore.subscribe((state) => {
       Howler.volume(state.volume * 0.5);
+      Howler.mute(state.isMuted);
     });
 
     this.spinSound = new Howl({
@@ -56,8 +58,6 @@ export class SoundManager {
     this.spinSound?.stop();
     this.rollingSound?.stop();
     this.winSound?.stop();
-    // Also global stop just in case
-    Howler.stop();
   }
 }
 

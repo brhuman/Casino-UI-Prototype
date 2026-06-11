@@ -7,34 +7,38 @@ import { Play, RotateCcw, Trophy } from 'lucide-react';
 import { GameButton } from '@/components/ui/GameButton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import { getRouletteColor, type RouletteBet } from '@/games/roulette/logic';
+import { PageMeta } from '@/components/ui/PageMeta';
+
+const BET_OPTIONS: { value: RouletteBet; label: string }[] = [
+  { value: 'red', label: 'Red 2x' },
+  { value: 'black', label: 'Black 2x' },
+  { value: 'green', label: 'Zero 36x' },
+  { value: 'even', label: 'Even 2x' },
+  { value: 'odd', label: 'Odd 2x' },
+];
 
 export const RouletteView: React.FC = () => {
-  const { highQualityFx, neonGlow } = useSettingsStore();
+  const highQualityFx = useSettingsStore((state) => state.highQualityFx);
+  const neonGlow = useSettingsStore((state) => state.neonGlow);
   const isSpinning = useRouletteStore((state) => state.isSpinning);
   const lastResult = useRouletteStore((state) => state.lastResult);
+  const lastWin = useRouletteStore((state) => state.lastWin);
   const currentBet = useRouletteStore((state) => state.currentBet);
-  const setSpinning = useRouletteStore((state) => state.actions.setSpinning);
+  const selectedBet = useRouletteStore((state) => state.selectedBet);
+  const startSpin = useRouletteStore((state) => state.actions.startSpin);
   const setBet = useRouletteStore((state) => state.actions.setBet);
+  const setSelectedBet = useRouletteStore((state) => state.actions.setSelectedBet);
   
   const balance = useUserStore((state) => state.balance);
-  const updateBalance = useUserStore((state) => state.actions.updateBalance);
-
-  const handleSpin = () => {
-    if (balance < currentBet) return;
-    updateBalance(-currentBet);
-    setSpinning(true);
-  };
 
   return (
     <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
-      <title>Neon Roulette | The Wheel of Fortune</title>
-      <meta name="description" content="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win." />
-      <meta property="og:title" content="Neon Roulette | The Wheel of Fortune" />
-      <meta property="og:description" content="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win." />
-      <meta property="og:image" content="https://neonspin.vercel.app/assets/roulette_thumb.png" />
-      <meta name="twitter:title" content="Neon Roulette | The Wheel of Fortune" />
-      <meta name="twitter:description" content="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win." />
-      <meta name="twitter:image" content="https://neonspin.vercel.app/assets/roulette_thumb.png" />
+      <PageMeta
+        title="Neon Roulette | The Wheel of Fortune"
+        description="Place your bets on the glowing wheel. A classic casino experience reimagined for the neon future. Spin and win."
+        image="/assets/roulette_thumb.png"
+      />
        {/* Background Graphic */}
        {highQualityFx && (
          <div className="pointer-events-none fixed inset-0 z-0 opacity-20 mix-blend-screen bg-[url('/assets/neon_roulette_background.png')] bg-cover bg-center bg-no-repeat"
@@ -60,7 +64,7 @@ export const RouletteView: React.FC = () => {
                 exit={{ scale: 0.8, opacity: 0, x: 20 }}
                 className="absolute top-4 right-4 z-20 pointer-events-none"
               >
-                <div className="bg-gray-900/40 backdrop-blur-3xl border border-neon-cyan/50 p-4 sm:p-6 rounded-2xl shadow-[0_0_40px_rgba(0,255,255,0.2)] flex flex-col items-center gap-2 sm:gap-3 min-w-[80px] sm:min-w-[120px]">
+                  <div className={`bg-gray-900/60 backdrop-blur-3xl p-4 sm:p-6 rounded-2xl shadow-[0_0_40px_rgba(0,255,255,0.2)] flex flex-col items-center gap-2 sm:gap-3 min-w-[80px] sm:min-w-[120px] border ${getRouletteColor(lastResult) === 'red' ? 'border-red-500/60' : getRouletteColor(lastResult) === 'green' ? 'border-emerald-500/60' : 'border-white/30'}`}>
                   <Trophy className="text-neon-cyan w-6 h-6 sm:w-8 sm:h-8 drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]" />
                   <div className="text-center">
                     <h3 className="text-3xl sm:text-5xl font-black italic text-white uppercase tracking-tighter leading-none mb-1">{lastResult}</h3>
@@ -78,7 +82,7 @@ export const RouletteView: React.FC = () => {
           {/* Top Row: Main Action */}
           <div className="flex justify-center">
             <GameButton
-              onClick={handleSpin}
+              onClick={startSpin}
               disabled={isSpinning || balance < currentBet}
               isLoading={isSpinning}
               loadingIcon={RotateCcw}
@@ -98,7 +102,7 @@ export const RouletteView: React.FC = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-[9px] font-bold text-neon-cyan/60 uppercase tracking-widest mb-1">Last Win</span>
-                <span className="font-mono text-lg font-bold text-neon-cyan leading-none">{lastResult !== null ? lastResult : '--'}</span>
+                <span className="font-mono text-lg font-bold text-neon-cyan leading-none">${lastWin.toLocaleString()}</span>
               </div>
             </div>
 
@@ -122,6 +126,20 @@ export const RouletteView: React.FC = () => {
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="grid grid-cols-5 gap-2 px-2 sm:px-6">
+            {BET_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                disabled={isSpinning}
+                onClick={() => setSelectedBet(option.value)}
+                className={`rounded-xl border px-2 py-3 text-[9px] font-black uppercase tracking-wider transition-all ${selectedBet === option.value ? 'border-neon-cyan bg-neon-cyan text-black' : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10'}`}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>

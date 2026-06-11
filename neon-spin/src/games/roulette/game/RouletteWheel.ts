@@ -33,8 +33,6 @@ export class RouletteWheel {
 
   private async drawWheel() {
     const angleStep = (Math.PI * 2) / this.segments;
-    const startTime = performance.now();
-    console.log('[RouletteWheel] Starting 3D Neon Overhaul...');
     
     const tempContainer = new Container();
     
@@ -127,7 +125,6 @@ export class RouletteWheel {
     this.wheel.addChild(this.wheelSprite);
 
     tempContainer.destroy({ children: true });
-    console.log(`[RouletteWheel] 3D Overhaul completed in ${performance.now() - startTime}ms`);
   }
 
   private addBall() {

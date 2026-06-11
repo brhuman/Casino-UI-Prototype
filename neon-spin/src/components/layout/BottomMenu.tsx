@@ -15,7 +15,8 @@ const MENU_ITEMS: { id: ViewType; label: string; icon: React.ElementType }[] = [
 ];
 
 export const BottomMenu = () => {
-  const { currentView, setView } = useUiStore();
+  const currentView = useUiStore((state) => state.currentView);
+  const setView = useUiStore((state) => state.setView);
   const isVip = useUserStore(state => state.isVip);
 
   return (

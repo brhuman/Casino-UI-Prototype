@@ -1,125 +1,69 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Application, Container } from 'pixi.js';
 import { RouletteWheel } from '@/games/roulette/game/RouletteWheel';
 import { useRouletteStore } from '@/games/roulette/store';
+import { usePixiApplication } from '@/hooks/usePixiApplication';
 
 export const RoulettePixiBridge: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const appRef = useRef<Application | null>(null);
   const wheelRef = useRef<RouletteWheel | null>(null);
   const mainContainerRef = useRef<Container | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const isSpinning = useRouletteStore(state => state.isSpinning);
+
+  const getOptions = useCallback((canvas: HTMLCanvasElement) => {
+    const width = containerRef.current?.clientWidth || 800;
+    const height = containerRef.current?.clientHeight || 600;
+    return {
+      canvas,
+      width,
+      height,
+      backgroundColor: 0x000000,
+      backgroundAlpha: 0,
+      antialias: true,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
+    };
+  }, []);
+
+  const initialize = useCallback(async (app: Application) => {
+    const width = containerRef.current?.clientWidth || 800;
+    const height = containerRef.current?.clientHeight || 600;
+    const mainContainer = new Container();
+    mainContainer.x = width / 2;
+    mainContainer.y = height / 2;
+    mainContainer.scale.set(Math.min(1, Math.min(width, height) / 600));
+    app.stage.addChild(mainContainer);
+    mainContainerRef.current = mainContainer;
+
+    const wheel = new RouletteWheel(app, mainContainer);
+    wheelRef.current = wheel;
+    await wheel.init();
+    return () => {
+      wheel.destroy();
+      wheelRef.current = null;
+      mainContainerRef.current = null;
+    };
+  }, []);
+
+  const { appRef, isLoaded, error, retry } = usePixiApplication({
+    canvasRef,
+    getOptions,
+    initialize,
+    timeoutMs: 30000,
+  });
 
   const handleResize = useCallback(() => {
     if (!appRef.current || !containerRef.current || !mainContainerRef.current) return;
-    
     const { clientWidth, clientHeight } = containerRef.current;
-    console.log(`[Roulette] Resizing to ${clientWidth}x${clientHeight}`);
-    
     appRef.current.renderer.resize(clientWidth, clientHeight);
     mainContainerRef.current.x = clientWidth / 2;
     mainContainerRef.current.y = clientHeight / 2;
-    
-    // Scale the main container if it gets too small
-    const minDim = Math.min(clientWidth, clientHeight);
-    const targetScale = Math.min(1, minDim / 600);
-    mainContainerRef.current.scale.set(targetScale);
-  }, []);
-
-  const setup = useCallback(async (isCurrentRef: { current: boolean }, canvas: HTMLCanvasElement) => {
-    if (!isCurrentRef.current || !containerRef.current) return;
-    
-    setIsLoaded(false);
-    setError(null);
-    const startTime = performance.now();
-    console.group('%c[Roulette] initialization', 'color: #00ffff; font-weight: bold;');
-    
-    const { clientWidth, clientHeight } = containerRef.current;
-    console.log(`[0ms] Setup started. Dimensions: ${clientWidth}x${clientHeight}`);
-    
-    let localApp: Application | null = null;
-    
-    try {
-      const setupPromise = (async () => {
-        localApp = new Application();
-        appRef.current = localApp;
-
-        console.log(`[${Math.round(performance.now() - startTime)}ms] Invoking app.init()...`);
-        
-        await Promise.race([
-          localApp.init({
-            canvas,
-            width: clientWidth,
-            height: clientHeight,
-            backgroundColor: 0x000000,
-            backgroundAlpha: 0,
-            antialias: true,
-            resolution: window.devicePixelRatio || 1,
-            autoDensity: true,
-          }),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('PIXI App Init Timeout (15s)')), 15000))
-        ]);
-        
-        if (!isCurrentRef.current) {
-          localApp.destroy(true, { children: true, texture: true });
-          return;
-        }
-
-        const mainContainer = new Container();
-        mainContainer.x = clientWidth / 2;
-        mainContainer.y = clientHeight / 2;
-        localApp.stage.addChild(mainContainer);
-        mainContainerRef.current = mainContainer;
-
-        // Apply initial scaling
-        const minDim = Math.min(clientWidth, clientHeight);
-        mainContainer.scale.set(Math.min(1, minDim / 600));
-
-        console.log(`[${Math.round(performance.now() - startTime)}ms] Drawing Wheel...`);
-        const wheel = new RouletteWheel(localApp, mainContainer);
-        wheelRef.current = wheel;
-        
-        await wheel.init();
-        
-        if (isCurrentRef.current) {
-          setIsLoaded(true);
-          console.log(`[${Math.round(performance.now() - startTime)}ms] ROULETTE ENGINE FULLY LOADED`);
-          handleResize(); // Final sync
-        }
-      })();
-
-      await Promise.race([
-        setupPromise,
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Total Load Timeout (30s)')), 30000))
-      ]);
-
-      console.groupEnd();
-    } catch (err: unknown) {
-      if (isCurrentRef.current) {
-        console.error(`[${Math.round(performance.now() - startTime)}ms] FATAL ERROR:`, err);
-        setError(err instanceof Error ? err.message : 'Unknown initialization error');
-      }
-      console.groupEnd();
-      if (localApp) {
-        try {
-          (localApp as Application).destroy(true, { children: true, texture: true });
-        } catch {
-          /* destroy during failed init */
-        }
-        appRef.current = null;
-      }
-    }
-  }, [handleResize]);
+    mainContainerRef.current.scale.set(Math.min(1, Math.min(clientWidth, clientHeight) / 600));
+  }, [appRef]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !containerRef.current) return;
-
-    const isCurrentRef = { current: true };
-    const timer = setTimeout(() => setup(isCurrentRef, canvas), 50);
+    if (!containerRef.current) return;
 
     const resizeObserver = new ResizeObserver(() => {
       handleResize();
@@ -127,54 +71,32 @@ export const RoulettePixiBridge: React.FC = () => {
     resizeObserver.observe(containerRef.current);
 
     return () => {
-      isCurrentRef.current = false;
-      clearTimeout(timer);
       resizeObserver.disconnect();
-      if (appRef.current) {
-        const app = appRef.current;
-        appRef.current = null;
-        try {
-          app.destroy(true, { children: true, texture: true });
-        } catch {
-          /* teardown */
-        }
-      }
-      if (wheelRef.current) {
-        try {
-          wheelRef.current.destroy();
-        } catch {
-          /* wheel teardown */
-        }
-        wheelRef.current = null;
-      }
-      mainContainerRef.current = null;
     };
-  }, [setup, handleResize]);
+  }, [handleResize]);
 
   useEffect(() => {
     if (isSpinning && wheelRef.current && isLoaded) {
-      console.log('[Roulette] Spin trigged');
       const result = Math.floor(Math.random() * 37);
       let wasResolved = false;
       
       const timeoutId = setTimeout(() => {
         if (wasResolved) return;
         wasResolved = true;
-        console.warn('[Roulette] Spin timed out');
-        useRouletteStore.getState().actions.setSpinning(false);
+        useRouletteStore.getState().actions.settleSpin(result);
       }, 12000);
 
       wheelRef.current.spin(result)
         .then(() => {
           if (wasResolved) return;
           wasResolved = true;
-          useRouletteStore.getState().actions.setResult(result);
+          useRouletteStore.getState().actions.settleSpin(result);
         })
         .catch((err) => {
           if (wasResolved) return;
           wasResolved = true;
-          console.error('[Roulette] Animation error:', err);
-          useRouletteStore.getState().actions.setSpinning(false);
+          if (import.meta.env.DEV) console.error('[Roulette] Animation error:', err);
+          useRouletteStore.getState().actions.settleSpin(result);
         })
         .finally(() => {
           clearTimeout(timeoutId);
@@ -197,7 +119,7 @@ export const RoulettePixiBridge: React.FC = () => {
                   <p className="text-gray-500 text-sm mt-3 font-medium leading-relaxed">{error}</p>
                 </div>
                 <button 
-                  onClick={() => canvasRef.current && setup({ current: true }, canvasRef.current)}
+                  onClick={retry}
                   className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-neon-cyan transition-all hover:scale-105 active:scale-95 shadow-xl"
                 >
                   Force Reconnect

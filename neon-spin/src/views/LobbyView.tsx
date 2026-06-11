@@ -1,26 +1,23 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Plus, Crown, Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { GlobalChat } from '@/components/game/GlobalChat';
 import { LatestWins } from '@/components/game/LatestWins';
 import { LeaderboardView } from '@/components/game/LeaderboardView';
 import { MinesIcon, RouletteIcon, SlotsIcon } from '@/components/ui/GameIcons';
-import { useSettingsStore } from '@/store/useSettingsStore';
 import type { ViewType } from '@/store/useUiStore';
 import { useUiStore } from '@/store/useUiStore';
-import { useUserStore } from '@/store/useUserStore';
 import { preloadViews } from '@/views/viewRegistry';
+import { PageMeta } from '@/components/ui/PageMeta';
+import { LobbyActionCards } from '@/components/lobby/LobbyActionCards';
+import { LobbyHero } from '@/components/lobby/LobbyHero';
 
 const GAME_VIEW_IDS: ViewType[] = ['slots', 'roulette', 'mines'];
 
 export const LobbyView = () => {
   const { t } = useTranslation();
-  const { neonGlow } = useSettingsStore();
   const setView = useUiStore((state) => state.setView);
-  const isVip = useUserStore((state) => state.isVip);
-  const setVip = useUserStore((state) => state.actions.setVip);
-  const updateBalance = useUserStore((state) => state.actions.updateBalance);
   const [currentUniverseSlide, setCurrentUniverseSlide] = useState(0);
 
   const GAMES_DATA = useMemo(() => [
@@ -59,40 +56,6 @@ export const LobbyView = () => {
   const nextUniverseSlide = () => setCurrentUniverseSlide((prev) => (prev + 1) % GAMES_DATA.length);
   const prevUniverseSlide = () => setCurrentUniverseSlide((prev) => (prev - 1 + GAMES_DATA.length) % GAMES_DATA.length);
 
-  const HERO_SLIDES = useMemo(() => [
-    {
-      id: 'slots',
-      title: t('lobby.hero.slots.title'),
-      subtitle: t('lobby.hero.slots.subtitle'),
-      description: t('lobby.hero.slots.description'),
-      buttonText: t('lobby.hero.slots.button'),
-      bg: '/assets/banner_slots.png',
-      color: 'neon-purple'
-    },
-    {
-      id: 'roulette',
-      title: t('lobby.hero.roulette.title'),
-      subtitle: t('lobby.hero.roulette.subtitle'),
-      description: t('lobby.hero.roulette.description'),
-      buttonText: t('lobby.hero.roulette.button'),
-      bg: '/assets/banner_roulette.png',
-      color: 'neon-cyan'
-    },
-    {
-      id: 'mines',
-      title: t('lobby.hero.mines.title'),
-      subtitle: t('lobby.hero.mines.subtitle'),
-      description: t('lobby.hero.mines.description'),
-      buttonText: t('lobby.hero.mines.button'),
-      bg: '/assets/banner_mines.png',
-      color: 'neon-fuchsia'
-    }
-  ], [t]);
-
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
   // Pre-load game view chunks once the lobby settles.
   useEffect(() => {
     const preloadGames = async () => {
@@ -107,137 +70,18 @@ export const LobbyView = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  // 2. AUTO-SLIDE LOGIC (Paused on hover)
-  useEffect(() => {
-    if (isHovered) return;
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 12000);
-    return () => clearInterval(timer);
-  }, [isHovered, HERO_SLIDES.length]);
-  
   return (
     <div className="w-full flex-1 flex flex-col items-center bg-black overflow-x-hidden relative">
-      <title>Neon Spin | The Ultimate Cyberpunk Gaming Experience</title>
-      <meta name="description" content="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights." />
-      <meta property="og:title" content="Neon Spin | The Ultimate Cyberpunk Gaming Experience" />
-      <meta property="og:description" content="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights." />
-      <meta property="og:image" content="https://neonspin.vercel.app/og-image.png" />
-      <meta name="twitter:title" content="Neon Spin | The Ultimate Cyberpunk Gaming Experience" />
-      <meta name="twitter:description" content="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights." />
-      <meta name="twitter:image" content="https://neonspin.vercel.app/og-image.png" />
+      <PageMeta
+        title="Neon Spin | The Ultimate Cyberpunk Gaming Experience"
+        description="Welcome to Neon Spin, where high-stakes mystery meets futuristic aesthetics. Play Mines, Roulette, and Slots in a world of neon lights."
+      />
       <div className="w-full max-w-[1920px] flex flex-col pb-24 relative">
         {/* Background Atmosphere */}
         <div className="pointer-events-none fixed inset-0 z-0 opacity-10 bg-[url('/assets/neon_lobby_background.png')] bg-cover bg-center bg-no-repeat" />
         
         <div className="relative z-10 flex flex-col gap-12 pt-4 sm:pt-8 px-4 sm:px-10">
-          {/* 3. HERO SLIDER */}
-          <section 
-            className="relative h-[350px] sm:h-[450px] lg:h-[500px] w-full rounded-[2.5rem] sm:rounded-[4rem] overflow-hidden border border-white/10 shadow-2xl group bg-black"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            {neonGlow && (
-              <div className="absolute -inset-10 bg-neon-cyan/10 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-duration-1000 pointer-events-none" />
-            )}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentSlide}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
-                onDragEnd={(_, info) => {
-                  const swipeThreshold = 50;
-                  if (info.offset.x > swipeThreshold) {
-                    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-                  } else if (info.offset.x < -swipeThreshold) {
-                    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-                  }
-                }}
-                className="absolute inset-0 cursor-grab active:cursor-grabbing"
-              >
-                <img 
-                  src={HERO_SLIDES[currentSlide].bg} 
-                  alt={HERO_SLIDES[currentSlide].title} 
-                  className="absolute inset-0 w-full h-full object-cover brightness-[0.7] contrast-[1.1] scale-105 pointer-events-none"
-                />
-                
-                {/* Repositioned Subtitle (Top Right) */}
-                <motion.div 
-                   initial={{ y: -20, opacity: 0 }}
-                   animate={{ y: 0, opacity: 1 }}
-                   transition={{ delay: 0.2, duration: 0.4 }}
-                   className="absolute top-10 right-10 sm:top-16 sm:right-16 hidden sm:flex items-center gap-3 bg-black/40 backdrop-blur-xl px-6 py-3 rounded-full border border-white/5 pointer-events-none"
-                >
-                   <div className={`w-2 h-2 rounded-full animate-pulse ${
-                      HERO_SLIDES[currentSlide].color === 'neon-purple' ? 'bg-neon-purple shadow-[0_0_10px_#9333ea]' : 
-                      HERO_SLIDES[currentSlide].color === 'neon-cyan' ? 'bg-neon-cyan shadow-[0_0_10px_#00ffff]' : 'bg-neon-fuchsia shadow-[0_0_10px_#d946ef]'
-                    }`} />
-                    <span className={`text-xs sm:text-sm font-black uppercase tracking-[0.5em] ${
-                      HERO_SLIDES[currentSlide].color === 'neon-purple' ? 'text-neon-purple' : 
-                      HERO_SLIDES[currentSlide].color === 'neon-cyan' ? 'text-neon-cyan' : 'text-neon-fuchsia'
-                    }`}>
-                      {HERO_SLIDES[currentSlide].subtitle}
-                    </span>
-                </motion.div>
-
-                <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/10 to-transparent p-8 sm:p-20 flex flex-col justify-start pt-16 sm:pt-24 pointer-events-none">
-                   <motion.div
-                     initial={{ x: -50, opacity: 0 }}
-                     animate={{ x: 0, opacity: 1 }}
-                     transition={{ delay: 0.1, duration: 0.5 }}
-                     className="max-w-xl"
-                   >
-                     {/* Mobile Subtitle */}
-                     <div className="sm:hidden flex items-center gap-3 mb-4">
-                        <div className={`w-2 h-2 rounded-full bg-neon-cyan`} />
-                        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/70">
-                          {HERO_SLIDES[currentSlide].subtitle}
-                        </span>
-                     </div>
-
-                     <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white italic uppercase tracking-tighter leading-[0.85] mb-6">
-                       {HERO_SLIDES[currentSlide].title.split(' ')[0]} <br />
-                       <span className={`text-transparent bg-clip-text bg-gradient-to-r ${
-                         HERO_SLIDES[currentSlide].color === 'neon-purple' ? 'from-neon-purple to-neon-fuchsia' : 
-                         HERO_SLIDES[currentSlide].color === 'neon-cyan' ? 'from-neon-cyan to-blue-500' : 'from-neon-fuchsia to-neon-purple'
-                       }`}>
-                         {HERO_SLIDES[currentSlide].title.split(' ')[1]}
-                       </span>
-                     </h1>
-                     <p className="text-sm sm:text-lg text-white/80 mb-8 leading-relaxed max-w-md font-medium drop-shadow-md">
-                       {HERO_SLIDES[currentSlide].description}
-                     </p>
-                     <button 
-                       onClick={(e) => {
-                         e.stopPropagation(); // Prevent drag from triggering
-                         setView(HERO_SLIDES[currentSlide].id as ViewType);
-                       }}
-                       className="group/btn relative px-10 py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:scale-105 active:scale-95 transition-all shadow-[0_15px_60px_rgba(255,255,255,0.2)] pointer-events-auto"
-                     >
-                       <Play size={16} fill="currentColor" /> {HERO_SLIDES[currentSlide].buttonText}
-                       <div className="absolute inset-0 rounded-2xl bg-white blur-xl opacity-0 group-hover/btn:opacity-30 transition-opacity" />
-                     </button>
-                   </motion.div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Centered Pagination Dots (Bottom Center) */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
-               {HERO_SLIDES.map((_, i) => (
-                 <button 
-                   key={i}
-                   onClick={() => setCurrentSlide(i)}
-                   className={`h-1 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-12 bg-white shadow-[0_0_15px_white]' : 'w-4 bg-white/10 hover:bg-white/30'}`}
-                 />
-               ))}
-            </div>
-          </section>
+          <LobbyHero />
 
           {/* 4. STATS BAR / SOCIAL PROOF */}
           <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-2">
@@ -362,61 +206,7 @@ export const LobbyView = () => {
           </section>
 
           {/* 6. PERFORMANCE DASHBOARDS (CTAs) */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 gap-8 px-2">
-             {/* VIP Card */}
-             <div 
-               className={`relative p-6 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden border transition-all cursor-pointer group flex flex-col gap-6 sm:gap-8 ${isVip ? 'border-yellow-500/30 bg-yellow-400/5' : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'}`}
-               onClick={() => setVip(!isVip)}
-             >
-                <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
-                   <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-yellow-600 via-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl transform group-hover:rotate-12 transition-all">
-                      <Crown size={32} className="text-black sm:scale-125" strokeWidth={2.5} />
-                   </div>
-                   <div className="flex flex-col gap-3 sm:gap-4">
-                      <h4 className="text-2xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
-                        {isVip ? t('lobby.cta.vip_title_active') : t('lobby.cta.vip_title_inactive')}
-                      </h4>
-                      <p className="text-[10px] sm:text-sm font-black text-white/80 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
-                        {isVip ? t('lobby.cta.vip_desc_active') : t('lobby.cta.vip_desc_inactive')}
-                      </p>
-                   </div>
-                   <button className={`w-fit px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase transition-all shadow-xl tracking-widest ${isVip ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white hover:bg-white hover:text-black hover:scale-105 active:scale-95'}`}>
-                     {isVip ? t('lobby.cta.vip_button_active') : t('lobby.cta.vip_button_inactive')}
-                   </button>
-                </div>
-                {neonGlow && (
-                   <div className="absolute -inset-20 bg-yellow-400/5 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
-                <Crown size={320} className="absolute -bottom-24 -right-24 text-white/[0.03] -rotate-12 pointer-events-none group-hover:text-white/[0.05] transition-colors" />
-             </div>
-
-             {/* Recharge Card */}
-             <div 
-               className="relative p-6 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl hover:bg-white/[0.08] transition-all cursor-pointer group flex flex-col gap-6 sm:gap-8"
-               onClick={() => updateBalance(5000)}
-             >
-                <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
-                   <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-neon-cyan via-[#00ccff] to-neon-cyan flex items-center justify-center shadow-2xl transform group-hover:-rotate-12 transition-all">
-                      <Plus size={32} className="text-black sm:scale-125" strokeWidth={3} />
-                   </div>
-                   <div className="flex flex-col gap-3 sm:gap-4">
-                      <h4 className="text-2xl sm:text-5xl font-black text-white uppercase italic tracking-tighter leading-tight">
-                        {t('lobby.cta.recharge_title')}
-                      </h4>
-                      <p className="text-[10px] sm:text-sm font-black text-white/80 uppercase tracking-[0.2em] leading-relaxed max-w-[280px]">
-                        {t('lobby.cta.recharge_desc')}
-                      </p>
-                   </div>
-                   <button className="w-fit px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl bg-neon-cyan text-black text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-[0_15px_40px_rgba(0,255,255,0.25)] hover:scale-105 active:scale-95">
-                     {t('lobby.cta.recharge_button')}
-                   </button>
-                </div>
-                {neonGlow && (
-                   <div className="absolute -inset-20 bg-neon-cyan/5 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
-                <Plus size={320} className="absolute -bottom-24 -right-24 text-white/[0.03] rotate-12 pointer-events-none group-hover:text-white/[0.05] transition-colors" />
-             </div>
-          </section>
+          <LobbyActionCards />
 
           {/* 7. LIVE LATEST WINS */}
           <section>

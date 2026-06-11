@@ -1,21 +1,19 @@
 import { PixiBridge } from '@/components/game/PixiBridge';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { PageMeta } from '@/components/ui/PageMeta';
 
 
 export const SlotView = () => {
-  const { highQualityFx } = useSettingsStore();
+  const highQualityFx = useSettingsStore((state) => state.highQualityFx);
 
   return (
     <div className="relative flex-1 flex w-full flex-col items-center justify-center p-4 sm:p-12">
-      <title>Neon Slots | Spin to Win in the Cybercity</title>
-      <meta name="description" content="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits." />
-      <meta property="og:title" content="Neon Slots | Spin to Win in the Cybercity" />
-      <meta property="og:description" content="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits." />
-      <meta property="og:image" content="https://neonspin.vercel.app/assets/slots_thumb.png" />
-      <meta name="twitter:title" content="Neon Slots | Spin to Win in the Cybercity" />
-      <meta name="twitter:description" content="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits." />
-      <meta name="twitter:image" content="https://neonspin.vercel.app/assets/slots_thumb.png" />
+      <PageMeta
+        title="Neon Slots | Spin to Win in the Cybercity"
+        description="Experience the thrill of the Neon Slots. High volatility, massive payouts, and stunning visual effects. Your jackpot awaits."
+        image="/assets/slots_thumb.png"
+      />
       {/* Scalable Ambient Background Graphic */}
       {highQualityFx && (
         <div 

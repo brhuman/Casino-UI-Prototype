@@ -20,13 +20,39 @@ interface UserState {
   actions: {
     login: (token: string, userId: string, username: string, balance: number) => void;
     logout: () => void;
-    updateBalance: (amount: number) => void;
+    placeBet: (amount: number) => boolean;
+    creditWin: (amount: number) => void;
+    creditBonus: (amount: number) => void;
+    claimQuestReward: (cash: number, xp: number) => void;
     setAvatar: (url: string) => void;
     addCustomAvatar: (url: string) => void;
     setVip: (status: boolean) => void;
     setUsername: (name: string) => void;
   };
 }
+
+const getLevelProgress = (xp: number) => {
+  const thresholds = [1000, 2000, 5000];
+  let level = 1;
+  let maxXp = thresholds[0];
+
+  while (xp >= maxXp) {
+    level += 1;
+    const thresholdIndex = level - 1;
+    const magnitude = Math.floor(thresholdIndex / thresholds.length);
+    maxXp = thresholds[thresholdIndex % thresholds.length] * Math.pow(10, magnitude);
+  }
+
+  return { level, maxXp };
+};
+
+const appendBalanceHistory = (history: UserState['balanceHistory'], amount: number) => [
+  ...history,
+  {
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    amount,
+  },
+].slice(-20);
 
 export const useUserStore = create<UserState>()(
   persist(
@@ -50,68 +76,83 @@ export const useUserStore = create<UserState>()(
         login: (token: string, userId: string, username: string, balance: number) => set({ token, userId, username, balance }),
         logout: () => set({ token: null, userId: null, username: 'Guest' }),
 
-        updateBalance: (amount) => set((state) => {
-          let newTotalWinAmount = state.totalWinAmount;
-          let newTotalBets = state.totalBets;
-          const newBalance = state.balance + amount;
-          let newBiggestWin = state.biggestWin;
+        placeBet: (amount) => {
+          if (!Number.isFinite(amount) || amount <= 0) return false;
 
-          if (amount < 0) {
-            newTotalBets = state.totalBets + Math.abs(amount);
-          } else if (amount > 0) {
-            newTotalWinAmount = state.totalWinAmount + amount;
-            if (amount > state.biggestWin) {
-              newBiggestWin = amount;
+          let accepted = false;
+          set((state) => {
+            if (state.balance < amount) return state;
+
+            accepted = true;
+            const balance = state.balance - amount;
+            const achievements = [...state.achievements];
+            if (amount > 1000 && !achievements.includes('HIGH_ROLLER')) {
+              achievements.push('HIGH_ROLLER');
             }
-          }
 
-          // Calculate Level and Next XP Threshold (1-2-5 pattern)
-          // 1k, 2k, 5k, 10k, 20k, 50k, 100k...
-          let lvl = 1;
-          let currentMax = 1000;
-          const multipliers = [1, 2, 5];
-          
-          while (newTotalWinAmount >= currentMax) {
-            const mIdx = lvl % multipliers.length;
-            const p = Math.floor(lvl / multipliers.length) + 3;
-            currentMax = multipliers[mIdx] * Math.pow(10, p);
-            lvl++;
-          }
+            return {
+              balance,
+              totalBets: state.totalBets + amount,
+              achievements,
+              balanceHistory: appendBalanceHistory(state.balanceHistory, balance),
+            };
+          });
+          return accepted;
+        },
+        creditWin: (amount) => {
+          if (!Number.isFinite(amount) || amount <= 0) return;
 
-          // Achievement: High Roller (bet > 1000)
-          const newAchievements = [...state.achievements];
-          if (amount < -1000 && !newAchievements.includes('HIGH_ROLLER')) {
-            newAchievements.push('HIGH_ROLLER');
-          }
-          
-          // Achievement: Bonus Collector (simulated by total recharge/balance increase not from wins if we had more state, but for now let's use a threshold)
-          if (newBalance > 20000 && !newAchievements.includes('BONUS_COLLECTOR')) {
-            newAchievements.push('BONUS_COLLECTOR');
-          }
-          
-          // Achievement: Ultimate Whale (Career payout)
-          if (newTotalWinAmount >= 50000 && !newAchievements.includes('ULTIMATE_WHALE')) {
-            newAchievements.push('ULTIMATE_WHALE');
-          }
+          set((state) => {
+            const balance = state.balance + amount;
+            const totalWinAmount = state.totalWinAmount + amount;
+            const xp = state.xp + amount;
+            const achievements = [...state.achievements];
+            if (totalWinAmount >= 50000 && !achievements.includes('ULTIMATE_WHALE')) {
+              achievements.push('ULTIMATE_WHALE');
+            }
 
-          // Update Balance History (Keep last 20 points)
-          const newHistory = [
-            ...state.balanceHistory,
-            { time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), amount: newBalance }
-          ].slice(-20);
+            return {
+              balance,
+              totalWinAmount,
+              biggestWin: Math.max(state.biggestWin, amount),
+              xp,
+              ...getLevelProgress(xp),
+              achievements,
+              balanceHistory: appendBalanceHistory(state.balanceHistory, balance),
+            };
+          });
+        },
+        creditBonus: (amount) => {
+          if (!Number.isFinite(amount) || amount <= 0) return;
 
-          return { 
-            balance: newBalance,
-            totalBets: newTotalBets,
-            totalWinAmount: newTotalWinAmount,
-            biggestWin: newBiggestWin,
-            level: lvl,
-            xp: newTotalWinAmount,
-            maxXp: currentMax,
-            achievements: newAchievements,
-            balanceHistory: newHistory
-          };
-        }),
+          set((state) => {
+            const balance = state.balance + amount;
+            const achievements = [...state.achievements];
+            if (balance > 20000 && !achievements.includes('BONUS_COLLECTOR')) {
+              achievements.push('BONUS_COLLECTOR');
+            }
+
+            return {
+              balance,
+              achievements,
+              balanceHistory: appendBalanceHistory(state.balanceHistory, balance),
+            };
+          });
+        },
+        claimQuestReward: (cash, rewardXp) => {
+          if (cash < 0 || rewardXp < 0) return;
+
+          set((state) => {
+            const balance = state.balance + cash;
+            const xp = state.xp + rewardXp;
+            return {
+              balance,
+              xp,
+              ...getLevelProgress(xp),
+              balanceHistory: appendBalanceHistory(state.balanceHistory, balance),
+            };
+          });
+        },
 
         setAvatar: (url: string) => set({ selectedAvatar: url }),
         addCustomAvatar: (url: string) => set((state) => ({ 

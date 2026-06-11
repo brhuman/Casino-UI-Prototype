@@ -6,27 +6,33 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { NotificationModal } from '@/components/ui/NotificationModal';
 import { useState } from 'react';
+import { PageMeta } from '@/components/ui/PageMeta';
 
 export const SettingsView = () => {
   const { t } = useTranslation();
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const setShowAboutModal = useUiStore((state) => state.setShowAboutModal);
-  const { isMuted, volume, language, highQualityFx, neonGlow, actions: settingsActions } = useSettingsStore();
+  const isMuted = useSettingsStore((state) => state.isMuted);
+  const volume = useSettingsStore((state) => state.volume);
+  const language = useSettingsStore((state) => state.language);
+  const highQualityFx = useSettingsStore((state) => state.highQualityFx);
+  const neonGlow = useSettingsStore((state) => state.neonGlow);
+  const setMuted = useSettingsStore((state) => state.actions.setMuted);
+  const setVolume = useSettingsStore((state) => state.actions.setVolume);
+  const setLanguage = useSettingsStore((state) => state.actions.setLanguage);
+  const setHighQualityFx = useSettingsStore((state) => state.actions.setHighQualityFx);
+  const setNeonGlow = useSettingsStore((state) => state.actions.setNeonGlow);
 
   const handleLanguageChange = (lang: 'en' | 'uk' | 'ru' | 'pl') => {
-    settingsActions.setLanguage(lang);
+    setLanguage(lang);
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col gap-6 pb-24 pt-4 sm:pt-10 px-4 relative">
-      <title>Settings | Optimize Your Experience</title>
-      <meta name="description" content="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session." />
-      <meta property="og:title" content="Settings | Optimize Your Experience" />
-      <meta property="og:description" content="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session." />
-      <meta property="og:image" content="https://neonspin.vercel.app/og-image.png" />
-      <meta name="twitter:title" content="Settings | Optimize Your Experience" />
-      <meta name="twitter:description" content="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session." />
-      <meta name="twitter:image" content="https://neonspin.vercel.app/og-image.png" />
+      <PageMeta
+        title="Settings | Optimize Your Experience"
+        description="Tune the neon glow, adjust audio levels, and optimize performance for your device. Personalize your Neon Spin session."
+      />
       <div className="flex items-center gap-4 mb-2">
         <div className="w-2 h-8 bg-neon-cyan rounded-full shadow-[0_0_15px_#00ffff]" />
         <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">{t('settings.title')}</h2>
@@ -72,7 +78,7 @@ export const SettingsView = () => {
               </div>
               <div className="flex items-center gap-6">
                 <button 
-                  onClick={() => settingsActions.setMuted(!isMuted)}
+                  onClick={() => setMuted(!isMuted)}
                   className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isMuted ? 'bg-red-500/20 text-red-500 border border-red-500/40' : 'bg-white/10 text-white/40 border border-white/20 hover:bg-white/20'}`}
                 >
                   {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -84,7 +90,7 @@ export const SettingsView = () => {
                     max="1" 
                     step="0.01" 
                     value={isMuted ? 0 : volume}
-                    onChange={(e) => settingsActions.setVolume(parseFloat(e.target.value))}
+                    onChange={(e) => setVolume(parseFloat(e.target.value))}
                     disabled={isMuted}
                     className="w-full h-1.5 bg-white/5 rounded-lg appearance-none cursor-pointer accent-neon-cyan hover:accent-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   />
@@ -102,7 +108,7 @@ export const SettingsView = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div 
-              onClick={() => settingsActions.setHighQualityFx(!highQualityFx)}
+              onClick={() => setHighQualityFx(!highQualityFx)}
               className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl cursor-pointer hover:bg-white/[0.12] transition-all group"
             >
               <span className="text-[10px] font-black text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">{t('settings.visual.quality_fx')}</span>
@@ -115,7 +121,7 @@ export const SettingsView = () => {
             </div>
 
             <div 
-              onClick={() => settingsActions.setNeonGlow(!neonGlow)}
+              onClick={() => setNeonGlow(!neonGlow)}
               className="flex items-center justify-between p-4 bg-white/[0.08] border border-white/10 rounded-2xl cursor-pointer hover:bg-white/[0.12] transition-all group"
             >
               <span className="text-[10px] font-black text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">{t('settings.visual.neon_glow')}</span>

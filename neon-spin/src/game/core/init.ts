@@ -16,10 +16,8 @@ export const SLOT_STAGE_WIDTH = SLOT_REEL_WIDTH + (SLOT_STAGE_PADDING * 2);
 export const SLOT_STAGE_HEIGHT = SLOT_REEL_HEIGHT + (SLOT_STAGE_PADDING * 2);
 
 export const initGameConfig = async (app: Application, onProgress: (p: number) => void) => {
-  console.log('[PIXI] initGameConfig starting...');
   try {
     await loadAssets(onProgress);
-    console.log('[PIXI] Assets loaded.');
     
     const mainContainer = new Container();
     mainContainer.label = 'MainContainer';
@@ -27,30 +25,16 @@ export const initGameConfig = async (app: Application, onProgress: (p: number) =
     app.stage.eventMode = 'static';
     mainContainer.eventMode = 'passive';
 
-    console.log(`[PIXI] Screen size: ${app.screen.width}x${app.screen.height}`);
     app.stage.addChild(mainContainer);
-    console.log('[PIXI] Main container added to stage.');
-
-    // Add ticker log to verify it's running
-    let tickerFrames = 0;
-    app.ticker.add(() => {
-      tickerFrames++;
-      if (tickerFrames === 60) {
-        console.log('[PIXI] Ticker is running (60 frames).');
-      }
-    });
 
     const game = new SlotGame(app, mainContainer);
-    console.log('[PIXI] SlotGame instance created.');
   
     const unsubscribeStore = useGameStore.subscribe((state, prevState) => {
       if (state.isSpinning && !prevState.isSpinning) {
-        console.log('[PIXI] Triggering spin from store update.');
         game.startSpin(state.currentBet);
       }
     });
 
-    console.log('[PIXI] initGameConfig finished successfully.');
     return () => {
       unsubscribeStore();
       game.destroy();
@@ -190,7 +174,6 @@ class SlotGame {
     if (this.isDestroyed || this.isSpinning) return;
     this.isSpinning = true;
 
-    console.log('[SlotGame] Starting Spin...');
     // Reset symbols alpha and scale before spinning
     for (let c = 0; c < REELS_COUNT; c++) {
       for (let r = 0; r < ROWS_COUNT; r++) {
@@ -228,7 +211,6 @@ class SlotGame {
     const spinTimeout = setTimeout(() => {
       if (wasResolved || this.isDestroyed) return;
       wasResolved = true;
-      console.warn('[SlotGame] Spin took too long! Force resolving...');
       useGameStore.getState().actions.setResult(resultMatrix, winAmount, winningLine);
       this.isSpinning = false;
       soundManager.stopRolling();
@@ -251,7 +233,6 @@ class SlotGame {
 
     useGameStore.getState().actions.setResult(resultMatrix, winAmount, winningLine);
     this.isSpinning = false;
-    console.log('[SlotGame] Spin Completed.');
   }
 
   public destroy() {

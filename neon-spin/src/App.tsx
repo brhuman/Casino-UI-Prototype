@@ -19,8 +19,12 @@ const ViewFallback = () => (
 
 function App() {
   const { i18n } = useTranslation();
-  const { currentView, setShowAboutModal } = useUiStore();
-  const { language, highQualityFx, neonGlow, hasSeenWelcome } = useSettingsStore();
+  const currentView = useUiStore((state) => state.currentView);
+  const setShowAboutModal = useUiStore((state) => state.setShowAboutModal);
+  const language = useSettingsStore((state) => state.language);
+  const highQualityFx = useSettingsStore((state) => state.highQualityFx);
+  const neonGlow = useSettingsStore((state) => state.neonGlow);
+  const hasSeenWelcome = useSettingsStore((state) => state.hasSeenWelcome);
   const [isLoading, setIsLoading] = useState(true);
   const CurrentView = viewRegistry[currentView];
 
@@ -65,7 +69,7 @@ function App() {
                   key={currentView}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%' }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="flex-1 flex flex-col"
                 >

@@ -36,7 +36,6 @@ const getInitialVolume = () => getLegacyUserVolume() ?? 0.3;
 interface SettingsState {
   isMuted: boolean;
   volume: number;
-  theme: 'neon' | 'cyberpunk' | 'vaporwave';
   language: 'en' | 'uk' | 'ru' | 'pl';
   highQualityFx: boolean;
   neonGlow: boolean;
@@ -45,7 +44,6 @@ interface SettingsState {
     toggleMute: () => void;
     setMuted: (muted: boolean) => void;
     setVolume: (val: number) => void;
-    setTheme: (theme: SettingsState['theme']) => void;
     setLanguage: (lang: SettingsState['language']) => void;
     setHighQualityFx: (enabled: boolean) => void;
     setNeonGlow: (enabled: boolean) => void;
@@ -55,13 +53,12 @@ interface SettingsState {
 
 type PersistedSettingsState = Pick<
   SettingsState,
-  'isMuted' | 'volume' | 'theme' | 'language' | 'highQualityFx' | 'neonGlow' | 'hasSeenWelcome'
+  'isMuted' | 'volume' | 'language' | 'highQualityFx' | 'neonGlow' | 'hasSeenWelcome'
 >;
 
 const getDefaultSettingsState = (): PersistedSettingsState => ({
   isMuted: false,
   volume: getInitialVolume(),
-  theme: 'neon',
   language: getInitialLanguage(),
   highQualityFx: true,
   neonGlow: true,
@@ -76,7 +73,6 @@ export const useSettingsStore = create<SettingsState>()(
         toggleMute: () => set({ isMuted: !get().isMuted }),
         setMuted: (isMuted) => set({ isMuted }),
         setVolume: (volume) => set({ volume }),
-        setTheme: (theme) => set({ theme }),
         setLanguage: (language) => set({ language }),
         setHighQualityFx: (highQualityFx) => set({ highQualityFx }),
         setNeonGlow: (neonGlow) => set({ neonGlow }),
@@ -100,7 +96,6 @@ export const useSettingsStore = create<SettingsState>()(
       partialize: (state) => ({ 
         isMuted: state.isMuted, 
         volume: state.volume, 
-        theme: state.theme,
         language: state.language,
         highQualityFx: state.highQualityFx,
         neonGlow: state.neonGlow,

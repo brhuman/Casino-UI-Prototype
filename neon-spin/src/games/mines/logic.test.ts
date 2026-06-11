@@ -5,6 +5,7 @@ describe('Mines Terminal Logic Test', () => {
   beforeEach(() => {
 
     useMinesStore.setState({
+      phase: 'idle',
       isActive: false,
       currentBet: 100,
       minesCount: 3,
@@ -52,6 +53,6 @@ describe('Mines Terminal Logic Test', () => {
 
   it('should cap mines count', () => {
     useMinesStore.getState().actions.setMinesCount(25);
-    expect(useMinesStore.getState().minesCount).toBe(25);
+    expect(useMinesStore.getState().minesCount).toBe(24);
   });
 });

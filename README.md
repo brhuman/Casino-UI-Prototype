@@ -15,13 +15,15 @@ Hello! This is my test project, where I am experimenting with modern technologie
 
 ## 🧪 Testing & quality assurance
 
-Automated checks run on **GitHub Actions** for every push and pull request: ESLint, **Vitest** (unit + integration-style tests), TypeScript check + production build (`npm run build` in `neon-spin/`). CI also generates a **V8 coverage** report (scoped to `src/game/math`, `src/games/mines`, and `src/store` so thresholds track core logic, not untested PIXI/roulette bundles) and uploads the HTML output as a workflow artifact (`coverage-html`).
+Automated checks run on **GitHub Actions** for every push and pull request: ESLint, **Vitest** (unit + integration-style tests), TypeScript check + production build (`npm run build` in `neon-spin/`). CI also generates a **V8 coverage** report focused on deterministic game and store logic rather than rendering-heavy PIXI bundles, and uploads the HTML output as a workflow artifact (`coverage-html`).
 
 ### What is covered
 
 - **Slot RNG math** (`src/game/math/rng.ts`) — matrix generation and win calculation.
-- **Zustand stores** — game, user, UI, settings, mines store, etc.
-- **Mines** — terminal logic and store behaviour.
+- **Zustand stores** — game, user, UI, settings, and Mines state transitions.
+- **Wallet transactions** — bet debits, wins, bonuses, quest rewards, XP, and balance invariants.
+- **Mines** — game logic, cancellable service requests, engine events, and store behaviour.
+- **Roulette** — bet validation, settlement payouts, and round state transitions.
 - **React** — light component tests with **Testing Library**; heavy PIXI/GSAP paths are mocked in `src/setupTests.ts` where needed.
 - **Integration-style** — e.g. `SlotSpinFlow.integration.test.tsx` exercises a spin control wired to real stores (no PIXI canvas).
 
@@ -44,7 +46,8 @@ Coverage HTML is written to `neon-spin/coverage/` (ignored by git; download the 
 ## 💎 Key Features
 - **Custom Game Engines**: Slot machines and Roulette implemented with raw PIXI.js graphics and optimized sprite handling.
 - **Responsive Architecture**: Fully optimized UX for desktop and mobile (breakpoints handled via Tailwind and custom ResizeObservers).
-- **Global State synchronization**: Real-time balance and statistics tracking across multiple game modules.
+- **Transactional Wallet State**: Explicit bet, win, bonus, and quest-reward operations keep balance and statistics consistent across game modules.
+- **Managed PIXI Lifecycle**: Shared initialization and cleanup guards keep WebGL applications stable under React Strict Mode and route changes.
 
 ---
 > [!IMPORTANT]

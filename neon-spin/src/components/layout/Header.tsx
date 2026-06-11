@@ -4,7 +4,6 @@ import { useUiStore } from '@/store/useUiStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { User, Volume2, VolumeX } from 'lucide-react';
-import { useAudio } from '@/hooks/useAudio';
 
 export const Header = () => {
   const balance = useUserStore((state) => state.balance);
@@ -12,10 +11,10 @@ export const Header = () => {
   const isMuted = useSettingsStore((state) => state.isMuted);
   const setMuted = useSettingsStore((state) => state.actions.setMuted);
   
-  const { level, isVip } = useUserStore();
+  const level = useUserStore((state) => state.level);
+  const isVip = useUserStore((state) => state.isVip);
+  const selectedAvatar = useUserStore((state) => state.selectedAvatar);
   
-  useAudio();
-
   const springBalance = useSpring(balance, { bounce: 0, duration: 800 });
   const displayBalance = useTransform(springBalance, (current) => `$${Math.floor(current).toLocaleString()}`);
 
@@ -56,8 +55,8 @@ export const Header = () => {
             className={`flex items-center gap-2 p-0.5 rounded-full transition-all border cursor-pointer group overflow-visible relative ${isVip ? 'bg-yellow-500/20 border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.3)]' : 'bg-gray-800 border-gray-700 hover:bg-gray-700'}`}
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700 rounded-full flex items-center justify-center text-neon-fuchsia group-hover:text-neon-cyan transition-colors overflow-hidden">
-              {useUserStore.getState().selectedAvatar ? (
-                <img src={useUserStore.getState().selectedAvatar!} alt="Avatar" className="w-full h-full object-cover" />
+              {selectedAvatar ? (
+                <img src={selectedAvatar} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <User size={18} />
               )}

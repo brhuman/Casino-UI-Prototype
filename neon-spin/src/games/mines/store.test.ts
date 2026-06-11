@@ -4,6 +4,7 @@ import { useMinesStore } from '@/games/mines/store';
 describe('useMinesStore', () => {
   beforeEach(() => {
     useMinesStore.setState({
+      phase: 'idle',
       isActive: false,
       currentBet: 100,
       minesCount: 3,
@@ -15,6 +16,7 @@ describe('useMinesStore', () => {
   it('should have default state', () => {
     const state = useMinesStore.getState();
     expect(state.isActive).toBe(false);
+    expect(state.phase).toBe('idle');
     expect(state.currentBet).toBe(100);
     expect(state.minesCount).toBe(3);
     expect(state.multiplier).toBe(1.0);
@@ -37,6 +39,7 @@ describe('useMinesStore', () => {
     useMinesStore.getState().actions.startGame();
     const state = useMinesStore.getState();
     expect(state.isActive).toBe(true);
+    expect(state.phase).toBe('active');
     expect(state.multiplier).toBe(1.0);
     expect(state.winAmount).toBe(0);
   });
@@ -47,7 +50,7 @@ describe('useMinesStore', () => {
   });
 
   it('should end game', () => {
-    useMinesStore.setState({ isActive: true });
+    useMinesStore.setState({ phase: 'active', isActive: true });
     
     useMinesStore.getState().actions.endGame(150);
     const state = useMinesStore.getState();
@@ -56,11 +59,17 @@ describe('useMinesStore', () => {
   });
 
   it('should end game with default winAmount 0', () => {
-    useMinesStore.setState({ isActive: true });
+    useMinesStore.setState({ phase: 'active', isActive: true });
     
     useMinesStore.getState().actions.endGame();
     const state = useMinesStore.getState();
     expect(state.isActive).toBe(false);
     expect(state.winAmount).toBe(0);
+  });
+
+  it('should reject a second start request while starting', () => {
+    expect(useMinesStore.getState().actions.requestStart()).toBe(true);
+    expect(useMinesStore.getState().actions.requestStart()).toBe(false);
+    expect(useMinesStore.getState().phase).toBe('starting');
   });
 });
